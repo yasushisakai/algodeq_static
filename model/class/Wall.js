@@ -65,8 +65,6 @@ Wall.prototype.create = function (merger, offsetX, offsetZ) {
     wall.recieveShadow = true;
     wall.castShadow = true;
 
-    //return wall;
-
     THREE.GeometryUtils.merge(merger, wall, this.matId);
 
 }

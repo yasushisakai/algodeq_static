@@ -7,7 +7,6 @@ function Floor(XZIndex, YIndex, matId) {
     this.XZIndex = XZIndex;
     this.YIndex = YIndex;
     this.matId = matId;
-
 }
 
 Floor.materialList = [
