@@ -7,6 +7,11 @@ function Plan(data, offsetX, offsetZ) {
     this.data = data;
     this.offsetX = offsetX;
     this.offsetZ = offsetZ;
+
+    this.visible = true;
+
+    this.walls = [];
+    this.floors = [];
 }
 
 /////////////////////////////////////////
@@ -40,19 +45,19 @@ Plan.prototype.create = function (entities) {
     var wall, floor;
     var offsetX = this.offsetX;
     var offsetZ = this.offsetZ;
-
-    //TODO:add plane and grid
+    var walls=[],floors = [];
 
     //create walls;
     for (var i = 0; i < Plan.wallTypes.length; i++) {
 
-        this.data[Plan.wallTypes[i]].forEach(function (walls) {
+        this.data[Plan.wallTypes[i]].forEach(function (wallsData) {
 
             //using "this" inside this function points the global "this"
             //not the one your thinking of.
 
-            wall = new Wall(walls[0], walls[1], 1+i);
+            wall = new Wall(wallsData[0], wallsData[1], 1 + i);
             wall.create(entities, offsetX, offsetZ);
+            walls.push(wall);
         });
     }
 
@@ -61,12 +66,17 @@ Plan.prototype.create = function (entities) {
     //create floors
     for (var i = 0; i < Plan.floorTypes.length; i++) {
 
-        this.data[Plan.floorTypes[i]].forEach(function (floors) {
-            floor = new Floor(floors[0], floors[1], 1+wallTypeLength + i);
+        this.data[Plan.floorTypes[i]].forEach(function (floorsData) {
+            floor = new Floor(floorsData[0], floorsData[1], 1 + wallTypeLength + i);
             floor.create(entities, offsetX, offsetZ);
+            floors.push(floor);
         });
 
     }
+
+    this.walls = walls;
+    this.floors = floors;
+
 }
 
 Plan.prototype.createPlane = function (entities) {
@@ -103,4 +113,13 @@ Plan.prototype.createGrid = function () {
 
         }
     }
+}
+
+Plan.prototype.toggleVisible = function () {
+
+    this.visible = !this.visible
+    for (var i = 0; i < this.walls.length; i++) this.walls[i].toggleVisible();
+    for (var i = 0; i < this.floors.length; i++) this.floors[i].toggleVisible();
+
+
 }

@@ -7,13 +7,16 @@ function Floor(XZIndex, YIndex, matId) {
     this.XZIndex = XZIndex;
     this.YIndex = YIndex;
     this.matId = matId;
+
+    this.geometry = null;
+    this.visible = true;
 }
 
 Floor.materialList = [
 
-    new THREE.MeshBasicMaterial({color: 0xFF0000, side: THREE.DoubleSide}),
-    new THREE.MeshBasicMaterial({color: 0x00FF00, side: THREE.DoubleSide}),
-    new THREE.MeshBasicMaterial({color: 0x0000FF, side: THREE.DoubleSide}),
+    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/siteTop.png"),side:THREE.DoubleSide}),
+    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/woodTop.png"),side:THREE.DoubleSide}),
+    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/rcTop.png"),side:THREE.DoubleSide}),
     new THREE.MeshBasicMaterial({color: 0xFF00FF, side: THREE.DoubleSide}),
     new THREE.MeshBasicMaterial({color: 0xFFFF00, side: THREE.DoubleSide}),
     new THREE.MeshBasicMaterial({color: 0x00FFFF, side: THREE.DoubleSide}),
@@ -40,7 +43,18 @@ Floor.prototype.create = function (merger,offsetX, offsetZ) {
     floor.castShadow = true;
 
     //return floor;
+    this.geometry = floor;
 
     THREE.GeometryUtils.merge(merger,floor,this.matId);
+
+}
+
+Floor.prototype.toggleVisible = function(){
+
+    if(this.geometry == null) return;
+
+    this.geometry.visible = !this.geometry.visible;
+
+    this.visible = !this.visible;
 
 }
