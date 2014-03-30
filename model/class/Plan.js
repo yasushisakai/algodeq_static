@@ -12,6 +12,8 @@ function Plan(data, offsetX, offsetZ) {
 
     this.walls = [];
     this.floors = [];
+
+    this.entities = new THREE.Geometry();
 }
 
 /////////////////////////////////////////
@@ -31,7 +33,7 @@ Plan.floorTypes = Array(
 );
 
 Plan.gridMat = new THREE.LineBasicMaterial({color: 0x000000});
-Plan.planeMat = new THREE.MeshBasicMaterial({color: 0xFFFFFF, side: THREE.DoubleSide});
+Plan.planeMat = new THREE.MeshLambertMaterial({color: 0xdddddd, side: THREE.DoubleSide});
 
 Plan.materialList = new THREE.MeshFaceMaterial([Plan.planeMat].concat(Wall.materialList.concat(Floor.materialList)));
 
@@ -80,13 +82,13 @@ Plan.prototype.create = function (entities) {
 }
 
 Plan.prototype.createPlane = function (entities) {
+
     var geometry = new THREE.Mesh(Plan.planeGeometry.clone());
 
     geometry.position.x += this.offsetX;
     geometry.position.z += this.offsetZ;
     geometry.rotation.x = -90 * Math.PI / 180;
-
-    geometry.recieveShadow = true;
+    geometry.position.y = -150;
 
     THREE.GeometryUtils.merge(entities, geometry);
 
@@ -121,5 +123,20 @@ Plan.prototype.toggleVisible = function () {
     for (var i = 0; i < this.walls.length; i++) this.walls[i].toggleVisible();
     for (var i = 0; i < this.floors.length; i++) this.floors[i].toggleVisible();
 
+    this.model.visible = !this.model.visible;
 
+}
+
+Plan.prototype.createEntity = function(){
+    //this.createPlane(this.entities);
+    this.create(this.entities);
+
+    this.entities.computeFaceNormals();
+
+    this.model = new THREE.Mesh(this.entities,Plan.materialList);
+    this.model.matrixAutoUpdate = false;
+    this.model.updateMatrix();
+    this.model.castShadow = true;
+    //this.model.recieveShadow = true;
+    scene.add(this.model);
 }

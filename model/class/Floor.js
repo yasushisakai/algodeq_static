@@ -14,9 +14,9 @@ function Floor(XZIndex, YIndex, matId) {
 
 Floor.materialList = [
 
-    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/siteTop.png"),side:THREE.DoubleSide}),
-    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/woodTop.png"),side:THREE.DoubleSide}),
-    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/rcTop.png"),side:THREE.DoubleSide}),
+    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/siteTop.png")}),
+    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/woodTop.png")}),
+    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/rcTop.png")}),
     new THREE.MeshBasicMaterial({color: 0xFF00FF, side: THREE.DoubleSide}),
     new THREE.MeshBasicMaterial({color: 0xFFFF00, side: THREE.DoubleSide}),
     new THREE.MeshBasicMaterial({color: 0x00FFFF, side: THREE.DoubleSide}),
@@ -35,12 +35,9 @@ Floor.prototype.create = function (merger,offsetX, offsetZ) {
     var floor = new THREE.Mesh(Floor.floorGeometry.clone());
     floor.position.x = (this.XZIndex%resolution - resolution / 2.0 + 0.5) * unitSize + offsetX;
     floor.position.z = (Math.floor(this.XZIndex/resolution) - resolution / 2.0 + 0.5) * unitSize + offsetZ;
-    floor.position.y = this.YIndex * unitHeight - 50;
+    floor.position.y = this.YIndex * unitHeight;
 
     floor.rotation.x = -90 * Math.PI / 180;
-
-    floor.recieveShadow = true;
-    floor.castShadow = true;
 
     //return floor;
     this.geometry = floor;

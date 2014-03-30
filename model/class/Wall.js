@@ -29,6 +29,12 @@ Wall.materialList = [
 Wall.createWallGeometrty = function(){
     var wallGeometry = new THREE.Geometry();
 
+//    wallGeometry.vertices.push(new THREE.Vector3(-unitLength/2.0, 0, -unitLength/2.0));
+//    wallGeometry.vertices.push(new THREE.Vector3(unitSize-unitLength/2.0, 0, -unitLength/2.0));
+//    wallGeometry.vertices.push(new THREE.Vector3(unitSize-unitLength/2.0, unitHeight, -unitLength/2.0));
+//    wallGeometry.vertices.push(new THREE.Vector3(-unitLength/2.0, unitHeight, -unitLength/2.0));
+
+
     wallGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
     wallGeometry.vertices.push(new THREE.Vector3(unitSize, 0, 0));
     wallGeometry.vertices.push(new THREE.Vector3(unitSize, unitHeight, 0));
@@ -65,26 +71,23 @@ Wall.prototype.create = function (merger, offsetX, offsetZ) {
     //var wall = new THREE.Mesh(Wall.wallGeometry.clone());
     var wall = new THREE.Mesh(Wall.wallGeometry.clone());
 
-    if (this.XZIndex < (resolution * 2 + 1) * resolution) {
+//    if (this.XZIndex < (resolution * 2 + 1) * resolution) {
 
-        var col = (this.XZIndex % (resolution * 2 + 1));
-        var row = Math.floor(this.XZIndex / (resolution * 2 + 1));
+    var col = (this.XZIndex % (resolution * 2 + 1));
+    var row = Math.floor(this.XZIndex / (resolution * 2 + 1));
 
-        wall.position.x = (Math.floor(col / 2) - resolution / 2) * unitSize + offsetX;
-        wall.position.z = (row - resolution / 2) * unitSize + offsetZ;
+    wall.position.x = (Math.floor(col / 2) - resolution / 2) * unitSize + offsetX;
+    wall.position.z = (row - resolution / 2) * unitSize + offsetZ;
 
-        if (col % 2 == 0) {
-            wall.rotation.y = -90 * Math.PI / 180;
-        }
-    } else {
-        wall.position.x = (this.XZIndex - ((resolution * 2 + 1) * resolution) - resolution / 2) * unitSize + offsetX;
-        wall.position.z = (resolution / 2) * unitSize + offsetZ;
+    if (col % 2 == 0) {
+        wall.rotation.y = -90 * Math.PI / 180;
     }
+//    } else {
+//        wall.position.x = (this.XZIndex - ((resolution * 2 + 1) * resolution) - resolution / 2) * unitSize + offsetX;
+//        wall.position.z = (resolution / 2) * unitSize + offsetZ;
+//    }
 
     wall.position.y = this.YIndex * unitHeight;
-
-    wall.recieveShadow = true;
-    wall.castShadow = true;
 
     THREE.GeometryUtils.merge(merger, wall, this.matId);
 
