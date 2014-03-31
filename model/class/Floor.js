@@ -14,9 +14,9 @@ function Floor(XZIndex, YIndex, matId) {
 
 Floor.materialList = [
 
-    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/siteTop.png")}),
-    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/woodTop.png")}),
-    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/rcTop.png")}),
+    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/siteTop.png"),side:THREE.DoubleSide}),
+    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/woodTop.png"),side:THREE.DoubleSide}),
+    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/rcTop.png"),side:THREE.DoubleSide}),
     new THREE.MeshBasicMaterial({color: 0xFF00FF, side: THREE.DoubleSide}),
     new THREE.MeshBasicMaterial({color: 0xFFFF00, side: THREE.DoubleSide}),
     new THREE.MeshBasicMaterial({color: 0x00FFFF, side: THREE.DoubleSide}),
@@ -26,6 +26,7 @@ Floor.materialList = [
 ];
 
 Floor.floorGeometry = new THREE.PlaneGeometry(unitSize, unitSize);
+Floor.Geometry
 
 Floor.prototype.create = function (merger,offsetX, offsetZ) {
 
