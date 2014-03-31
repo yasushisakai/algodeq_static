@@ -33,9 +33,11 @@ Plan.floorTypes = Array(
 );
 
 Plan.gridMat = new THREE.LineBasicMaterial({color: 0x000000});
-Plan.planeMat = new THREE.MeshLambertMaterial({color: 0xdddddd, side: THREE.DoubleSide});
+//Plan.planeMat = new THREE.MeshLambertMaterial({color: 0xdddddd, side: THREE.DoubleSide});
 
-Plan.materialList = new THREE.MeshFaceMaterial([Plan.planeMat].concat(Wall.materialList.concat(Floor.materialList)));
+//Plan.materialList = new THREE.MeshFaceMaterial([Plan.planeMat].concat(Wall.materialList.concat(Floor.materialList)));
+Plan.materialList = new THREE.MeshFaceMaterial(Wall.materialList.concat(Floor.materialList));
+
 
 Plan.planeGeometry = new THREE.PlaneGeometry(unitLength, unitLength, resolution, resolution);
 
@@ -45,9 +47,9 @@ Plan.planeGeometry = new THREE.PlaneGeometry(unitLength, unitLength, resolution,
 
 Plan.prototype.create = function (entities) {
     var wall, floor;
-    var offsetX = this.offsetX;
+    var offsetX = this.offsetX
     var offsetZ = this.offsetZ;
-    var walls=[],floors = [];
+    var walls = [], floors = [];
 
     //create walls;
     for (var i = 0; i < Plan.wallTypes.length; i++) {
@@ -57,7 +59,7 @@ Plan.prototype.create = function (entities) {
             //using "this" inside this function points the global "this"
             //not the one your thinking of.
 
-            wall = new Wall(wallsData[0], wallsData[1], 1 + i);
+            wall = new Wall(wallsData[0], wallsData[1], i*6);
             wall.create(entities, offsetX, offsetZ);
             walls.push(wall);
         });
@@ -69,7 +71,7 @@ Plan.prototype.create = function (entities) {
     for (var i = 0; i < Plan.floorTypes.length; i++) {
 
         this.data[Plan.floorTypes[i]].forEach(function (floorsData) {
-            floor = new Floor(floorsData[0], floorsData[1], 1 + wallTypeLength + i);
+            floor = new Floor(floorsData[0], floorsData[1], wallTypeLength + i * 6);
             floor.create(entities, offsetX, offsetZ);
             floors.push(floor);
         });
@@ -127,16 +129,23 @@ Plan.prototype.toggleVisible = function () {
 
 }
 
-Plan.prototype.createEntity = function(){
+Plan.prototype.createEntity = function () {
     //this.createPlane(this.entities);
     this.create(this.entities);
 
     this.entities.computeFaceNormals();
+    this.model = new THREE.Mesh(this.entities, Plan.materialList);
 
-    this.model = new THREE.Mesh(this.entities,Plan.materialList);
+
     this.model.matrixAutoUpdate = false;
     this.model.updateMatrix();
-    this.model.castShadow = true;
-    //this.model.recieveShadow = true;
+
+    this.model.traverse(function(object){
+
+        object.castShadow = true;
+        object.receiveShadow = true;
+
+    });
+
     scene.add(this.model);
 }

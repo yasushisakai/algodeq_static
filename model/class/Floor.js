@@ -6,27 +6,39 @@ function Floor(XZIndex, YIndex, matId) {
 
     this.XZIndex = XZIndex;
     this.YIndex = YIndex;
+
     this.matId = matId;
+
+//    this.matId = []
+//    for(var i=0;i<6;i++){
+//            this.matId.push(matId);
+//    }
 
     this.geometry = null;
     this.visible = true;
 }
 
-Floor.materialList = [
+    Floor.materialTypes = [
 
-    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/siteTop.png"),side:THREE.DoubleSide}),
-    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/woodTop.png"),side:THREE.DoubleSide}),
-    new THREE.MeshLambertMaterial({ambient:0xffffff,map:THREE.ImageUtils.loadTexture("../static/img/rcTop.png"),side:THREE.DoubleSide}),
-    new THREE.MeshBasicMaterial({color: 0xFF00FF, side: THREE.DoubleSide}),
-    new THREE.MeshBasicMaterial({color: 0xFFFF00, side: THREE.DoubleSide}),
-    new THREE.MeshBasicMaterial({color: 0x00FFFF, side: THREE.DoubleSide}),
-    new THREE.MeshBasicMaterial({color: 0xFFFFFF, side: THREE.DoubleSide}),
-    new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide})
+        new THREE.MeshLambertMaterial({ambient: 0xffffff, map: THREE.ImageUtils.loadTexture("../static/img/siteTop.png")}),
+        new THREE.MeshLambertMaterial({ambient: 0xffffff, map: THREE.ImageUtils.loadTexture("../static/img/woodTop.png")}),
+        new THREE.MeshLambertMaterial({ambient: 0xffffff, map: THREE.ImageUtils.loadTexture("../static/img/rcTop.png")}),
+        new THREE.MeshBasicMaterial({color: 0xFF00FF}),
+        new THREE.MeshBasicMaterial({color: 0xFFFF00}),
+        new THREE.MeshBasicMaterial({color: 0x00FFFF}),
+        new THREE.MeshBasicMaterial({color: 0xFFFFFF}),
+        new THREE.MeshBasicMaterial({color: 0x000000})
 
-];
+    ];
 
-Floor.floorGeometry = new THREE.PlaneGeometry(unitSize, unitSize);
-Floor.Geometry
+Floor.materialList=[];
+for(var i=0;i<Floor.materialTypes.length;i++){
+    for(var j=0;j<6;j++) Floor.materialList.push(Floor.materialTypes[i]);
+}
+
+//Floor.floorGeometry = new THREE.PlaneGeometry(unitSize, unitSize);
+Floor.floorGeometry = new THREE.CubeGeometry(unitSize,unitSize,150);
+
 
 Floor.prototype.create = function (merger,offsetX, offsetZ) {
 
@@ -40,11 +52,14 @@ Floor.prototype.create = function (merger,offsetX, offsetZ) {
 
     floor.rotation.x = -90 * Math.PI / 180;
 
+    //floor.castShadow = true;
+
     //return floor;
     this.geometry = floor;
 
-    THREE.GeometryUtils.merge(merger,floor,this.matId);
 
+
+    THREE.GeometryUtils.merge(merger,floor,this.matId);
 }
 
 Floor.prototype.toggleVisible = function(){

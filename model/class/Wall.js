@@ -13,10 +13,10 @@ function Wall(XZIndex, YIndex, matId) {
     this.visible = true;
 }
 
-Wall.materialList = [
+Wall.materialTypes = [
 
     new THREE.MeshLambertMaterial({ambient: 0xffffff, map: THREE.ImageUtils.loadTexture("../static/img/woodWall.png"), side: THREE.DoubleSide}),
-    new THREE.MeshLambertMaterial({ambient: 0xffffff, map: THREE.ImageUtils.loadTexture("../static/img/woodWall.png"), side: THREE.DoubleSide}),
+    new THREE.MeshLambertMaterial({ambient: 0xffffff, map: THREE.ImageUtils.loadTexture("../static/img/concreteWall.png"), side: THREE.DoubleSide}),
     new THREE.MeshLambertMaterial({ambient: 0xffffff, map: THREE.ImageUtils.loadTexture("../static/img/glassWall.png"), side: THREE.DoubleSide, transparent: true}),
     new THREE.MeshBasicMaterial({color: 0xFF00FF, side: THREE.DoubleSide}),
     new THREE.MeshBasicMaterial({color: 0xFFFF00, side: THREE.DoubleSide}),
@@ -25,6 +25,10 @@ Wall.materialList = [
     new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide})
 
 ];
+
+Wall.materialList=[];
+for(var i =0;i<Wall.materialTypes.length;i++)
+    for(var j =0;j<6;j++) Wall.materialList.push(Wall.materialTypes[i]);
 
 Wall.createWallGeometry = function () {
     var wallGeometry = new THREE.Geometry();
