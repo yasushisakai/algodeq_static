@@ -7,7 +7,7 @@ you can visit the main app [here](https://github.com/yasushisakai/algodeq_app).
 
 
 
-acknowledgements
+acknowledgementis
 -----------------------
 the project uses the following libraries.
 
