@@ -92,3 +92,7 @@ legend {
 hr{
     border-top: 1px dotted #000000;
 }
+
+.error{
+    color: #FF3399;
+}
