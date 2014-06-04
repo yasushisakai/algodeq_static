@@ -27,7 +27,6 @@ function zeroAdd(num) {
 
 }
 
-
 function shuffle(array) {
     //shuffles the array
     var m = array.length, t, i;
