@@ -1,151 +1,89 @@
-function Plan(data, offsetX, offsetZ) {
+function Plan(_room_data) {
 
-    if (typeof offsetX === 'undefined') offsetX = 0;
-    if (typeof offsetZ === 'undefined') offsetZ = 0;
+    if (typeof _room_data === 'undefined') {
 
-
-    this.data = data;
-    this.offsetX = offsetX;
-    this.offsetZ = offsetZ;
-
-    this.visible = true;
-
-    this.walls = [];
-    this.floors = [];
-
-    this.entities = new THREE.Geometry();
-}
-
-/////////////////////////////////////////
-// class properties
-////////////////////////////////////////
-
-Plan.wallTypes = Array(
-    "woodWall",
-    "concreteWall",
-    "glassWall"
-);
-
-Plan.floorTypes = Array(
-    "site",
-    "woodFloor",
-    "concreteFloor"
-);
-
-Plan.gridMat = new THREE.LineBasicMaterial({color: 0x000000});
-//Plan.planeMat = new THREE.MeshLambertMaterial({color: 0xdddddd, side: THREE.DoubleSide});
-
-//Plan.materialList = new THREE.MeshFaceMaterial([Plan.planeMat].concat(Wall.materialList.concat(Floor.materialList)));
-Plan.materialList = new THREE.MeshFaceMaterial(Wall.materialList.concat(Floor.materialList));
-
-
-Plan.planeGeometry = new THREE.PlaneGeometry(unitLength, unitLength, resolution, resolution);
-
-////////////////////////////////////////////
-// instance methods
-///////////////////////////////////////////
-
-Plan.prototype.create = function (entities) {
-    var wall, floor;
-    var offsetX = this.offsetX
-    var offsetZ = this.offsetZ;
-    var walls = [], floors = [];
-
-    //create walls;
-    for (var i = 0; i < Plan.wallTypes.length; i++) {
-
-        this.data[Plan.wallTypes[i]].forEach(function (wallsData) {
-
-            //using "this" inside this function points the global "this"
-            //not the one your thinking of.
-
-            wall = new Wall(wallsData[0], wallsData[1], i*6);
-            wall.create(entities, offsetX, offsetZ);
-            walls.push(wall);
-        });
-    }
-
-    var wallTypeLength = Wall.materialList.length;
-
-    //create floors
-    for (var i = 0; i < Plan.floorTypes.length; i++) {
-
-        this.data[Plan.floorTypes[i]].forEach(function (floorsData) {
-            floor = new Floor(floorsData[0], floorsData[1], wallTypeLength + i * 6);
-            floor.create(entities, offsetX, offsetZ);
-            floors.push(floor);
-        });
+        this.room_data = {
+            "living": [],
+            "dining": [],
+            "kitchen": [],
+            "bedroom": [],
+            "wc": [],
+            "staircase": []
+        };
 
     }
 
-    this.walls = walls;
-    this.floors = floors;
+    else this.room_data = _room_data;
 
 }
 
-Plan.prototype.createPlane = function (entities) {
+Plan.room_type = ["living", "dining", "kitchen", "bedroom", "wc", "staircase"];
 
-    var geometry = new THREE.Mesh(Plan.planeGeometry.clone());
 
-    geometry.position.x += this.offsetX;
-    geometry.position.z += this.offsetZ;
-    geometry.rotation.x = -90 * Math.PI / 180;
-    geometry.position.y = -150;
+Plan.prototype.check_room_duplicates = function (_index) {
 
-    THREE.GeometryUtils.merge(entities, geometry);
+    console.log(_index);
 
-}
-
-Plan.prototype.createGrid = function () {
-
-    for (var i = 0; i < resolution; i++) {
-        for (var j = 0; j < resolution; j++) {
-
-            var lineGeom = new THREE.Geometry();
-            lineGeom.vertices.push(new THREE.Vector3(i * unitSize - unitLength / 2.0 + this.offsetX, 10, -unitLength / 2.0 + this.offsetZ));
-            lineGeom.vertices.push(new THREE.Vector3(i * unitSize - unitLength / 2.0 + this.offsetX, 10, unitLength / 2.0 + this.offsetZ));
-
-            var line = new THREE.Line(lineGeom, Plan.gridMat);
-            scene.add(line);
-
-            lineGeom = new THREE.Geometry();
-            lineGeom.vertices.push(new THREE.Vector3(-unitLength / 2.0 + this.offsetX, 10, j * unitSize - unitLength / 2.0 + this.offsetZ));
-            lineGeom.vertices.push(new THREE.Vector3(unitLength / 2.0 + this.offsetX, 10, j * unitSize - unitLength / 2.0 + this.offsetZ));
-
-            line = new THREE.Line(lineGeom, Plan.gridMat);
-            scene.add(line);
-
+    for (var rooms in this.room_data) {
+        for (var i = 0; i < this.room_data[rooms].length; i++) {
+            if(this.room_data[rooms][i] == _index){
+                return false;  // there is a duplicate!
+            }
         }
     }
+
+    return true;  // there is no duplicate;
 }
 
-Plan.prototype.toggleVisible = function () {
 
-    this.visible = !this.visible
-    for (var i = 0; i < this.walls.length; i++) this.walls[i].toggleVisible();
-    for (var i = 0; i < this.floors.length; i++) this.floors[i].toggleVisible();
+Plan.prototype.add_room = function (_index, _room_type) {
 
-    this.model.visible = !this.model.visible;
+    this.room_data[Plan.room_type[_room_type]].push(_index);
+    this.sort_rooms();
 
 }
 
-Plan.prototype.createEntity = function () {
-    //this.createPlane(this.entities);
-    this.create(this.entities);
 
-    this.entities.computeFaceNormals();
-    this.model = new THREE.Mesh(this.entities, Plan.materialList);
+Plan.prototype.sort_rooms = function () {
+
+    for (var rooms in this.room_data) {
+        var id = 0;
+        this.room_data[rooms].sort();
+
+    }
+}
 
 
-    this.model.matrixAutoUpdate = false;
-    this.model.updateMatrix();
+Plan.prototype.remove_room = function (_index, _room_type) {
 
-    this.model.traverse(function(object){
+    if (typeof _room_type === 'undefined') {  // this is when we don't know the room type
+        var flag = true;
+        for (var rooms in this.room_data) {
+            for (var i = 0; i < this.room_data[rooms].length; i++) {
+                if (this.room_data[Plan.room_type[_room_type]][i] == _index) {
+                    this.room_data[Plan.room_type[_room_type]].splice(i, 1);
+                    flag = false;
+                    break;
+                }
+                if (!flag) break;
+            }
+        }
+    }
+    else {  // this is when we know the room type more faster.
+        for (var i = 0; i < this.room_data[Plan.room_type[_room_type]].length; i++) {
+            if (this.room_data[Plan.room_type[_room_type]][i] == _index) {
+                this.room_data[Plan.room_type[_room_type]].splice(i, 1);
+                break;
+            }
+        }
+    }
 
-        object.castShadow = true;
-        object.receiveShadow = true;
+}
 
-    });
 
-    scene.add(this.model);
+// todo: function to reproduce form given plan_data
+
+
+Plan.prototype.get_rooms_json = function () {
+    return JSON.stringify(this.room_data);
 }

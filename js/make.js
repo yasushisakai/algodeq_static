@@ -18,16 +18,17 @@ var unit_length = unit_size * resolution;
 var max_floor = 3;
 
 // geometry
-var plans = [];
+var cursor,ground;
+var plan;
 var geometry_data;
 
 
 // document specific global variables
 // todo: add something below, THIS IS HARD CODING!!
 var new_plan_name;
-var new_plan_geometry;
+var new_plan_geometry=plan_json["geometry"];
 var new_plan_similarity;
-
+var room_type=0;
 
 //
 // METHODS
@@ -44,7 +45,7 @@ function initialize() {
     setup_events();  // mouse and keyboard
 
     // infinite loop
-    // todo: try a smarter way. may be able to shortcut 'animate'.
+    // todo: try a smarter way. maybe able to shortcut 'animate'.
     requestAnimationFrame(function animate() {
         run();
         requestAnimationFrame(animate);
@@ -71,9 +72,9 @@ function setup_three_js() {
     );
 
     camera.position = new THREE.Vector3(
-            unit_size * 2.5,
-            unit_size * 2.5,
-            unit_size * 2.5
+            unit_length * 2.5,
+            unit_length * 2.5,
+            unit_length * 2.5
     );
 
     controls = new THREE.OrbitControls(camera);
@@ -114,7 +115,7 @@ function setup_world() {
         camera.position.z
     );
 
-    // todo: fine-tune the shadows
+    // todo: fine-tune the shadows, or write it as a class?
     light.castShadow = true;
     light.shadowMapWidth = 4096;
     light.shadowMapHeight = 4096;
@@ -136,9 +137,16 @@ function setup_world() {
     //
 
     // todo: generate main plan geometry
+    plan = new Plan(new_plan_geometry);
 
     // todo: add infinite plane (horizon)
-    var ground = new Ground();
+
+    // cursor
+    cursor = new Cursor();
+    cursor.create();
+
+    // base ground
+    ground = new Ground();
     ground.create();
 
     var axis = new Axis(unit_length * 10);
@@ -147,6 +155,9 @@ function setup_world() {
 
 function setup_events() {
     console.log("--setup events--");
+
+    var intersect_objects;
+
     renderer.domElement.addEventListener('mousemove', function (event) {
 
         event.preventDefault();
@@ -158,16 +169,40 @@ function setup_events() {
 
         projector.unprojectVector(vector, camera);
 
-        // will need after unprojection
         var raycaster = new THREE.Raycaster(
             camera.position,
             vector.sub(camera.position).normalize()
         );
+
+        intersect_objects = raycaster.intersectObjects(scene.children);
+
+        if (intersect_objects.length > 0 && intersect_objects[0].object.name == "grid") {
+            if (Math.abs(ground.get_level_height() - intersect_objects[0].point.y) < 1) {
+                var int_point = intersect_objects[0].point;
+                int_point.y = ground.get_level_height();  // over write height to clean value
+                console.log(intersect_objects[0]);
+                if (cursor.check_position(int_point)) {
+                    cursor.index_from_pos(int_point);
+                    cursor.update_pos();
+                }
+            }
+        }
+
+
     });
 
     renderer.domElement.addEventListener('mousedown', function (event) {
-//        console.log(camera.position);
-//        console.log(controls.target);
+
+        // add a cube if the cursor is in boundary and there is no rooms extant
+        if(cursor.is_valid && plan.check_room_duplicates(cursor.get_index())){
+            var cube = new Cube(cursor.get_index(),room_type);
+            cube.create();
+            cube.update_pos();
+        }
+
+        $("#new_model_info").text(plan.get_rooms_json());
+        new_plan_geometry = plan.get_rooms_json();
+
     });
 }
 
@@ -176,12 +211,12 @@ function run() {
     controls.update(clock.getDelta());
 }
 
+
 function save_plan(_id) {
     // saves the plan
     // the process is two-folded
 
-    new_plan_name = Math.random().toString(36).substr(2, 5);
-    new_plan_geometry = 'nice geometry';
+    new_plan_name = random_station()+"_"+Math.floor(Math.random()*100);
     new_plan_similarity = Math.random();
 
     // first attempt validates the new model
@@ -226,4 +261,14 @@ function save_plan(_id) {
             alert("Error: " + xhr.statusText);
         });
     return false;
+}
+
+function change_room_type(_num){
+    room_type = _num;
+    console.log(room_type);
+}
+
+function change_floor(_num){
+    ground.move_level_grid(_num);
+    cursor.change_floor(_num);
 }

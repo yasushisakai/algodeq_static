@@ -1,7 +1,15 @@
 
+body{
+    color: #333333;
+}
 
-#model_info, #model_action{
-    color:#ffffff;
+#navigation {
+    width: 200px;
+}
+
+#model_info, #model_action {
+    color: #ffffff;
+    width: 200px;
 }
 
 #webgl_canvas {
