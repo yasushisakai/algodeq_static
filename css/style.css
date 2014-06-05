@@ -1,0 +1,12 @@
+
+
+#model_info, #model_action{
+    color:#ffffff;
+}
+
+#webgl_canvas {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: -10;
+}
