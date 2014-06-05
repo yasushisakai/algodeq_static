@@ -11,9 +11,9 @@
 var canvas, camera, scene, renderer, controls, clock, projector;
 
 // dimensions
-var unit_size = 1820;
-var unit_height = 3000;
-var resolution = 8;
+var unit_size = 910;
+var unit_height = 2550;
+var resolution = 12;
 var unit_length = unit_size * resolution;
 var max_floor = 3;
 
@@ -138,6 +138,8 @@ function setup_world() {
     // todo: generate main plan geometry
 
     // todo: add infinite plane (horizon)
+    var ground = new Ground();
+    ground.create();
 
     var axis = new Axis(unit_length * 10);
     axis.create();
