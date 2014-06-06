@@ -2,17 +2,52 @@ function treeDiagram() {
     var modelGene = impData[0];
 
 
-    var width = 500,
-        height = 500,
-        scl = 1.2;
-
     var nodeSizeW = 100,
         nodeSizeH = 100,
         mxDiv = width / nodeSizeW;
 
+    var width = 1000,
+        height = 600,
+        scl = 1.2;
 
-    var cluster = d3.layout.tree()
-        .size([width, height]);
+    //何世代目までいるかを調べる
+    var cluster = d3.layout.tree();
+    var generation = [];
+    var geneID = [];
+    var node = cluster.nodes(modelGene);
+    for (var i in node) {
+        var gene = node[i].depth;
+        var gID = node[i].id;
+        generation.push(gene);
+        geneID.push(gID);
+    };
+    var geneMax = Math.max.apply(null, generation);
+    console.log(generation);
+    console.log(geneID);
+    var cluster_sizeH = nodeSizeH * 2 * geneMax;
+
+    var ttt = [];
+    for(var ii=0;ii<geneMax;ii++){
+        var tt =[];
+
+        for(var k=0;k<generation.length;k++){
+            console.log(generation[k]);
+            if(generation[k]==ii+1){
+                tt.push(geneID[k]);
+
+
+            }
+        }
+        ttt.push(tt);
+        //console.log(tt);
+    }
+    console.log(ttt);
+
+
+
+    //樹形図領域生成
+    cluster = d3.layout.tree()
+        .size([width, cluster_sizeH]);
 
     var diagonal = d3.svg.diagonal()
 
@@ -26,7 +61,7 @@ function treeDiagram() {
     //DOM svgのフィールドを作成
     var svg = d3.select("body").append("svg")
         .attr("width", width * scl)
-        .attr("height", height * scl)
+        .attr("height", cluster_sizeH * scl)
         .append("g")
         .attr("transform", "translate(" + dx + "," + dy + ")");
 
@@ -36,10 +71,27 @@ function treeDiagram() {
     function netnode(json) {
         var nodes = cluster.nodes(json),
             links = cluster.links(nodes);
-        var my = array_count_values(nodes);
-        console.log(my);
-        //console.log(nodes[0].children.length);
 
+        var ar = [0];
+        var link = svg.selectAll(".link")
+            .data(links)
+            .enter().append("path")
+            .attr("class", "link")
+//            .attr("transform", function (d) {
+//
+//                if (ar.indexOf(d.target.id) != 1) {
+//
+//                    d.target.y -= nodeSizeH / 2;
+//                    ar.push(d.target.id);
+//                    console.log(ar);
+//                    console.log(d.target.id);
+//                }
+//
+//                //console.log(ar);
+//                //d.target.y -=nodeSizeH/2;
+//                return "translate(0,0)";
+//            })
+            .attr("d", diagonal);
 
         var node = svg.selectAll(".node")
             .data(nodes)
@@ -53,6 +105,7 @@ function treeDiagram() {
                 //console.log(d.id + "::"+d.y);
                 return "translate(" + d.x + "," + yy + ")";
             })
+
 
         //各サムネイルを入れ込む
         node.append("svg:image")
@@ -90,39 +143,48 @@ function treeDiagram() {
             });
 
         node.append("circle")
-            .attr("r", 4.5);
+            .attr("r", nodeSizeW / 2+5)
+            .style('fill', "none")
+            .style("stroke", d3.rgb(0, 0, 0))
+            .style("stroke-width", 1);
 
         node.append("text")
-            .attr("dx", function (d) {
-                return d.children ? -20 : 20;
-            })
-            .attr("dy", 3)
-            .style("text-anchor", function (d) {
-                return d.children ? "end" : "start";
-            })
+//            .attr("dx", function (d) {
+//                return d.children ? 30 : 100;
+//            })
+            .attr("dy", -nodeSizeH / 2+20)
+            .style("text-anchor","middle")
+//            .style("text-anchor", function (d) {
+//                return d.children ? "end" : "start";
+//            })
             .text(function (d) {
                 return d.name;
             });
-        var ar = [0];
-        var link = svg.selectAll(".link")
-            .data(links)
-            .enter().append("path")
-            .attr("class", "link")
-            .attr("transform", function (d) {
 
-                if(ar.indexOf(d.target.id)!=1){
+        //テキストの基準座標 [x,y,height]
+        var textPos = [10,100,10];
+        node.append("text")
+            .attr("dx",-nodeSizeW/2+textPos[0])
+            .attr("dy", nodeSizeH / 2+10)
+            .style("text-anchor","start")
+            .text(function (d) {
+                return d.id;
+            });
+        node.append("text")
+            .attr("dx",-nodeSizeW/2+textPos[0])
+            .attr("dy", nodeSizeH / 2+10+textPos[2])
+            .style("text-anchor","start")
+            .text(function (d) {
+                return d.name;
+            });
+        node.append("text")
+            .attr("dx",-nodeSizeW/2+textPos[0])
+            .attr("dy", nodeSizeH / 2+10+textPos[2]*2)
+            .style("text-anchor","start")
+            .text(function (d) {
+                return d.url;
+            });
 
-                    d.target.y -= nodeSizeH / 2;
-                    ar.push(d.target.id);
-                    console.log(ar);
-                    console.log(d.target.id);
-                }
-
-                //console.log(ar);
-                //d.target.y -=nodeSizeH/2;
-                return "translate(0,0)";
-            })
-            .attr("d", diagonal);
 
     }
 
