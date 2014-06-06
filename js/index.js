@@ -1,15 +1,21 @@
 function treeDiagram() {
-    var data = impData[0];
-    console.log(data);
+    var modelGene = impData[0];
+
 
     var width = 500,
         height = 500,
         scl = 1.2;
 
+    var nodeSizeW = 100,
+        nodeSizeH = 100,
+        mxDiv = width / nodeSizeW;
+
+
     var cluster = d3.layout.tree()
         .size([width, height]);
 
     var diagonal = d3.svg.diagonal()
+
         .projection(function (d) {
             return [d.x, d.y];
         });
@@ -24,25 +30,28 @@ function treeDiagram() {
         .append("g")
         .attr("transform", "translate(" + dx + "," + dy + ")");
 
-    netnode(data);
+    netnode(modelGene);
 
     //樹形図を作成する
     function netnode(json) {
         var nodes = cluster.nodes(json),
             links = cluster.links(nodes);
+        var my = array_count_values(nodes);
+        console.log(my);
+        //console.log(nodes[0].children.length);
 
-        var link = svg.selectAll(".link")
-            .data(links)
-            .enter().append("path")
-            .attr("class", "link")
-            .attr("d", diagonal);
 
         var node = svg.selectAll(".node")
             .data(nodes)
             .enter().append("g")
             .attr("class", "node")
             .attr("transform", function (d) {
-                return "translate(" + d.x + "," + d.y + ")";
+                var yy = d.y;
+                if (d.y > 400) {
+                    yy = d.y;// + Math.random() * 50;
+                }
+                //console.log(d.id + "::"+d.y);
+                return "translate(" + d.x + "," + yy + ")";
             })
 
         //各サムネイルを入れ込む
@@ -54,10 +63,10 @@ function treeDiagram() {
                 //return "http://lmnarchitecture.com/thumbnail/" + name + "_" + ch + "_" + tm + "_s.png";
                 return "http://www.lmnarchitecture.com/thumbnail/woodWall_17_20120518100934_s.png";
             })
-            .attr("x", "-50px")
-            .attr("y", "-70px")
-            .attr("width", "100px")
-            .attr("height", "100px");
+            .attr("x", -nodeSizeW / 2)
+            .attr("y", -nodeSizeH / 2)
+            .attr("width", nodeSizeW)
+            .attr("height", nodeSizeH);
 
         svg.selectAll(".node")
             .on("mouseover", function (d, i) {
@@ -85,7 +94,7 @@ function treeDiagram() {
 
         node.append("text")
             .attr("dx", function (d) {
-                return d.children ? -8 : 8;
+                return d.children ? -20 : 20;
             })
             .attr("dy", 3)
             .style("text-anchor", function (d) {
@@ -94,14 +103,80 @@ function treeDiagram() {
             .text(function (d) {
                 return d.name;
             });
+        var ar = [0];
+        var link = svg.selectAll(".link")
+            .data(links)
+            .enter().append("path")
+            .attr("class", "link")
+            .attr("transform", function (d) {
+
+                if(ar.indexOf(d.target.id)!=1){
+
+                    d.target.y -= nodeSizeH / 2;
+                    ar.push(d.target.id);
+                    console.log(ar);
+                    console.log(d.target.id);
+                }
+
+                //console.log(ar);
+                //d.target.y -=nodeSizeH/2;
+                return "translate(0,0)";
+            })
+            .attr("d", diagonal);
+
     }
 
     d3.select(self.frameElement).style("width", width + "py");
 
     function gotoView(modelName) {
 
-        var link = "plan/"+modelName;
+        var link = "plan/" + modelName;
         location.href = link;
 
     }
+
+    //世代の数を知る
+    function array_count_values(array) {
+
+        var tmp_arr = array;
+
+        var countArray = [];
+
+        for (var i in  tmp_arr) {
+            countArray.push(tmp_arr[i].children.length);
+            //console.log(tmp_arr[i].children.length);
+        }
+        var maxCount = Math.max.apply(null, countArray);
+
+        return maxCount;
+    }
+
+    function geneKnow(gene) {
+        //自分の子供データをインポート
+        for (var k = gene.length - 1; k >= 0; k--) {
+            var pn = gene[k].paID;//modelParentId[k];
+            if (pn > 0) {
+                var IDD = pn - 1;//modelIds.indexOf(pn);
+                console.log(k + "::" + pn + "::" + IDD);
+                JYUKEI[IDD].children.push(JYUKEI[k]);
+            }
+        }
+        //樹形図の階層データをインポート
+        //ID:0が祖先
+        myJSONObject = JYUKEI[0];
+
+        //自分が何世代目かを調べる
+        function ID(_num) {
+            var nn = _num;
+            var cID;
+            if (nn == 0) {
+                cID = 0
+            } else {
+                var IDD = modelIds.indexOf(nn);
+                var cID = modelParentId[IDD]
+            }
+            return cID;
+        }
+    }
+
 }
