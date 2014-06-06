@@ -5,6 +5,7 @@ function Cursor() {
 
 Cursor.geometry = new THREE.PlaneGeometry(unit_size, unit_size, 2, 2);
 
+
 Cursor.material_types = [
     new THREE.MeshLambertMaterial({ambient: 0xffffff, color: '0xffff00'})
 ];
@@ -26,7 +27,6 @@ Cursor.prototype.index_from_pos = function (_vector) {
         Math.floor(_vector.z/unit_size)
     ]
 
-    console.log(this.index[1]);
 }
 
 

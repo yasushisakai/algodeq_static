@@ -1,14 +1,9 @@
 
 body{
-    color: #333333;
+    color: #898989;
 }
 
 #navigation {
-    width: 200px;
-}
-
-#model_info, #model_action {
-    color: #ffffff;
     width: 200px;
 }
 
