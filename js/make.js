@@ -15,7 +15,6 @@ var unit_size = 910;
 var unit_height = 2550;
 var resolution = 12;
 var unit_length = unit_size * resolution;
-var max_floor = 3;
 
 // geometry
 var cursor, ground;
@@ -85,7 +84,8 @@ function setup_three_js() {
     clock = new THREE.Clock();
     projector = new THREE.Projector();
 
-    renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
+    renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true, alpha: true});
+    //renderer.setClearColor(0xffffff,0);
     renderer.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
     renderer.shadowMapEnabled = true;
 
@@ -134,13 +134,11 @@ function setup_world() {
     // geometry
     //
 
-    // todo: generate main plan geometry
-
-    plan = new Plan(geometry_data);
+    plan = new Plan(geometry_data); // generates the parents model when initialization
     new_plan_geometry = plan.get_rooms_json();
-    $("#new_model_geometry").text(new_plan_geometry);
+    $("#new_model_geometry").text(new_plan_geometry);  // todo: this is also kind of stupid in a way...
 
-    // todo: add infinite plane (horizon)
+    // todo: add infinite plane (horizon) do we need this??
 
     // cursor
     cursor = new Cursor();
@@ -203,7 +201,7 @@ function setup_events() {
     });
 
     renderer.domElement.addEventListener('mousedown', function (event) {
-        if (Plan.room_index != 6) {  // 6 is deleteing cubes
+        if (Plan.room_index != 6) {  // 6 is deleting cubes
             // add a cube if the cursor is in boundary and there is no rooms extant
             if (cursor.is_valid && plan.check_room_duplicates(cursor.get_index())) {
                 plan.add_room(cursor.get_index());
@@ -219,7 +217,7 @@ function setup_events() {
         new_plan_geometry = plan.get_rooms_json();
 
         var similarity = plan.compare_with(JSON.parse(geometry_data));
-        $("#new_model_similarity").text(""+similarity);
+        $("#new_model_similarity").text("" + similarity);
         new_plan_similarity = similarity;
 
     });
@@ -238,7 +236,6 @@ function save_plan(_id) {
     // the process is two-folded
 
     new_plan_name = random_station() + "_" + Math.floor(Math.random() * 100);
-    new_plan_similarity = Math.random();
 
     // first attempt validates the new model
     $.post("",
@@ -261,7 +258,7 @@ function save_plan(_id) {
                         new_plan_name: new_plan_name,
                         new_plan_geometry: new_plan_geometry,
                         new_plan_similarity: new_plan_similarity,
-                        // todo: fetch the image here
+                        image: renderer.domElement.toDataURL().replace("data:image/png;base64,", ""),
                         csrfmiddlewaretoken: csrf_token
                     },
                     function () {
