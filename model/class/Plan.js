@@ -14,8 +14,6 @@ function Plan(_room_data) {
 
     else {
         this.room_data = JSON.parse(_room_data);
-        this.generate_parent();
-        this.sort_rooms();
 
     }
 }
@@ -125,8 +123,7 @@ Plan.prototype.remove_room = function (_index) {
 }
 
 
-// todo: function to reproduce form given plan_data
-Plan.prototype.generate_parent = function () {
+Plan.prototype.create = function () {
 
     var room_index = 0;
 
@@ -138,6 +135,7 @@ Plan.prototype.generate_parent = function () {
         room_index++;
     }
 
+        this.sort_rooms();
 
 }
 
