@@ -23,7 +23,6 @@ var geometry_data;
 
 
 // document specific global variables
-// todo: add something below, THIS IS HARD CODING!!
 var new_plan_name;
 var new_plan_geometry;
 var new_plan_similarity;
@@ -43,7 +42,6 @@ function initialize() {
     setup_events();  // mouse and keyboard
 
     // infinite loop
-    // todo: try a smarter way. maybe able to shortcut 'animate'.
     requestAnimationFrame(function animate() {
         run();
         requestAnimationFrame(animate);
@@ -108,6 +106,9 @@ function setup_world() {
     plan = new Plan(geometry_data);
     plan.create(); // generates the parents model when initialization
 
+    // new name
+    new_plan_name = random_station() + "_" + Math.floor(Math.random() * 100);
+
     // todo: add infinite plane (horizon) do we really need this??
 
     // cursor
@@ -147,9 +148,11 @@ function run() {
 
 function save_plan(_id) {
     // saves the plan
-    // the process is two-folded
 
-    new_plan_name = random_station() + "_" + Math.floor(Math.random() * 100);
+    // update new model_name
+    new_plan_name = $("*[name=new_name]").val()
+
+    // the process is two-folded
 
     // first attempt validates the new model
     // todo: validation should be in javascript? the only db matter is the plan name?
@@ -209,10 +212,10 @@ function update_model_info() {
 
     new_plan_geometry = plan.get_rooms_json();
     new_plan_similarity = plan.compare_with(JSON.parse(geometry_data));
-    // todo: what about the model name
 
 
     // update the page info as well.
+    $("*[name=new_name]").val(new_plan_name);
     $("#new_model_geometry").text(new_plan_geometry);
     $("#new_model_similarity").text(new_plan_similarity);
 

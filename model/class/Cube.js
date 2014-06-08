@@ -23,7 +23,6 @@ Cube.material_types = [
 
 Cube.remove_cube = function (_index) {
 
-    // todo: delete the cube from scene
     var obj_name = "cube[" + _index[0] + "," + _index[1] + "," + _index[2] + "]";
     var object = scene.getObjectByName(obj_name);
     console.log(obj_name);
