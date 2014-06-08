@@ -122,6 +122,9 @@ function setup_world() {
     var axis = new Axis(unit_length * 10);
     axis.create();
 
+    var wall = new Wall("dining",false);
+    wall.create();
+
     update_model_info(); // update the information
 }
 
@@ -144,7 +147,6 @@ function run() {
     controls.update(clock.getDelta());
 
 }
-
 
 function save_plan(_id) {
     // saves the plan

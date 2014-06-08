@@ -1,110 +1,68 @@
-function Wall(XZIndex, YIndex, matId) {
+function Wall(_type, _flip) {
 
+    if (typeof  _type === 'undefined') this.type = "living";
+    else this.type = _type;
+    if (typeof  _flip === 'undefined') this.flip = false;
+    else this.flip = _flip;
 
-    if (typeof XZIndex === 'undefined') XZIndex = 0;
-    if (typeof YIndex === 'undefined') YIndex = 0;
-    if (typeof matId === 'undefined') matId = 0;
-
-    this.XZIndex = XZIndex;
-    this.YIndex = YIndex;
-    this.matId = matId;
-
-    this.geometry = null;
-    this.visible = true;
 }
 
-Wall.materialTypes = [
-
-    new THREE.MeshLambertMaterial({ambient: 0xffffff, map: THREE.ImageUtils.loadTexture("../static/img/woodWall.png"), side: THREE.DoubleSide}),
-    new THREE.MeshLambertMaterial({ambient: 0xffffff, map: THREE.ImageUtils.loadTexture("../static/img/concreteWall.png"), side: THREE.DoubleSide}),
-    new THREE.MeshLambertMaterial({ambient: 0xffffff, map: THREE.ImageUtils.loadTexture("../static/img/glassWall.png"), side: THREE.DoubleSide, transparent: true}),
-    new THREE.MeshBasicMaterial({color: 0xFF00FF, side: THREE.DoubleSide}),
-    new THREE.MeshBasicMaterial({color: 0xFFFF00, side: THREE.DoubleSide}),
-    new THREE.MeshBasicMaterial({color: 0x00FFFF, side: THREE.DoubleSide}),
-    new THREE.MeshBasicMaterial({color: 0xFFFFFF, side: THREE.DoubleSide}),
-    new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.DoubleSide})
-
-];
-
-Wall.materialList=[];
-for(var i =0;i<Wall.materialTypes.length;i++)
-    for(var j =0;j<6;j++) Wall.materialList.push(Wall.materialTypes[i]);
-
-Wall.createWallGeometry = function () {
-    var wallGeometry = new THREE.Geometry();
-
-//    var wallGeometry = new THREE.CubeGeometry(unitSize, 150, unitHeight);
-
-
-//    wallGeometry.vertices.push(new THREE.Vector3(-unitLength/2.0, 0, -unitLength/2.0));
-//    wallGeometry.vertices.push(new THREE.Vector3(unitSize-unitLength/2.0, 0, -unitLength/2.0));
-//    wallGeometry.vertices.push(new THREE.Vector3(unitSize-unitLength/2.0, unitHeight, -unitLength/2.0));
-//    wallGeometry.vertices.push(new THREE.Vector3(-unitLength/2.0, unitHeight, -unitLength/2.0));
-
-    wallGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
-    wallGeometry.vertices.push(new THREE.Vector3(unitSize, 0, 0));
-    wallGeometry.vertices.push(new THREE.Vector3(unitSize, unitHeight, 0));
-    wallGeometry.vertices.push(new THREE.Vector3(0, unitHeight, 0));
-
-    wallGeometry.faces.push(new THREE.Face3(0, 1, 2));
-    wallGeometry.faces.push(new THREE.Face3(2, 3, 0));
-
-    wallGeometry.faceVertexUvs[ 0 ].push([
-        new THREE.Vector2(0, 0),
-        new THREE.Vector2(1, 0),
-        new THREE.Vector2(1, 1)
-    ]);
-
-    wallGeometry.faceVertexUvs[ 0 ].push([
-        new THREE.Vector2(1, 1),
-        new THREE.Vector2(0, 1),
-        new THREE.Vector2(0, 0)
-    ]);
-
-    wallGeometry.computeBoundingSphere();
-    wallGeometry.computeFaceNormals();
-    wallGeometry.computeVertexNormals();
-    return wallGeometry;
-}
-
-Wall.wallGeometry = Wall.createWallGeometry();
-
-Wall.prototype.create = function (merger, offsetX, offsetZ) {
-
-    if (typeof offsetX === 'undefined') offsetX = 0;
-    if (typeof offsetZ === 'undefined') offsetZ = 0;
-
-    var wall = new THREE.Mesh(Wall.wallGeometry.clone());
-
-//    if (this.XZIndex < (resolution * 2 + 1) * resolution) {
-
-    var col = (this.XZIndex % (resolution * 2 + 1));
-    var row = Math.floor(this.XZIndex / (resolution * 2 + 1));
-
-    wall.position.x = (Math.floor(col / 2) - resolution / 2) * unitSize + offsetX;
-    wall.position.z = (row - resolution / 2) * unitSize + offsetZ;
-
-    if (col % 2 == 0) {
-        wall.rotation.y = -90 * Math.PI / 180;
+Wall.textures = {
+    "living": {
+        inside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-01.png"),
+        outside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-02.png")
+    },
+    "dining": {
+        inside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-03.png"),
+        outside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-04.png")
+    },
+    "kitchen": {
+        inside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-05.png"),
+        outside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-06.png")
+    },
+    "bedroom": {
+        inside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-07.png"),
+        outside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-08.png")
+    },
+    "wc_bath": {
+        inside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-09.png"),
+        outside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-10.png")
+    },
+    "staircase": {
+        inside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-11.png"),
+        outside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-12.png")
     }
-//    } else {
-//        wall.position.x = (this.XZIndex - ((resolution * 2 + 1) * resolution) - resolution / 2) * unitSize + offsetX;
-//        wall.position.z = (resolution / 2) * unitSize + offsetZ;
-//    }
+};
 
-    wall.position.y = this.YIndex * unitHeight;
+Wall.geometry = function () {
 
-    THREE.GeometryUtils.merge(merger, wall, this.matId);
+    var wall_geometry = new THREE.Geometry();
+    var wall_single_side = new THREE.PlaneGeometry(unit_size, unit_height);
+    THREE.GeometryUtils.merge(wall_geometry, wall_single_side, 0);
+    THREE.GeometryUtils.merge(wall_geometry, wall_single_side.clone(), 1);
+
+    return wall_geometry;
 
 }
 
-Wall.prototype.toggleVisible = function () {
+Wall.prototype.create = function () {
 
-    if (this.geometry == null) return;
+    var materials;
 
-    if (this.visible) this.geometry.visible = false;
-    else this.geometry.visible = true;
+    if (this.flip) {
+        materials = [
+            new THREE.MeshLambertMaterial({map: Wall.textures[this.type].inside, side: THREE.BackSide}),
+            new THREE.MeshLambertMaterial({map: Wall.textures[this.type].outside, side: THREE.FrontSide})
+        ]
+    } else {
+        materials = [
+            new THREE.MeshLambertMaterial({map: Wall.textures[this.type].inside, side: THREE.FrontSide}),
+            new THREE.MeshLambertMaterial({map: Wall.textures[this.type].outside, side: THREE.BackSide})
+        ]
+    }
 
-    this.visible = !this.visible;
+    this.mesh = new THREE.Mesh(Wall.geometry(), new THREE.MeshFaceMaterial(materials));
+    scene.add(this.mesh);
+    this.mesh.rotation.y = -90 * Math.PI / 180;
 
 }
