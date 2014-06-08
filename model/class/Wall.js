@@ -1,9 +1,11 @@
-function Wall(_type, _flip) {
+function Wall(_index, _type, _flip) {
 
     if (typeof  _type === 'undefined') this.type = "living";
     else this.type = _type;
     if (typeof  _flip === 'undefined') this.flip = false;
     else this.flip = _flip;
+
+    this.index = _index;
 
 }
 
@@ -20,7 +22,7 @@ Wall.textures = {
         inside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-05.png"),
         outside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-06.png")
     },
-    "bedroom": {
+    "staircase": {
         inside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-07.png"),
         outside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-08.png")
     },
@@ -28,7 +30,7 @@ Wall.textures = {
         inside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-09.png"),
         outside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-10.png")
     },
-    "staircase": {
+    "bedroom": {
         inside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-11.png"),
         outside: new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-12.png")
     }
@@ -45,11 +47,11 @@ Wall.geometry = function () {
 
 }
 
-Wall.prototype.create = function () {
+Wall.prototype.create = function (_flag) {
 
     var materials;
 
-    if (this.flip) {
+    if (!this.flip) {
         materials = [
             new THREE.MeshLambertMaterial({map: Wall.textures[this.type].inside, side: THREE.BackSide}),
             new THREE.MeshLambertMaterial({map: Wall.textures[this.type].outside, side: THREE.FrontSide})
@@ -64,5 +66,20 @@ Wall.prototype.create = function () {
     this.mesh = new THREE.Mesh(Wall.geometry(), new THREE.MeshFaceMaterial(materials));
     scene.add(this.mesh);
     this.mesh.rotation.y = -90 * Math.PI / 180;
+    if(_flag){
+        this.mesh.rotation.y = 180 * Math.PI / 180;
+    }
+
+    if(!_flag) {
+        this.mesh.position = new THREE.Vector3(
+                (this.index[0] + 1) * unit_size,
+                (this.index[1] + 0.5) * unit_height,
+                (this.index[2] + 0.5) * unit_size);
+    }else{
+        this.mesh.position = new THREE.Vector3(
+                (this.index[0] + 0.5) * unit_size,
+                (this.index[1] + 0.5) * unit_height,
+                (this.index[2] + 1) * unit_size);
+    }
 
 }

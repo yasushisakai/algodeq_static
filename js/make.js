@@ -105,6 +105,7 @@ function setup_world() {
 
     plan = new Plan(geometry_data);
     plan.create(); // generates the parents model when initialization
+    plan.create_walls();  // this is a test
 
     // new name
     new_plan_name = random_station() + "_" + Math.floor(Math.random() * 100);
@@ -122,8 +123,8 @@ function setup_world() {
     var axis = new Axis(unit_length * 10);
     axis.create();
 
-    var wall = new Wall("dining",false);
-    wall.create();
+    // this is a test for walls
+
 
     update_model_info(); // update the information
 }
