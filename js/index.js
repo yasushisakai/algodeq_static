@@ -20,29 +20,28 @@ function treeDiagram() {
         var gID = node[i].id;
         generation.push(gene);
         geneID.push(gID);
-    };
+    }
+    ;
     var geneMax = Math.max.apply(null, generation);
-    console.log(generation);
-    console.log(geneID);
+
     var cluster_sizeH = nodeSizeH * 2 * geneMax;
 
-    var ttt = [];
-    for(var ii=0;ii<geneMax;ii++){
-        var tt =[];
+    //世代ごとの配列生成
+    var geneHi = [];
+    for (var ii = 0; ii < geneMax; ii++) {
+        var tt = [];
 
-        for(var k=0;k<generation.length;k++){
-            console.log(generation[k]);
-            if(generation[k]==ii+1){
+        for (var k = 0; k < generation.length; k++) {
+            if (generation[k] == ii + 1) {
                 tt.push(geneID[k]);
 
 
             }
         }
-        ttt.push(tt);
+        geneHi.push(tt);
         //console.log(tt);
     }
-    console.log(ttt);
-
+    //console.log(geneHi);
 
 
     //樹形図領域生成
@@ -142,18 +141,67 @@ function treeDiagram() {
                 gotoView(d.name);
             });
 
+        var arr = [];
         node.append("circle")
-            .attr("r", nodeSizeW / 2+5)
+            .attr("r", nodeSizeW / 2 + 5)
             .style('fill', "none")
             .style("stroke", d3.rgb(0, 0, 0))
-            .style("stroke-width", 1);
+            .style("stroke-width", 1)
+            .attr("transform", function (d) {
+                var c_x;
+                //var ar_t = [];
+                var xxx = 0;
+                var dis = 0;
 
+                for (var l = 0; l < geneHi.length; l++) {
+                    var ar_t = [];
+                    for (var j = 0; j < geneHi[l].length; j++) {
+                        if (d.id == geneHi[l][j]) {
+                            var a_r = [d.id, d.x];
+
+                           var dis = 0;
+                            if(j>=2){
+                                for (var zz = 0;zz<arr.length;zz++){
+                                    if(geneHi[l][j-1]==arr[zz][0]){
+                                        dis = d.x-arr[zz][1];
+                                        console.log("id:"+arr[zz][0]);
+                                        console.log("dis:"+dis);
+                                        console.log("idNOW:"+ d.id);
+                                    }
+
+                                }
+                            };
+
+
+                            if(dis==0){
+                                xxx = 0;
+                            }else if(dis<100){
+                                xxx =(nodeSizeW / 2 + 5)*2-dis;
+                            }else{
+                                xxx =0;// geneHi[l].length*j*2;
+                            }
+                            arr.push(a_r);
+
+
+                        }
+
+                    }
+
+
+
+                }
+
+
+                console.log(xxx);
+                return "translate(" + xxx + ",0)";
+            });
+        //console.log(arr);
         node.append("text")
 //            .attr("dx", function (d) {
 //                return d.children ? 30 : 100;
 //            })
-            .attr("dy", -nodeSizeH / 2+20)
-            .style("text-anchor","middle")
+            .attr("dy", -nodeSizeH / 2 + 20)
+            .style("text-anchor", "middle")
 //            .style("text-anchor", function (d) {
 //                return d.children ? "end" : "start";
 //            })
@@ -162,25 +210,25 @@ function treeDiagram() {
             });
 
         //テキストの基準座標 [x,y,height]
-        var textPos = [10,100,10];
+        var textPos = [10, 100, 10];
         node.append("text")
-            .attr("dx",-nodeSizeW/2+textPos[0])
-            .attr("dy", nodeSizeH / 2+10)
-            .style("text-anchor","start")
+            .attr("dx", -nodeSizeW / 2 + textPos[0])
+            .attr("dy", nodeSizeH / 2 + 10)
+            .style("text-anchor", "start")
             .text(function (d) {
                 return d.id;
             });
         node.append("text")
-            .attr("dx",-nodeSizeW/2+textPos[0])
-            .attr("dy", nodeSizeH / 2+10+textPos[2])
-            .style("text-anchor","start")
+            .attr("dx", -nodeSizeW / 2 + textPos[0])
+            .attr("dy", nodeSizeH / 2 + 10 + textPos[2])
+            .style("text-anchor", "start")
             .text(function (d) {
                 return d.name;
             });
         node.append("text")
-            .attr("dx",-nodeSizeW/2+textPos[0])
-            .attr("dy", nodeSizeH / 2+10+textPos[2]*2)
-            .style("text-anchor","start")
+            .attr("dx", -nodeSizeW / 2 + textPos[0])
+            .attr("dy", nodeSizeH / 2 + 10 + textPos[2] * 2)
+            .style("text-anchor", "start")
             .text(function (d) {
                 return d.url;
             });
