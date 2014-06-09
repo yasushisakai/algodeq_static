@@ -1,5 +1,7 @@
 function Plan(_room_data) {
 
+    this.max_height = 0;
+
     if (typeof _room_data === 'undefined') {
 
         this.room_data = {
@@ -14,14 +16,19 @@ function Plan(_room_data) {
 
     else {
         this.room_data = JSON.parse(_room_data);
+        this.max_height = this.get_max_height();
 
     }
+
+
 }
 
 
 Plan.room_index = 0;
 
 Plan.room_type = ["living", "dining", "kitchen", "bedroom", "wc", "staircase", "nothing"];
+
+Plan.room_cost = {"living": 15, "dining": 15, "kitchen": 20, "bedroom": 15, "wc": 20, "staircase": 25}; // the cost for unit_size^2;
 
 Plan.format_geometry = function (_geometry_data) {
     // returns formatted geometry data for diff comparison.
@@ -39,7 +46,7 @@ Plan.format_geometry = function (_geometry_data) {
     }
 
     return format_geom;
-}
+};
 
 
 Plan.prototype.check_room_duplicates = function (_index) {
@@ -52,7 +59,7 @@ Plan.prototype.check_room_duplicates = function (_index) {
     }
 
     return true;  // there is no duplicate;
-}
+};
 
 
 Plan.prototype.compare_with = function (_geometry_data) {
@@ -73,10 +80,14 @@ Plan.prototype.compare_with = function (_geometry_data) {
     }
 
     return similarity = same_char / all_char;
-}
+};
 
 
 Plan.prototype.add_room = function (_index) {
+
+    if (this.max_height < _index[1]) {
+        this.max_height = _index[1];
+    }
 
     this.room_data[Plan.room_type[Plan.room_index]].push(_index);
     this.sort_rooms();
@@ -84,7 +95,7 @@ Plan.prototype.add_room = function (_index) {
     var cube = new Cube(cursor.get_index(), Plan.room_index);
     cube.create();
 
-}
+};
 
 
 Plan.prototype.sort_rooms = function () {
@@ -94,53 +105,30 @@ Plan.prototype.sort_rooms = function () {
         this.room_data[rooms].sort();
 
     }
-}
+};
 
 
 Plan.prototype.remove_room = function (_index) {
 
-    if (typeof _room_type === 'undefined') {  // this is when we don't know the room type
-        var flag = true;
-        for (var rooms in this.room_data) {
-            for (var i = 0; i < this.room_data[rooms].length; i++) {
-                if (this.room_data[rooms][i].toString() == _index.toString()) {
-                    this.room_data[rooms].splice(i, 1);
-                    flag = false;
-                    break;
-                }
-                if (!flag) break;
-            }
-        }
-    }
-    else {  // this is when we know the room type more faster.
-        for (var i = 0; i < this.room_data[Plan.room_type[_room_type]].length; i++) {
-            if (this.room_data[Plan.room_type[_room_type]][i] == _index) {
-                this.room_data[Plan.room_type[_room_type]].splice(i, 1);
+
+    var flag = true;
+    for (var rooms in this.room_data) {
+        for (var i = 0; i < this.room_data[rooms].length; i++) {
+            if (this.room_data[rooms][i].toString() == _index.toString()) {
+                this.room_data[rooms].splice(i, 1);
+                flag = false;
                 break;
             }
+            if (!flag) break;
         }
     }
+
+
+    this.max_height = this.get_max_height();
 
     Cube.remove_cube(_index);  // removes the cube
 
-}
-
-
-Plan.prototype.create = function () {
-
-    var room_index = 0;
-
-    for (var rooms in this.room_data) {
-        for (var i = 0; i < this.room_data[rooms].length; i++) {
-            var cube = new Cube(this.room_data[rooms][i], room_index);
-            cube.create();
-        }
-        room_index++;
-    }
-
-    this.sort_rooms();
-
-}
+};
 
 
 Plan.prototype.search_for = function (_index) {
@@ -153,7 +141,50 @@ Plan.prototype.search_for = function (_index) {
 
     return "nothing";
 
+};
+
+Plan.prototype.get_max_height = function () {
+
+    var is_3f = false;
+    for (var rooms in this.room_data) {
+        for (var i = 0; i < this.room_data[rooms].length; i++) {
+            if (this.max_height < this.room_data[rooms][i][1]) {
+                this.max_height = this.room_data[rooms][i][1];
+                if (this.max_height == 2) {
+                    is_3f = true;
+                    break;
+                }
+            }
+        }
+        if (is_3f) break;
+    }
+
+    return this.max_height;
+
 }
+
+Plan.prototype.get_cost = function () {
+    var cost = 0;
+
+
+    for (var rooms in this.room_data) {
+
+        cost += this.room_data[rooms].length * Plan.room_cost[rooms];
+    }
+
+    console.log(this.max_height);
+
+    if (this.max_height == 0) {
+        return cost;
+    } else if (this.max_height == 1) {
+        return cost*1.2;
+    } else {
+        return cost*2.0;
+    }
+
+
+};
+
 
 Plan.prototype.room_matrix = function () {
 
@@ -171,50 +202,123 @@ Plan.prototype.room_matrix = function () {
         room_matrix.push(index_floor);
     }
 
-    console.log(JSON.stringify(room_matrix));
-
     return room_matrix;
 
-}
+};
 
-Plan.prototype.create_walls = function () {
+
+Plan.prototype.create = function () {
+    // simple view for version - used for make view.
+
+    var room_index = 0;
+
+    for (var rooms in this.room_data) {
+        for (var i = 0; i < this.room_data[rooms].length; i++) {
+            var cube = new Cube(this.room_data[rooms][i], room_index);
+            cube.create();
+        }
+        room_index++;
+    }
+
+    this.sort_rooms();
+
+};
+
+
+Plan.prototype.create_walls_floors = function () {
+    // the realistic version - will be used for finalize version for showing
+    // todo:maybe optimizing the meshes for accumilated viewing??
+
     var room_matrix = this.room_matrix();
+
+    var wall;
 
     for (var floor = 0; floor < 3; floor++) {
         for (var z = 0; z < resolution; z++) {
             for (var x = 0; x < resolution; x++) {
 
-                // this is for x line
-                if ((room_matrix[floor][z][x] != room_matrix[floor][z][x + 1]) && (x < (resolution - 1))) {
+
+                //west edge (x==0 index:-7)
+                if (x == 0) {
                     if (room_matrix[floor][z][x] != "nothing") {
-                        var wall = new Wall([x - 6, floor, z - 6], room_matrix[floor][z][x], false);
-                    } else {
-                        var wall = new Wall([x - 6, floor, z - 6], room_matrix[floor][z][x + 1], true);
+                        console.log(room_matrix[floor][z][x]);
+                        wall = new Wall([-7, floor, z - 6], true, room_matrix[floor][z][x]);
+                        wall.create(false);
                     }
-                    wall.create(false);
                 }
 
-                console.log(floor + " " + z + " " + x);
-                console.log(room_matrix[floor][z][x]);
-                //console.log(room_matrix[floor][z + 1][x]);
+                // typical cases the middle places
+                if (x < (resolution - 1)) {
+
+                    if (room_matrix[floor][z][x] != room_matrix[floor][z][x + 1]) {  // detects weather the two room types are different
+                        if (room_matrix[floor][z][x] != "nothing") {
+                            if (room_matrix[floor][z][x + 1] == "nothing") wall = new Wall([x - 6, floor, z - 6], false, room_matrix[floor][z][x]);
+                            else wall = new Wall([x - 6, floor, z - 6], true, room_matrix[floor][z][x], room_matrix[floor][z][x + 1]);
+                        } else {
+                            wall = new Wall([x - 6, floor, z - 6], true, room_matrix[floor][z][x + 1]);
+                        }
+                        wall.create(false);
+                    }
+                }
+
+                //east edge (x==11 index:5)
+                if (x == 11) {
+                    if (room_matrix[floor][z][x] != "nothing") {
+                        wall = new Wall([5, floor, z - 6], false, room_matrix[floor][z][x]);
+                        wall.create(false);
+                    }
+                }
+
+
+                //north edge (z==0 index:-7)
+                if (z == 0) {
+                    if (room_matrix[floor][z][x] != "nothing") {
+                        wall = new Wall([x - 6, floor, -7], true, room_matrix[floor][z][x]);
+                        wall.create(true);
+                    }
+                }
+
+
                 // this is for z line
                 if ((z < resolution - 1)) {
                     if (room_matrix[floor][z][x] != room_matrix[floor][z + 1][x]) {
                         if (room_matrix[floor][z][x] != "nothing") {
-                            var wall = new Wall([x - 6, floor, z - 6], room_matrix[floor][z][x], false);
+                            if (room_matrix[floor][z + 1][x] == "nothing")  wall = new Wall([x - 6, floor, z - 6], false, room_matrix[floor][z][x]);
+                            else wall = new Wall([x - 6, floor, z - 6], true, room_matrix[floor][z][x], room_matrix[floor][z + 1][x]);
                         } else {
-                            var wall = new Wall([x - 6, floor, z - 6], room_matrix[floor][z + 1][x], true);
+                            wall = new Wall([x - 6, floor, z - 6], true, room_matrix[floor][z + 1][x]);
                         }
                         wall.create(true);
                     }
                 }
 
+                //south edge (z==11 index:5)
+                if (z == 11) {
+                    if (room_matrix[floor][z][x] != "nothing") {
+                        wall = new Wall([x - 6, floor, 5], false, room_matrix[floor][z][x]);
+                        wall.create(true);
+                    }
+                }
+
+                //floors
+                var floor_plate;
+                if (room_matrix[floor][z][x] != "nothing") {
+                    floor_plate = new Floor([x - 6, floor, z - 6], room_matrix[floor][z][x]);
+                    floor_plate.create();
+                } else {
+                    if (floor < 1) {
+                        floor_plate = new Floor([x - 6, floor, z - 6], "grass");
+                        floor_plate.create();
+                    }
+                }
+
+
             }
         }
     }
-}
+};
 
 
 Plan.prototype.get_rooms_json = function () {
     return JSON.stringify(this.room_data);
-}
+};
