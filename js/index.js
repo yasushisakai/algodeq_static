@@ -15,11 +15,19 @@ function treeDiagram() {
     var generation = [];
     var geneID = [];
     var node = cluster.nodes(modelGene);
+    //console.log(node);
     for (var i in node) {
         var gene = node[i].depth;
         var gID = node[i].id;
+        if (node[i].parent == null) {
+            var gPar = 0;
+        } else {
+            var gPar = node[i].parent.id;
+        }
+        //console.log(gPar);
+
         generation.push(gene);
-        geneID.push(gID);
+        geneID.push([gID, gPar]);
     }
     ;
     var geneMax = Math.max.apply(null, generation);
@@ -39,7 +47,6 @@ function treeDiagram() {
             }
         }
         geneHi.push(tt);
-        //console.log(tt);
     }
     //console.log(geneHi);
 
@@ -92,6 +99,7 @@ function treeDiagram() {
 //            })
             .attr("d", diagonal);
 
+        var array_node = [];
         var node = svg.selectAll(".node")
             .data(nodes)
             .enter().append("g")
@@ -103,10 +111,11 @@ function treeDiagram() {
                 }
                 //console.log(d.id + "::"+d.y);
                 return "translate(" + d.x + "," + yy + ")";
-            })
+            });
 
 
         //各サムネイルを入れ込む
+        var array_image = [];
         node.append("svg:image")
             .attr("xlink:href", function (d) {
                 var name = d.name;
@@ -118,7 +127,12 @@ function treeDiagram() {
             .attr("x", -nodeSizeW / 2)
             .attr("y", -nodeSizeH / 2)
             .attr("width", nodeSizeW)
-            .attr("height", nodeSizeH);
+            .attr("height", nodeSizeH)
+            .attr("transform", function (d) {
+
+                var t_x = pos_trance(d, array_image);
+                return "translate(" + t_x + ",0)";
+            });
 
         svg.selectAll(".node")
             .on("mouseover", function (d, i) {
@@ -148,54 +162,12 @@ function treeDiagram() {
             .style("stroke", d3.rgb(0, 0, 0))
             .style("stroke-width", 1)
             .attr("transform", function (d) {
-                var c_x;
-                //var ar_t = [];
-                var xxx = 0;
-                var dis = 0;
 
-                for (var l = 0; l < geneHi.length; l++) {
-                    var ar_t = [];
-                    for (var j = 0; j < geneHi[l].length; j++) {
-                        if (d.id == geneHi[l][j]) {
-                            var a_r = [d.id, d.x];
-
-                           var dis = 0;
-                            if(j>=2){
-                                for (var zz = 0;zz<arr.length;zz++){
-                                    if(geneHi[l][j-1]==arr[zz][0]){
-                                        dis = d.x-arr[zz][1];
-                                        console.log("id:"+arr[zz][0]);
-                                        console.log("dis:"+dis);
-                                        console.log("idNOW:"+ d.id);
-                                    }
-
-                                }
-                            };
-
-
-                            if(dis==0){
-                                xxx = 0;
-                            }else if(dis<100){
-                                xxx =(nodeSizeW / 2 + 5)*2-dis;
-                            }else{
-                                xxx =0;// geneHi[l].length*j*2;
-                            }
-                            arr.push(a_r);
-
-
-                        }
-
-                    }
-
-
-
-                }
-
-
-                console.log(xxx);
-                return "translate(" + xxx + ",0)";
+                var t_x = pos_trance(d, arr);
+                return "translate(" + t_x + ",0)";
             });
         //console.log(arr);
+        var a_text = [];
         node.append("text")
 //            .attr("dx", function (d) {
 //                return d.children ? 30 : 100;
@@ -207,30 +179,55 @@ function treeDiagram() {
 //            })
             .text(function (d) {
                 return d.name;
+            })
+            .attr("transform", function (d) {
+
+                var t_x = pos_trance(d, a_text);
+                return "translate(" + t_x + ",0)";
             });
 
         //テキストの基準座標 [x,y,height]
         var textPos = [10, 100, 10];
+        a_text = [];
         node.append("text")
             .attr("dx", -nodeSizeW / 2 + textPos[0])
             .attr("dy", nodeSizeH / 2 + 10)
             .style("text-anchor", "start")
             .text(function (d) {
                 return d.id;
+            })
+            .attr("transform", function (d) {
+
+                var t_x = pos_trance(d, a_text);
+                return "translate(" + t_x + ",0)";
             });
+
+        a_text = [];
         node.append("text")
             .attr("dx", -nodeSizeW / 2 + textPos[0])
             .attr("dy", nodeSizeH / 2 + 10 + textPos[2])
             .style("text-anchor", "start")
             .text(function (d) {
                 return d.name;
+            })
+            .attr("transform", function (d) {
+
+                var t_x = pos_trance(d, a_text);
+                return "translate(" + t_x + ",0)";
             });
+
+        a_text = [];
         node.append("text")
             .attr("dx", -nodeSizeW / 2 + textPos[0])
             .attr("dy", nodeSizeH / 2 + 10 + textPos[2] * 2)
             .style("text-anchor", "start")
             .text(function (d) {
                 return d.url;
+            })
+            .attr("transform", function (d) {
+
+                var t_x = pos_trance(d, a_text);
+                return "translate(" + t_x + ",0)";
             });
 
 
@@ -287,6 +284,66 @@ function treeDiagram() {
             }
             return cID;
         }
+    }
+
+    function pos_trance(d, array) {
+        var c_x;
+        var xxx = 0;
+        var dis = 0;
+        var j_num = 0;
+        array[0]=[1, 0, 1];
+
+        for (var l = 0; l < geneHi.length; l++) {
+            var ar_t = [];
+            for (var j = 0; j < geneHi[l].length; j++) {
+                if (d.id == geneHi[l][j][0]) {
+                    var a_r = [d.id, d.x, d.parent.id];
+                    var dis = 0;
+                    var signal = false;
+                    if (j > 0) {
+                        for (var zz = 0; zz < array.length; zz++) {
+                            if (geneHi[l][j - 1][0] == array[zz][0]) {
+                                dis = d.x - array[zz][1];
+                            }
+                        }
+                    }
+                    if(d.parent.id == array[array.length-1][2]){
+//                        console.log(d.id);
+//                        console.log(d.parent.id);
+//                        console.log("OK");
+                        j_num = j;
+                        signal = true;
+                    }
+                    //console.log(array);
+
+
+                    //console.log(signal);
+                    if (dis == 0) {
+                        xxx = 0;
+                    } else if (dis < (nodeSizeW / 2 + 5) * 2) {
+                        if (signal == true) {
+                            xxx = ((nodeSizeW / 2 + 5) * 2 - dis) * (j - j_num + 1);
+                        } else {
+                            xxx = ((nodeSizeW / 2 + 5) * 2 - dis);
+                        }
+
+                    } else {
+                        xxx = 0;
+                    }
+                    array.push(a_r);
+
+
+                }
+
+            }
+
+
+        }
+
+
+        array =[];
+        return xxx;
+
     }
 
 }
