@@ -6,7 +6,7 @@ function treeDiagram() {
         nodeSizeH = 100,
         mxDiv = width / nodeSizeW;
 
-    var width = 1500,
+    var width = 1200,
         height = 600,
         scl = 1.2;
 
@@ -65,7 +65,7 @@ function treeDiagram() {
     var dy = (height * scl - height) * 0.5;
 
     //DOM svgのフィールドを作成
-    var svg = d3.select("body").append("svg")
+    var svg = d3.select(".pure-u-4-5").append("svg")
         .attr("width", width * scl)
         .attr("height", cluster_sizeH * scl)
         .append("g")
