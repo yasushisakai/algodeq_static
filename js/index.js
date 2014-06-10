@@ -6,7 +6,7 @@ function treeDiagram() {
         nodeSizeH = 100,
         mxDiv = width / nodeSizeW;
 
-    var width = 1000,
+    var width = 1500,
         height = 600,
         scl = 1.2;
 
@@ -15,7 +15,7 @@ function treeDiagram() {
     var generation = [];
     var geneID = [];
     var node = cluster.nodes(modelGene);
-    //console.log(node);
+    console.log(node);
     for (var i in node) {
         var gene = node[i].depth;
         var gID = node[i].id;
@@ -97,13 +97,26 @@ function treeDiagram() {
 //                //d.target.y -=nodeSizeH/2;
 //                return "translate(0,0)";
 //            })
-            .attr("d", diagonal);
+            .attr("d", diagonal)
+            .style("stroke-width", function(d){
+                //console.log(d);
+                var wd;
+                var wid= d.target.similarity;
+                if(wid == 0){
+                    wd = 1;
+                }else{
+                    wd = (wid+1)*2;
+                }
+
+                return wd;
+            });
 
         var array_node = [];
         var node = svg.selectAll(".node")
             .data(nodes)
             .enter().append("g")
             .attr("class", "node")
+
             .attr("transform", function (d) {
                 var yy = d.y;
                 if (d.y > 400) {
@@ -131,7 +144,7 @@ function treeDiagram() {
             .attr("transform", function (d) {
 
                 var t_x = pos_trance(d, array_image);
-                return "translate(" + t_x + ",0)";
+                return "translate(" + t_x[0] + ","+t_x[1]+")";
             });
 
         svg.selectAll(".node")
@@ -164,7 +177,7 @@ function treeDiagram() {
             .attr("transform", function (d) {
 
                 var t_x = pos_trance(d, arr);
-                return "translate(" + t_x + ",0)";
+                return "translate(" + t_x[0] + ","+t_x[1]+")";
             });
         //console.log(arr);
         var a_text = [];
@@ -183,7 +196,7 @@ function treeDiagram() {
             .attr("transform", function (d) {
 
                 var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x + ",0)";
+                return "translate(" + t_x[0] + ","+t_x[1]+")";
             });
 
         //テキストの基準座標 [x,y,height]
@@ -199,7 +212,7 @@ function treeDiagram() {
             .attr("transform", function (d) {
 
                 var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x + ",0)";
+                return "translate(" + t_x[0] + ","+t_x[1]+")";
             });
 
         a_text = [];
@@ -213,7 +226,7 @@ function treeDiagram() {
             .attr("transform", function (d) {
 
                 var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x + ",0)";
+                return "translate(" + t_x[0] + ","+t_x[1]+")";
             });
 
         a_text = [];
@@ -227,7 +240,7 @@ function treeDiagram() {
             .attr("transform", function (d) {
 
                 var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x + ",0)";
+                return "translate(" + t_x[0] + ","+t_x[1]+")";
             });
 
 
@@ -291,7 +304,7 @@ function treeDiagram() {
         var xxx = 0;
         var dis = 0;
         var j_num = 0;
-        array[0]=[1, 0, 1];
+        array[0] = [1, 0, 1];
 
         for (var l = 0; l < geneHi.length; l++) {
             var ar_t = [];
@@ -307,17 +320,21 @@ function treeDiagram() {
                             }
                         }
                     }
-                    if(d.parent.id == array[array.length-1][2]){
+                    if (d.parent.id == array[array.length - 1][2]) {
 //                        console.log(d.id);
 //                        console.log(d.parent.id);
 //                        console.log("OK");
                         j_num = j;
                         signal = true;
+                        //console.log("NO");
+//                        if (array.length > 1) {
+//                            if (d.parent.id == array[array.length - 1][2]) {
+//                                j_num = (j - 2);
+//                            }
+//                        }
+
                     }
-                    //console.log(array);
 
-
-                    //console.log(signal);
                     if (dis == 0) {
                         xxx = 0;
                     } else if (dis < (nodeSizeW / 2 + 5) * 2) {
@@ -339,10 +356,11 @@ function treeDiagram() {
 
 
         }
+        var yyy = 0;
 
 
-        array =[];
-        return xxx;
+        array = [];
+        return [xxx,yyy];
 
     }
 
