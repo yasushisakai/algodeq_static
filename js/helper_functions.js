@@ -45,6 +45,9 @@ function log_in(){
         function(data,status){
             console.log('logged in');
             location.reload(true);
+        })
+        .fail(function(){
+
         });
     return false;
 }
