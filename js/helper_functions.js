@@ -29,3 +29,22 @@ function shuffle(array) {
         array[i] = t;
     }
 }
+
+function log_in(){
+    var email = $("#e-mail").val();
+    var password = $("#password").val();
+    console.log(email);
+    $.post("",
+        {
+
+            email:email,
+            password:password,
+            csrfmiddlewaretoken: csrf_token
+
+        },
+        function(data,status){
+            console.log('logged in');
+            location.reload(true);
+        });
+    return false;
+}

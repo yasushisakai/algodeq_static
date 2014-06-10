@@ -192,6 +192,7 @@ function save_plan(_id) {
                         new_plan_name: new_plan_name,
                         new_plan_geometry: new_plan_geometry,
                         new_plan_similarity: new_plan_similarity,
+                        new_plan_cost:new_plan_cost,
                         image: renderer.domElement.toDataURL().replace("data:image/png;base64,", ""),
                         csrfmiddlewaretoken: csrf_token
                     },
