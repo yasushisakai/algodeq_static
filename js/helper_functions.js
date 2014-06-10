@@ -30,24 +30,26 @@ function shuffle(array) {
     }
 }
 
-function log_in(){
+function log_in() {
     var email = $("#e-mail").val();
     var password = $("#password").val();
     console.log(email);
     $.post("",
         {
 
-            email:email,
-            password:password,
+            email: email,
+            password: password,
             csrfmiddlewaretoken: csrf_token
 
         },
-        function(data,status){
+        function (data, status) {
             console.log('logged in');
             location.reload(true);
         })
-        .fail(function(){
 
+        .fail(function (xhr) {
+            console.log("Error: " + xhr.statusText);
+            alert("Error: " + xhr.statusText);
         });
     return false;
 }
