@@ -15,7 +15,7 @@ function treeDiagram() {
     var generation = [];
     var geneID = [];
     var node = cluster.nodes(modelGene);
-    console.log(node);
+    //console.log(node);
     for (var i in node) {
         var gene = node[i].depth;
         var gID = node[i].id;
@@ -83,20 +83,7 @@ function treeDiagram() {
             .data(links)
             .enter().append("path")
             .attr("class", "link")
-//            .attr("transform", function (d) {
-//
-//                if (ar.indexOf(d.target.id) != 1) {
-//
-//                    d.target.y -= nodeSizeH / 2;
-//                    ar.push(d.target.id);
-//                    console.log(ar);
-//                    console.log(d.target.id);
-//                }
-//
-//                //console.log(ar);
-//                //d.target.y -=nodeSizeH/2;
-//                return "translate(0,0)";
-//            })
+
             .attr("d", diagonal)
             .style("stroke-width", function(d){
                 //console.log(d);
@@ -365,3 +352,15 @@ function treeDiagram() {
     }
 
 }
+
+function Lst_sort() {
+    var modelGene = impData[0];
+    var cluster = d3.layout.tree();
+    var node = cluster.nodes(modelGene);
+    //console.log(node);
+
+    return node;
+
+}
+
+
