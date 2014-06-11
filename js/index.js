@@ -358,6 +358,8 @@ function Lst_sort() {
     var cluster = d3.layout.tree();
     var node = cluster.nodes(modelGene);
     //console.log(node);
+    var test = [];
+    
 
     return node;
 
