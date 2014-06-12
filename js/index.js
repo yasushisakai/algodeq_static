@@ -85,14 +85,14 @@ function treeDiagram() {
             .attr("class", "link")
 
             .attr("d", diagonal)
-            .style("stroke-width", function(d){
+            .style("stroke-width", function (d) {
                 //console.log(d);
                 var wd;
-                var wid= d.target.similarity;
-                if(wid == 0){
+                var wid = d.target.similarity;
+                if (wid == 0) {
                     wd = 1;
-                }else{
-                    wd = (wid+1)*2;
+                } else {
+                    wd = (wid + 1) * 2;
                 }
 
                 return wd;
@@ -131,7 +131,7 @@ function treeDiagram() {
             .attr("transform", function (d) {
 
                 var t_x = pos_trance(d, array_image);
-                return "translate(" + t_x[0] + ","+t_x[1]+")";
+                return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
 
         svg.selectAll(".node")
@@ -164,7 +164,7 @@ function treeDiagram() {
             .attr("transform", function (d) {
 
                 var t_x = pos_trance(d, arr);
-                return "translate(" + t_x[0] + ","+t_x[1]+")";
+                return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
         //console.log(arr);
         var a_text = [];
@@ -183,7 +183,7 @@ function treeDiagram() {
             .attr("transform", function (d) {
 
                 var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x[0] + ","+t_x[1]+")";
+                return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
 
         //テキストの基準座標 [x,y,height]
@@ -199,7 +199,7 @@ function treeDiagram() {
             .attr("transform", function (d) {
 
                 var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x[0] + ","+t_x[1]+")";
+                return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
 
         a_text = [];
@@ -213,7 +213,7 @@ function treeDiagram() {
             .attr("transform", function (d) {
 
                 var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x[0] + ","+t_x[1]+")";
+                return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
 
         a_text = [];
@@ -222,12 +222,49 @@ function treeDiagram() {
             .attr("dy", nodeSizeH / 2 + 10 + textPos[2] * 2)
             .style("text-anchor", "start")
             .text(function (d) {
-                return d.url;
+                return d.creation_time;
             })
             .attr("transform", function (d) {
 
                 var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x[0] + ","+t_x[1]+")";
+                return "translate(" + t_x[0] + "," + t_x[1] + ")";
+            });
+
+        //diff
+        a_text = [];
+        node.append("text")
+
+            .attr("dy", -nodeSizeH / 2 - 10)
+            .style("text-anchor", "middle")
+
+            .text(function (d) {
+
+                var sim = d.similarity *100;
+
+                return sim.toFixed(1) + "%";
+            })
+            .attr("transform", function (d) {
+
+                var t_x = pos_trance(d, a_text);
+                return "translate(" + t_x[0] + "," + t_x[1] + ")";
+            });
+        //point
+        a_text = [];
+        node.append("text")
+
+            .attr("dx", -nodeSizeH / 2+10)
+            .attr("dy", -nodeSizeH / 2 + 40)
+            .style("text-anchor", "middle")
+
+            .text(function (d) {
+                var pnt = d.total_points;
+
+                return pnt.toFixed(1);
+            })
+            .attr("transform", function (d) {
+
+                var t_x = pos_trance(d, a_text);
+                return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
 
 
@@ -347,7 +384,7 @@ function treeDiagram() {
 
 
         array = [];
-        return [xxx,yyy];
+        return [xxx, yyy];
 
     }
 
@@ -358,11 +395,18 @@ function Lst_sort() {
     var cluster = d3.layout.tree();
     var node = cluster.nodes(modelGene);
     //console.log(node);
-    var test = [];
-    
 
     return node;
 
 }
+
+function SortScore(array) {
+    array.sort(function(a, b) {
+        return (a.total_points > b.total_points) ? -1 : 1;
+    });
+}
+
+
+
 
 
