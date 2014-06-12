@@ -402,10 +402,10 @@ function Lst_sort() {
 }
 
 //配列をソート
-function SortScore(array,parameter) {
+function SortScore(array, parameter) {
     array.sort(function (a, b) {
-        var aa = eval("a."+parameter);
-        var bb = eval("b."+parameter);
+        var aa = eval("a." + parameter);
+        var bb = eval("b." + parameter);
         return (aa > bb) ? -1 : 1;
     });
 }
@@ -417,32 +417,52 @@ function domMaker(array) {
 
 
     for (var i in array) {
-        document.write("<li>");
+
+        document.write("<tr>");
+        document.write("<td >");
         document.write("<a href=" + array[i].url + ">");
         document.write(array[i].id);
+        document.write("</a></td><td>");
         document.write(array[i].name);
-        document.write("</a>");
-        document.write("<br/>");
-        document.write("</li>");
+        document.write("</td><td>");
+        var pnts = array[i].total_points;
+        document.write(pnts.toFixed(1));
+        document.write("</td><td>");
+        var smt = array[i].similarity * 100;
+        document.write(smt.toFixed(1));
+        document.write("</td><td>");
+        document.write(array[i].creation_time);
+        document.write("</td>");
+        document.write("</tr>");
+
     }
 
 }
 
 //右のListを並べ替える
-function reWrite(array,parameter) {
-    SortScore(array);
-    var txt = domRewrite(array,parameter);
+function reWrite(array, parameter) {
+    SortScore(array, parameter);
+    var txt = domRewrite(array);
 
-    document.getElementById("make-list").innerHTML = txt;
+    document.getElementById("table_list").innerHTML = txt;
 
     function domRewrite(array) {
-        var ttt = "";
+        var ttt=[];
+       // var ttt = '<table class="pure-table pure-table-horizontal"><thead><tr><th>ID</th><th>name</th><th>point</th><th>diff</th><th>time</th></tr></thead>';
 
         for (var i in array) {
-            ttt += "<li><a href=" + array[i].url + ">";
-            ttt += array[i].id;
-            ttt += array[i].name;
-            ttt += "</a><br/></li>";
+            ttt += "<tr>";
+            ttt += "<a href=" + array[i].url + ">";
+            ttt += "<td>" + array[i].id + "</td>";
+            ttt += "<td>" + array[i].name + "</td>";
+            var pnts = array[i].total_points;
+            ttt += "<td>" + pnts.toFixed(1) + "</td>";
+                var smt = array[i].similarity * 100;
+            ttt += "<td>" + smt.toFixed(1) + "</td>";
+                 ttt += "<td>" + array[i].creation_time+ "</td>";
+
+            ttt += "</tr>";
+            ttt += "</a></td>";
         }
 
         return ttt;
