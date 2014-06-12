@@ -239,7 +239,7 @@ function treeDiagram() {
 
             .text(function (d) {
 
-                var sim = d.similarity *100;
+                var sim = d.similarity * 100;
 
                 return sim.toFixed(1) + "%";
             })
@@ -252,7 +252,7 @@ function treeDiagram() {
         a_text = [];
         node.append("text")
 
-            .attr("dx", -nodeSizeH / 2+10)
+            .attr("dx", -nodeSizeH / 2 + 10)
             .attr("dy", -nodeSizeH / 2 + 40)
             .style("text-anchor", "middle")
 
@@ -390,20 +390,64 @@ function treeDiagram() {
 
 }
 
+//JSONデータをD3の連想配列に変換
 function Lst_sort() {
     var modelGene = impData[0];
     var cluster = d3.layout.tree();
     var node = cluster.nodes(modelGene);
-    //console.log(node);
-
+    var ttt = eval("node[0].id");
+    console.log(ttt);
     return node;
 
 }
 
-function SortScore(array) {
-    array.sort(function(a, b) {
-        return (a.total_points > b.total_points) ? -1 : 1;
+//配列をソート
+function SortScore(array,parameter) {
+    array.sort(function (a, b) {
+        var aa = eval("a."+parameter);
+        var bb = eval("b."+parameter);
+        return (aa > bb) ? -1 : 1;
     });
+}
+
+
+//List DOMを生成
+
+function domMaker(array) {
+
+
+    for (var i in array) {
+        document.write("<li>");
+        document.write("<a href=" + array[i].url + ">");
+        document.write(array[i].id);
+        document.write(array[i].name);
+        document.write("</a>");
+        document.write("<br/>");
+        document.write("</li>");
+    }
+
+}
+
+//右のListを並べ替える
+function reWrite(array,parameter) {
+    SortScore(array);
+    var txt = domRewrite(array,parameter);
+
+    document.getElementById("make-list").innerHTML = txt;
+
+    function domRewrite(array) {
+        var ttt = "";
+
+        for (var i in array) {
+            ttt += "<li><a href=" + array[i].url + ">";
+            ttt += array[i].id;
+            ttt += array[i].name;
+            ttt += "</a><br/></li>";
+        }
+
+        return ttt;
+    }
+
 }
 
 
