@@ -161,8 +161,8 @@ function run() {
 
     //update time
     var seconds_elapsed = clock.getElapsedTime();
-    until_next_creation = (60 * 3) - (creation_timer + (seconds_elapsed - creation_lap));
-    until_next_evaluation = 10 - (evaluation_timer + (seconds_elapsed - evaluation_lap));
+    until_next_creation = creation_threshold - (creation_timer + (seconds_elapsed - creation_lap));
+    until_next_evaluation = evaluation_threshold - (evaluation_timer + (seconds_elapsed - evaluation_lap));
 
     update_timer_limiations();
 
