@@ -21,6 +21,8 @@ var cursor, ground;
 var plan;
 var geometry_data;
 
+var new_name, new_geometry, new_similarity, new_cost, new_points, image;
+
 
 function initialize() {
 
@@ -35,26 +37,42 @@ function initialize() {
 
 function setup_three_js() {
     console.log("--setup three js--");
-    var CANVAS_WIDTH = window.innerWidth;
-    var CANVAS_HEIGHT = window.innerHeight;
+
+//    var CANVAS_WIDTH = window.innerWidth;
+//    var CANVAS_HEIGHT = window.innerHeight;
+    var CANVAS_WIDTH = 1280;
+    var CANVAS_HEIGHT = 720;
 
     scene = new THREE.Scene();
 
     // todo: take care CAMERA pos and CONTROLS target
-    camera = new THREE.PerspectiveCamera(
-        20,
-            CANVAS_WIDTH / CANVAS_HEIGHT,
-        unit_size,
-            unit_size * 100
-    );
+//    camera = new THREE.PerspectiveCamera(
+//        20,
+//            CANVAS_WIDTH / CANVAS_HEIGHT,
+//        unit_size,
+//            unit_size * 100
+//    );
+//    camera = new THREE.OrthographicCamera(
+//            CANVAS_WIDTH / - 8,
+//            CANVAS_WIDTH / 8,
+//            CANVAS_HEIGHT / 8,
+//            CANVAS_HEIGHT / - 8,
+//        10,
+//        10000000 );
+        camera = new THREE.OrthographicCamera(
+            CANVAS_WIDTH / - 0.1,
+            CANVAS_WIDTH / 0.1,
+            CANVAS_HEIGHT / 0.1,
+            CANVAS_HEIGHT / - 0.1,
+        10,
+        10000000 );
 
     camera.position.set(
             unit_length * 2.5,
             unit_length * 2.5,
             unit_length * 2.5
     );
-    camera.up.set(0, 1, 0);
-
+    //camera.up.set(0, 1, 0);
     camera.lookAt({x: 0, y: 0, z: 0});
 
     // the clock and two timers
@@ -89,7 +107,7 @@ function setup_world() {
 
 
     // update cost and points_inborn
-    points_inborn = parent_points * similarity;
+    new_points = parent_points * similarity;
     cost = plan.get_cost();
     $("#cost").text('cost: ' + cost);
     $("#points_inborn").text('points inborn: ' + points_inborn);
@@ -107,8 +125,6 @@ function setup_world() {
 
 function validate_name() {
     // validate name
-
-
 
     if ($("#name").val() == "") {
         $("#name").css("border", "solid 1px #ff0000");
@@ -134,6 +150,7 @@ function validate_name() {
                 if (result["flag"]) {
                     $("#name").css("border", "solid 1px #0000ff");
                     $("#status").text("valid name!");
+                    new_name = $("#name").val();
                     if (!$("#save_plan").is(":visible")) {
                         $("#save_plan").show();
                     }
@@ -148,13 +165,32 @@ function validate_name() {
 
             }
         );
-
-
     }
 
 
 }
 
-function save_plan() {
+function save_plan() {  // save plan!!!
+
+    $.post("",
+        {
+            save_name: new_name,
+            save_geometry: JSON.stringify(geometry_data),
+            save_similarity: similarity,
+            save_cost: cost,
+            save_points: new_points,
+            save_parent_id: parent_id,
+            save_image: renderer.domElement.toDataURL().replace("data:image/png;base64,", ""),
+            csrfmiddlewaretoken: csrf_token
+        },
+        function () {
+            document.location.href = "../plan/" + new_name;
+
+        })
+        .fail(function (xhr) {
+            console.log("Error: " + xhr.statusText);
+            alert("Error: " + xhr.statusText);
+        }
+    );
 
 }

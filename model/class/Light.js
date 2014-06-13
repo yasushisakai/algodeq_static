@@ -16,10 +16,14 @@ function Light(_ambient_color,_directional_light_color,_intensity) {
 
     this.light = new THREE.DirectionalLight(directional_light_color, intensity);
 
+//    this.light.position.set(
+//        camera.position.x,
+//        camera.position.y,
+//        camera.position.z
+//    );
+
     this.light.position.set(
-        camera.position.x,
-        camera.position.y,
-        camera.position.z
+        unit_size*2,unit_size*2,unit_size*2
     );
 
     // todo: fine-tune the shadows,
