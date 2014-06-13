@@ -1,14 +1,13 @@
 
-body{
+body {
     color: #898989;
 }
-#header{
+
+#header {
     background-color: #DFCE3A;
+    height:100px;
 }
 
-#navigation {
-    width: 200px;
-}
 
 #webgl_canvas {
     position: absolute;
@@ -20,23 +19,41 @@ body{
 .login {
     text-align: right;
     vertical-align: -100px;
-    padding:0 15px 0 0;
+    padding: 0 15px 0 0;
 
 }
 
-.pure-u-4-5{
-    padding:50px 0 0 0;
+
+.pure-u-4-5 {
+    padding: 50px 0 0 0;
+    z-index: 0;
 }
 
-#make-list{
+#make-list {
     font-size: 10px;
-    padding:20px 0 0 0;
+    padding: 20px 0 0 0;
 }
 
-.webfont{
-    font-family: 'Dosis', sans-serif; font-weight: 100;line-height: 100%;
+.webfont {
+    font-family: 'Dosis', sans-serif;
+    font-weight: 100;
+    line-height: 100%;
 }
 
-h1 { font-family: 'Dosis', sans-serif; font-weight: 400;line-height: 50%;padding: 10px 0px 0px 10px; }
-h2 { font-family: 'Dosis', sans-serif; font-weight: 100;line-height: 0%;padding:0 0 5px 10px; }
+h1 {
+    font-family: 'Dosis', sans-serif;
+    font-weight: 400;
+    line-height: 50%;
+    padding: 10px 0px 0px 10px;
+}
+
+h2 {
+    font-family: 'Dosis', sans-serif;
+    font-weight: 100;
+    line-height: 0%;
+    padding: 0 0 5px 10px;
+}
+
+
+
 
