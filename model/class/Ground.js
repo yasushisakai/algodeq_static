@@ -8,6 +8,8 @@ function Ground(_size){
     this.geometry = new THREE.CubeGeometry(this.size,unit_size,this.size);
     this.level_height_geom = new THREE.PlaneGeometry(this.size,this.size,2,2);
 
+    console.log(path_to_static + 'img/make_grid.png');
+
 }
 
 Ground.material_types=[

@@ -75,7 +75,6 @@ Wall.prototype.create = function (_rotate) {
                 new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].outside, side: THREE.FrontSide})
             ]
         } else {
-            console.log(this.type_A + "," + this.type_B);
             materials = [
                 new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].inside, side: THREE.FrontSide}),
                 new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].outside, side: THREE.BackSide})

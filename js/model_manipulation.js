@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////
-// make
+// Model Manipulation
 /////////////////////////////////////////////////////
 
 
@@ -20,7 +20,6 @@ var unit_length = unit_size * resolution;
 var cursor, ground;
 var plan;
 var geometry_data;
-
 
 // document specific global variables
 var creation_lap, evaluation_lap;
@@ -171,7 +170,26 @@ function run() {
 
 }
 
-function save_plan(_id) {
+function to_finalize() {
+
+    //update form info
+    $("#new_geometry").val(new_plan_geometry);
+    $("#new_similarity").val(new_plan_similarity);
+
+    //validate
+    if (new_plan_similarity == 1.0) {
+        $(".error").text("models cannot be identical");
+        return;
+    }else if(new_plan_cost > 3000.0){
+        $(".error").text("models cannot cost more than 3000");
+        return;
+    }
+
+    //submit
+    document.finalization.submit();
+}
+
+function save_plan() {
     // saves the plan
 
     // update new model_name
@@ -258,10 +276,10 @@ function update_model_info() {
 
 }
 
-function update_timer_limiations(){
+function update_timer_limiations() {
     // updates the limitations for creating and adding points
 
-        if (until_next_creation < 0) {
+    if (until_next_creation < 0) {
         if (!$("#save_plan").is(":visible")) {
             $("#save_plan").show();
         }
@@ -273,7 +291,6 @@ function update_timer_limiations(){
         }
         $("#timers_creation").text(Math.floor(until_next_creation) + "seconds until next creation");
     }
-
 
 
     if (until_next_evaluation < 0) {

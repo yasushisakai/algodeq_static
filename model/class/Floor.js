@@ -12,7 +12,7 @@ function Floor(_index, _type) {
 Floor.thickness = 300;
 
 Floor.texture = {
-    "living": new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-13.png"),
+    "living": new THREE.ImageUtils.loadTexture( "/static/img/textures-13.png"),
     "dining": new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-14.png"),
     "kitchen": new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-15.png"),
     "staircase": new THREE.ImageUtils.loadTexture(path_to_static + "img/textures-16.png"),

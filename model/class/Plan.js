@@ -15,7 +15,12 @@ function Plan(_room_data) {
     }
 
     else {
-        this.room_data = JSON.parse(_room_data);
+        console.log(typeof _room_data);
+        if (typeof _room_data === 'object') {
+            this.room_data = _room_data;
+        } else {
+            this.room_data = JSON.parse(_room_data);
+        }
         this.max_height = this.get_max_height();
 
     }
@@ -177,9 +182,9 @@ Plan.prototype.get_cost = function () {
     if (this.max_height == 0) {
         return cost;
     } else if (this.max_height == 1) {
-        return cost*1.2;
+        return cost * 1.2;
     } else {
-        return cost*2.0;
+        return cost * 2.0;
     }
 
 

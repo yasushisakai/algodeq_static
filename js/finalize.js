@@ -1,0 +1,160 @@
+//////////////////////////////////////////////////////
+// Model Manipulation
+/////////////////////////////////////////////////////
+
+
+//
+// GLOBAL VARIABLES
+//
+
+// essential global variables for three.js
+var canvas, camera, scene, renderer, controls, clock, projector;
+
+// dimensions
+var unit_size = 910;
+var unit_height = 2550;
+var resolution = 12;
+var unit_length = unit_size * resolution;
+
+// geometry
+var cursor, ground;
+var plan;
+var geometry_data;
+
+
+function initialize() {
+
+    setup_three_js();
+    setup_world();
+
+    requestAnimationFrame(function animate() {
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+    });
+}
+
+function setup_three_js() {
+    console.log("--setup three js--");
+    var CANVAS_WIDTH = window.innerWidth;
+    var CANVAS_HEIGHT = window.innerHeight;
+
+    scene = new THREE.Scene();
+
+    // todo: take care CAMERA pos and CONTROLS target
+    camera = new THREE.PerspectiveCamera(
+        20,
+            CANVAS_WIDTH / CANVAS_HEIGHT,
+        unit_size,
+            unit_size * 100
+    );
+
+    camera.position.set(
+            unit_length * 2.5,
+            unit_length * 2.5,
+            unit_length * 2.5
+    );
+    camera.up.set(0, 1, 0);
+
+    camera.lookAt({x: 0, y: 0, z: 0});
+
+    // the clock and two timers
+    clock = new THREE.Clock();
+
+
+    projector = new THREE.Projector();
+
+    renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true, alpha: true});
+    //renderer.setClearColor(0xffffff,0);  // something is wrong with white, transparent background
+    renderer.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
+    renderer.shadowMapEnabled = true;
+
+
+    // html element
+    canvas = $("#webgl_canvas").prepend(renderer.domElement);
+    canvas.width(CANVAS_WIDTH);
+    canvas.height(CANVAS_HEIGHT);
+}
+
+
+function setup_world() {
+    console.log("--setup world--");
+
+    // lights
+    var light = new Light();  // refer to Light.js
+    light.create();
+
+    // geometry (geometry data is already ready.)
+    plan = new Plan(geometry_data);
+    plan.create_walls_floors();
+
+
+    // update cost and points_inborn
+    points_inborn = parent_points * similarity;
+    cost = plan.get_cost();
+    $("#cost").text('cost: ' + cost);
+    $("#points_inborn").text('points inborn: ' + points_inborn);
+
+    // base ground w/ grid
+    ground = new Ground();
+    ground.create();
+
+
+    validate_name();
+    $("#name").focusout(function () {
+        validate_name();
+    });
+}
+
+function validate_name() {
+    // validate name
+
+
+
+    if ($("#name").val() == "") {
+        $("#name").css("border", "solid 1px #ff0000");
+        $("#status").text("please enter something for a name.");
+        if ($("#save_plan").is(":visible")) {
+            $("#save_plan").hide();
+        }
+    } else if ($("#name").val().match(/^[-a-zA-Z0-9]+[-a-zA-Z0-9_]+$/) == null) {
+        $("#name").css("border", "solid 1px #ff0000");
+        $("#status").text("use only numbers and alphabets.('_' is permitted in between)");
+        if ($("#save_plan").is(":visible")) {
+            $("#save_plan").hide();
+        }
+    } else {
+        $.post("",
+            {
+                name: $("#name").val(),
+                csrfmiddlewaretoken: csrf_token
+
+            },
+            function (data, status) {
+                var result = JSON.parse(data);
+                if (result["flag"]) {
+                    $("#name").css("border", "solid 1px #0000ff");
+                    $("#status").text("valid name!");
+                    if (!$("#save_plan").is(":visible")) {
+                        $("#save_plan").show();
+                    }
+                } else {
+                    $("#name").css("border", "solid 1px #ff0000");
+                    $("#status").text("name is already used...");
+                    if ($("#save_plan").is(":visible")) {
+                        $("#save_plan").hide();
+                    }
+
+                }
+
+            }
+        );
+
+
+    }
+
+
+}
+
+function save_plan() {
+
+}
