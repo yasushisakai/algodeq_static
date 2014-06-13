@@ -92,7 +92,7 @@ function treeDiagram() {
                 if (wid == 0) {
                     wd = 1;
                 } else {
-                    wd = (wid + 1) * 2;
+                    wd = (wid) * 4;
                 }
 
                 return wd;
@@ -113,6 +113,19 @@ function treeDiagram() {
                 return "translate(" + d.x + "," + yy + ")";
             });
 
+        var arr = [];
+        node.append("circle")
+            .attr("r", nodeSizeW / 2 + 5)
+
+            .style("stroke", "none")
+            .style("stroke-width", 1)
+            .style('opacity', 0.5)
+            .attr("transform", function (d) {
+
+                var t_x = pos_trance(d, arr);
+                return "translate(" + t_x[0] + "," + t_x[1] + ")";
+            });
+
 
         //各サムネイルを入れ込む
         var array_image = [];
@@ -121,8 +134,9 @@ function treeDiagram() {
                 var name = d.name;
                 var ch = d.paID;
                 var tm = d.time;
-                //return "http://lmnarchitecture.com/thumbnail/" + name + "_" + ch + "_" + tm + "_s.png";
-                return "http://www.lmnarchitecture.com/thumbnail/woodWall_17_20120518100934_s.png";
+                return "/media/plans/img_" + d.name + ".png";
+                //return "/media/plans/img_tokyo_0.png";
+
             })
             .attr("x", -nodeSizeW / 2)
             .attr("y", -nodeSizeH / 2)
@@ -155,46 +169,33 @@ function treeDiagram() {
                 gotoView(d.name);
             });
 
-        var arr = [];
-        node.append("circle")
-            .attr("r", nodeSizeW / 2 + 5)
-            .style('fill', "none")
-            .style("stroke", d3.rgb(0, 0, 0))
-            .style("stroke-width", 1)
-            .attr("transform", function (d) {
 
-                var t_x = pos_trance(d, arr);
-                return "translate(" + t_x[0] + "," + t_x[1] + ")";
-            });
         //console.log(arr);
-        var a_text = [];
-        node.append("text")
-//            .attr("dx", function (d) {
-//                return d.children ? 30 : 100;
+//        var a_text = [];
+//        node.append("text")
+//            .attr("dy", -nodeSizeH / 2 + 20)
+//            .style("text-anchor", "middle")
+//
+//            .text(function (d) {
+//                return d.name;
 //            })
-            .attr("dy", -nodeSizeH / 2 + 20)
-            .style("text-anchor", "middle")
-//            .style("text-anchor", function (d) {
-//                return d.children ? "end" : "start";
-//            })
-            .text(function (d) {
-                return d.name;
-            })
-            .attr("transform", function (d) {
-
-                var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x[0] + "," + t_x[1] + ")";
-            });
+//            .attr("transform", function (d) {
+//
+//                var t_x = pos_trance(d, a_text);
+//                return "translate(" + t_x[0] + "," + t_x[1] + ")";
+//           });
 
         //テキストの基準座標 [x,y,height]
-        var textPos = [10, 100, 10];
+        var textPos = [10, -10, 10];
+
+        //ID
         a_text = [];
         node.append("text")
             .attr("dx", -nodeSizeW / 2 + textPos[0])
-            .attr("dy", nodeSizeH / 2 + 10)
+            .attr("dy", nodeSizeH / 2 + textPos[1])
             .style("text-anchor", "start")
             .text(function (d) {
-                return d.id;
+                return "id: " + d.id;
             })
             .attr("transform", function (d) {
 
@@ -202,13 +203,14 @@ function treeDiagram() {
                 return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
 
+        //name
         a_text = [];
         node.append("text")
             .attr("dx", -nodeSizeW / 2 + textPos[0])
-            .attr("dy", nodeSizeH / 2 + 10 + textPos[2])
+            .attr("dy", nodeSizeH / 2 + textPos[1] + 10)
             .style("text-anchor", "start")
             .text(function (d) {
-                return d.name;
+                return "name: " + d.name;
             })
             .attr("transform", function (d) {
 
@@ -216,13 +218,16 @@ function treeDiagram() {
                 return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
 
+        //creation_time
         a_text = [];
         node.append("text")
             .attr("dx", -nodeSizeW / 2 + textPos[0])
-            .attr("dy", nodeSizeH / 2 + 10 + textPos[2] * 2)
+            .attr("dy", nodeSizeH / 2 + textPos[1] + 10 * 2)
             .style("text-anchor", "start")
+            .style("font-size", 5)
             .text(function (d) {
-                return d.creation_time;
+                var txt = d.creation_time;
+                return txt.substring(2, 16);
             })
             .attr("transform", function (d) {
 
@@ -234,7 +239,7 @@ function treeDiagram() {
         a_text = [];
         node.append("text")
 
-            .attr("dy", -nodeSizeH / 2 - 10)
+            .attr("dy", -nodeSizeH / 2 + 20)
             .style("text-anchor", "middle")
 
             .text(function (d) {
@@ -248,13 +253,59 @@ function treeDiagram() {
                 var t_x = pos_trance(d, a_text);
                 return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
+
+
         //point
         a_text = [];
         node.append("text")
 
-            .attr("dx", -nodeSizeH / 2 + 10)
+            .attr("dx", -nodeSizeH / 2 + 20)
             .attr("dy", -nodeSizeH / 2 + 40)
-            .style("text-anchor", "middle")
+            .style("text-anchor", "end")
+
+            .style("font-size", function (d) {
+                var pnt = d.total_points;
+                var clr = 10;
+                SortScore(nodes, "total_points");
+
+                for (var i = 1; i < 6; i++) {
+                    if (nodes[i].id == d.id) {
+                        clr = 10 + (10 / 6) * (6 - i);
+
+                    }
+                }
+
+                return clr;
+
+            })
+            .style("fill", function (d) {
+                var pnt = d.total_points;
+                var clr = 0;
+                SortScore(nodes, "total_points");
+
+                for (var i = 1; i < 6; i++) {
+                    if (nodes[i].id == d.id) {
+                        clr = (255 / 5) * (5 - i);
+
+                    }
+                }
+
+                return d3.rgb(Math.round(clr), 0, 0);
+
+            })
+            .style("font-weight", function (d) {
+                SortScore(nodes, "total_points");
+                var sty = "none";
+
+                for (var i = 1; i < 6; i++) {
+                    if (nodes[i].id == d.id) {
+                        sty = "bold";
+                    }
+                }
+                ;
+
+                return sty;
+            })
 
             .text(function (d) {
                 var pnt = d.total_points;
@@ -266,6 +317,59 @@ function treeDiagram() {
                 var t_x = pos_trance(d, a_text);
                 return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
+
+        //rank
+        a_text = [];
+        node.append("text")
+
+            .attr("dx", -nodeSizeH / 2 + 10)
+            .attr("dy", nodeSizeH / 2 + textPos[1] - 10)
+            .style("text-anchor", "start")
+            .attr("transform", function (d) {
+
+                var t_x = pos_trance(d, a_text);
+                return "translate(" + t_x[0] + "," + t_x[1] + ")";
+            })
+
+            .text(function (d) {
+
+                var rank = Lst_sort();
+                var rk;
+                for (var i in rank) {
+                    if (d.id == rank[i].id) {
+                        rk = rank[i].rank;
+                    }
+                }
+
+                return "rank:" + rk;
+            })
+        ;
+
+//        arr = [];
+//        node.append("circle")
+//            .attr("r", nodeSizeW / 2 + 5)
+//
+//            .style("fill","none")
+//            .style("stroke", d3.rgb(255,0,0))
+//            .style("stroke-width", 1)
+//            .style('opacity', function (d) {
+//                SortScore(nodes, "total_points");
+//                var sty = 0;
+//
+//                for (var i = 1; i < 6; i++) {
+//                    if (nodes[i].id == d.id) {
+//                        sty  =  (6 - i)/6;
+//                    }
+//                }
+//                ;
+//
+//                return sty;
+//            })
+//            .attr("transform", function (d) {
+//
+//                var t_x = pos_trance(d, arr);
+//                return "translate(" + t_x[0] + "," + t_x[1] + ")";
+//            });
 
 
     }
@@ -345,17 +449,10 @@ function treeDiagram() {
                         }
                     }
                     if (d.parent.id == array[array.length - 1][2]) {
-//                        console.log(d.id);
-//                        console.log(d.parent.id);
-//                        console.log("OK");
+
                         j_num = j;
                         signal = true;
-                        //console.log("NO");
-//                        if (array.length > 1) {
-//                            if (d.parent.id == array[array.length - 1][2]) {
-//                                j_num = (j - 2);
-//                            }
-//                        }
+
 
                     }
 
@@ -392,22 +489,50 @@ function treeDiagram() {
 
 //JSONデータをD3の連想配列に変換
 function Lst_sort() {
+
     var modelGene = impData[0];
     var cluster = d3.layout.tree();
     var node = cluster.nodes(modelGene);
-    var ttt = eval("node[0].id");
-    console.log(ttt);
+
+    var rank = rank_maker(node);
+    for (var i in node) {
+        var counter = 0;
+        for (var l in rank) {
+            counter += 1;
+            if (node[i].id == rank[l]) {
+                node[i]["rank"] = counter;
+            }
+        }
+
+    }
+
     return node;
 
 }
 
 //配列をソート
 function SortScore(array, parameter) {
+
     array.sort(function (a, b) {
         var aa = eval("a." + parameter);
         var bb = eval("b." + parameter);
-        return (aa > bb) ? -1 : 1;
+        if (parameter == "rank") {
+            return (aa < bb) ? -1 : 1;
+        } else {
+            return (aa > bb) ? -1 : 1;
+        }
+
     });
+}
+
+//rank
+function rank_maker(array) {
+    var ranker = [];
+    SortScore(array, "total_points");
+    for (var i in array) {
+        ranker.push(array[i].id);
+    }
+    return ranker;
 }
 
 
@@ -418,13 +543,17 @@ function domMaker(array) {
 
     for (var i in array) {
 
+
         document.write("<tr>");
         document.write("<td >");
-        document.write("<a href=" + array[i].url + ">");
+        document.write(array[i].rank);
+        document.write("</td>");
+        document.write("<td >");
         document.write(array[i].id);
         document.write("</a></td><td>");
+        document.write("<a href=" + array[i].url + " OnMouseOver='MouseIn("+array[i].id+");' OnMouseOut='MouseOut("+array[i].id+");'>");
         document.write(array[i].name);
-        document.write("</td><td>");
+        document.write("</a></td><td>");
         var pnts = array[i].total_points;
         document.write(pnts.toFixed(1));
         document.write("</td><td>");
@@ -447,28 +576,59 @@ function reWrite(array, parameter) {
     document.getElementById("table_list").innerHTML = txt;
 
     function domRewrite(array) {
-        var ttt=[];
-       // var ttt = '<table class="pure-table pure-table-horizontal"><thead><tr><th>ID</th><th>name</th><th>point</th><th>diff</th><th>time</th></tr></thead>';
+        var ttt = [];
+        // var ttt = '<table class="pure-table pure-table-horizontal"><thead><tr><th>ID</th><th>name</th><th>point</th><th>diff</th><th>time</th></tr></thead>';
 
         for (var i in array) {
             ttt += "<tr>";
-            ttt += "<a href=" + array[i].url + ">";
+            ttt += "<td>" + array[i].rank + "</td>";
+
             ttt += "<td>" + array[i].id + "</td>";
-            ttt += "<td>" + array[i].name + "</td>";
+            ttt += "<td><a href=" + array[i].url + " OnMouseOver='MouseIn("+array[i].id+");' OnMouseOut='MouseOut("+array[i].id+");'>" + array[i].name + "</a></td>";
             var pnts = array[i].total_points;
             ttt += "<td>" + pnts.toFixed(1) + "</td>";
-                var smt = array[i].similarity * 100;
+            var smt = array[i].similarity * 100;
             ttt += "<td>" + smt.toFixed(1) + "</td>";
-                 ttt += "<td>" + array[i].creation_time+ "</td>";
+            ttt += "<td>" + array[i].creation_time + "</td>";
 
             ttt += "</tr>";
-            ttt += "</a></td>";
+            ttt += "</td>";
         }
 
         return ttt;
     }
 
 }
+
+function MouseIn(id) {
+    var svg = d3.select(".pure-u-4-5");
+    svg.selectAll(".node")
+
+        .style('opacity', 0.8)
+        .style('fill', function (d) {
+            if (id == d.id) {
+                return d3.rgb(0, 0, 255);
+            }
+
+        });
+
+}
+
+function MouseOut(id) {
+    var svg = d3.select(".pure-u-4-5");
+    svg.selectAll(".node")
+
+        .style('opacity', 0.8)
+        .style('fill', function (d) {
+            if (id == d.id) {
+                return d3.rgb(0, 0, 0);
+            }
+
+        });
+
+}
+
+
 
 
 
