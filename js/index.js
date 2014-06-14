@@ -65,7 +65,7 @@ function treeDiagram() {
     var dy = (height * scl - height) * 0.5;
 
     //DOM svgのフィールドを作成
-    var svg = d3.select(".pure-u-4-5").append("svg")
+    var svg = d3.select(".pure-u-19-24").append("svg")
         .attr("width", width * scl)
         .attr("height", cluster_sizeH * scl)
         .append("g")
@@ -77,6 +77,7 @@ function treeDiagram() {
     function netnode(json) {
         var nodes = cluster.nodes(json),
             links = cluster.links(nodes);
+
 
         var ar = [0];
         var link = svg.selectAll(".link")
@@ -152,7 +153,7 @@ function treeDiagram() {
             .on("mouseover", function (d, i) {
                 d3.select(this)
                     .style('opacity', 0.8)
-                    .style('fill', d3.rgb(0, 0, 255));
+                    .style('fill', d3.rgb(223, 206, 58));
             })
             .on("mouseout", function (d, i) {
                 d3.select(this)
@@ -162,7 +163,7 @@ function treeDiagram() {
             })
             .on("click", function (d, i) {
                 d3.select(this)
-                    .style("fill", d3.rgb(255, 0, 0));
+                    .style("fill", d3.rgb(81, 79, 90));
 
                 //link設定
 
@@ -601,13 +602,13 @@ function reWrite(array, parameter) {
 }
 
 function MouseIn(id) {
-    var svg = d3.select(".pure-u-4-5");
+    var svg = d3.select(".pure-u-19-24");
     svg.selectAll(".node")
 
         .style('opacity', 0.8)
         .style('fill', function (d) {
             if (id == d.id) {
-                return d3.rgb(0, 0, 255);
+                return d3.rgb(223, 206, 58);
             }
 
         });
@@ -615,7 +616,7 @@ function MouseIn(id) {
 }
 
 function MouseOut(id) {
-    var svg = d3.select(".pure-u-4-5");
+    var svg = d3.select(".pure-u-19-24");
     svg.selectAll(".node")
 
         .style('opacity', 0.8)
