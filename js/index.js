@@ -3,7 +3,7 @@ function treeDiagram() {
 
 
     var nodeSizeW = 100,
-        nodeSizeH = 100,
+        nodeSizeH = 150,
         mxDiv = width / nodeSizeW;
 
     var width = 1200,
@@ -48,7 +48,7 @@ function treeDiagram() {
         }
         geneHi.push(tt);
     }
-    //console.log(geneHi);
+
 
 
     //樹形図領域生成
@@ -71,12 +71,15 @@ function treeDiagram() {
         .append("g")
         .attr("transform", "translate(" + dx + "," + dy + ")");
 
-    netnode(modelGene);
+
+    netnode(modelGene,geneHi,width,nodeSizeW,nodeSizeH);
 
     //樹形図を作成する
-    function netnode(json) {
+    function netnode(json,geneHi,width,nodeSizeW,nodeSizeH) {
         var nodes = cluster.nodes(json),
             links = cluster.links(nodes);
+
+        layout_tree(nodes,geneHi,width,nodeSizeW,nodeSizeH);
 
 
         var ar = [0];
@@ -142,12 +145,7 @@ function treeDiagram() {
             .attr("x", -nodeSizeW / 2)
             .attr("y", -nodeSizeH / 2)
             .attr("width", nodeSizeW)
-            .attr("height", nodeSizeH)
-            .attr("transform", function (d) {
-
-                var t_x = pos_trance(d, array_image);
-                return "translate(" + t_x[0] + "," + t_x[1] + ")";
-            });
+            .attr("height", nodeSizeH);
 
         svg.selectAll(".node")
             .on("mouseover", function (d, i) {
@@ -170,24 +168,8 @@ function treeDiagram() {
                 gotoView(d.name);
             });
 
-
-        //console.log(arr);
-//        var a_text = [];
-//        node.append("text")
-//            .attr("dy", -nodeSizeH / 2 + 20)
-//            .style("text-anchor", "middle")
-//
-//            .text(function (d) {
-//                return d.name;
-//            })
-//            .attr("transform", function (d) {
-//
-//                var t_x = pos_trance(d, a_text);
-//                return "translate(" + t_x[0] + "," + t_x[1] + ")";
-//           });
-
         //テキストの基準座標 [x,y,height]
-        var textPos = [10, -10, 10];
+        var textPos = [10, -40, 10];
 
         //ID
         a_text = [];
@@ -197,11 +179,6 @@ function treeDiagram() {
             .style("text-anchor", "start")
             .text(function (d) {
                 return "id: " + d.id;
-            })
-            .attr("transform", function (d) {
-
-                var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
 
         //name
@@ -212,11 +189,6 @@ function treeDiagram() {
             .style("text-anchor", "start")
             .text(function (d) {
                 return "name: " + d.name;
-            })
-            .attr("transform", function (d) {
-
-                var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
 
         //creation_time
@@ -229,11 +201,6 @@ function treeDiagram() {
             .text(function (d) {
                 var txt = d.creation_time;
                 return txt.substring(2, 16);
-            })
-            .attr("transform", function (d) {
-
-                var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
 
         //diff
@@ -248,11 +215,6 @@ function treeDiagram() {
                 var sim = d.similarity * 100;
 
                 return sim.toFixed(1) + "%";
-            })
-            .attr("transform", function (d) {
-
-                var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
 
 
@@ -260,7 +222,7 @@ function treeDiagram() {
         a_text = [];
         node.append("text")
 
-            .attr("dx", -nodeSizeH / 2 + 20)
+            .attr("dx", -nodeSizeH / 2 + 40)
             .attr("dy", -nodeSizeH / 2 + 40)
             .style("text-anchor", "end")
 
@@ -275,9 +237,7 @@ function treeDiagram() {
 
                     }
                 }
-
                 return clr;
-
             })
             .style("fill", function (d) {
                 var pnt = d.total_points;
@@ -312,26 +272,15 @@ function treeDiagram() {
                 var pnt = d.total_points;
 
                 return pnt.toFixed(1);
-            })
-            .attr("transform", function (d) {
-
-                var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x[0] + "," + t_x[1] + ")";
             });
 
         //rank
         a_text = [];
         node.append("text")
 
-            .attr("dx", -nodeSizeH / 2 + 10)
+            .attr("dx", -nodeSizeW / 2 + textPos[0])
             .attr("dy", nodeSizeH / 2 + textPos[1] - 10)
             .style("text-anchor", "start")
-            .attr("transform", function (d) {
-
-                var t_x = pos_trance(d, a_text);
-                return "translate(" + t_x[0] + "," + t_x[1] + ")";
-            })
-
             .text(function (d) {
 
                 var rank = Lst_sort();
@@ -343,34 +292,7 @@ function treeDiagram() {
                 }
 
                 return "rank:" + rk;
-            })
-        ;
-
-//        arr = [];
-//        node.append("circle")
-//            .attr("r", nodeSizeW / 2 + 5)
-//
-//            .style("fill","none")
-//            .style("stroke", d3.rgb(255,0,0))
-//            .style("stroke-width", 1)
-//            .style('opacity', function (d) {
-//                SortScore(nodes, "total_points");
-//                var sty = 0;
-//
-//                for (var i = 1; i < 6; i++) {
-//                    if (nodes[i].id == d.id) {
-//                        sty  =  (6 - i)/6;
-//                    }
-//                }
-//                ;
-//
-//                return sty;
-//            })
-//            .attr("transform", function (d) {
-//
-//                var t_x = pos_trance(d, arr);
-//                return "translate(" + t_x[0] + "," + t_x[1] + ")";
-//            });
+            });
 
 
     }
@@ -626,6 +548,58 @@ function MouseOut(id) {
             }
 
         });
+
+}
+
+//樹形図の座標設定
+function layout_tree(array,geneHi,width,nodeSizeW,nodeSizeH){
+
+    var max_count = Math.floor(1250/nodeSizeW);
+    var range = [];
+    for(var i in geneHi){
+        if(max_count<geneHi[i].length){
+                var ran = Math.floor(geneHi[i].length/2);
+                range.push(ran);
+            }else{
+                range.push(1);
+            }
+
+    }
+
+    for(var i in array){
+        for(var l=0;l<geneHi.length;l++){
+
+            for(var k=0;k<geneHi[l].length;k++){
+                if(array[i].id == geneHi[l][k][0]){
+                    array[i].x = (width/(geneHi[l].length+1)*(k+1));
+                    var node_y=0;
+                    for(var m=0;m<l;m++){
+                        node_y +=range[m];
+
+                    }
+                    if(max_count<geneHi[l].length){
+                        if(k<geneHi[l].length/2){
+                             node_y +=k;
+                        }else{
+                            node_y +=k-Math.floor(geneHi[l].length/2);
+                        }
+
+                    }
+
+                    array[i].y = (node_y+1)* nodeSizeH;
+
+
+                }
+            }
+        }
+        if(i==0){
+            array[i].x=1250/2;
+        }
+    }
+
+
+
+    return array;
 
 }
 
