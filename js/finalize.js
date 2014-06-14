@@ -21,7 +21,7 @@ var cursor, ground;
 var plan;
 var geometry_data;
 
-var new_name, new_geometry, new_similarity, new_cost, new_points, image;
+var new_name, new_points, image;
 
 
 function initialize() {
@@ -59,13 +59,15 @@ function setup_three_js() {
 //            CANVAS_HEIGHT / - 8,
 //        10,
 //        10000000 );
-        camera = new THREE.OrthographicCamera(
-            CANVAS_WIDTH / - 0.1,
+
+
+    camera = new THREE.OrthographicCamera(
+            CANVAS_WIDTH / -0.1,
             CANVAS_WIDTH / 0.1,
             CANVAS_HEIGHT / 0.1,
-            CANVAS_HEIGHT / - 0.1,
+            CANVAS_HEIGHT / -0.1,
         10,
-        10000000 );
+        10000000);
 
     camera.position.set(
             unit_length * 2.5,
@@ -95,6 +97,7 @@ function setup_three_js() {
 
 
 function setup_world() {
+
     console.log("--setup world--");
 
     // lights
@@ -104,7 +107,6 @@ function setup_world() {
     // geometry (geometry data is already ready.)
     plan = new Plan(geometry_data);
     plan.create_walls_floors();
-
 
     // update cost and points_inborn
     new_points = parent_points * similarity;
@@ -116,8 +118,8 @@ function setup_world() {
     ground = new Ground();
     ground.create();
 
+    validate_name();  // initial validation
 
-    validate_name();
     $("#name").focusout(function () {
         validate_name();
     });
@@ -126,19 +128,19 @@ function setup_world() {
 function validate_name() {
     // validate name
 
+    // null filtering
     if ($("#name").val() == "") {
         $("#name").css("border", "solid 1px #ff0000");
         $("#status").text("please enter something for a name.");
-        if ($("#save_plan").is(":visible")) {
-            $("#save_plan").hide();
-        }
+        if ($("#save_plan").is(":visible"))   $("#save_plan").hide();
+
+        // regex name filtering
     } else if ($("#name").val().match(/^[-a-zA-Z0-9]+[-a-zA-Z0-9_]+$/) == null) {
         $("#name").css("border", "solid 1px #ff0000");
         $("#status").text("use only numbers and alphabets.('_' is permitted in between)");
-        if ($("#save_plan").is(":visible")) {
-            $("#save_plan").hide();
-        }
-    } else {
+        if ($("#save_plan").is(":visible"))   $("#save_plan").hide();
+
+    } else { // ajax search for uniqueness
         $.post("",
             {
                 name: $("#name").val(),
@@ -147,31 +149,28 @@ function validate_name() {
             },
             function (data, status) {
                 var result = JSON.parse(data);
+
+                // valid
                 if (result["flag"]) {
                     $("#name").css("border", "solid 1px #0000ff");
-                    $("#status").text("valid name!");
+                    $("#status").text("valid name!..ready to submit");
                     new_name = $("#name").val();
-                    if (!$("#save_plan").is(":visible")) {
-                        $("#save_plan").show();
-                    }
+                    if (!$("#save_plan").is(":visible"))   $("#save_plan").show();
+
+                    // duplicate
                 } else {
                     $("#name").css("border", "solid 1px #ff0000");
                     $("#status").text("name is already used...");
-                    if ($("#save_plan").is(":visible")) {
-                        $("#save_plan").hide();
-                    }
-
+                    if ($("#save_plan").is(":visible"))   $("#save_plan").hide();
                 }
-
-            }
-        );
+            });
     }
-
-
 }
 
-function save_plan() {  // save plan!!!
 
+function save_plan() {
+
+    // no worries the validation has ended....
     $.post("",
         {
             save_name: new_name,
@@ -190,7 +189,5 @@ function save_plan() {  // save plan!!!
         .fail(function (xhr) {
             console.log("Error: " + xhr.statusText);
             alert("Error: " + xhr.statusText);
-        }
-    );
-
+        });
 }
