@@ -65,7 +65,7 @@ function treeDiagram() {
             return [d.x, d.y];
         });
 
-    var dx = (width * scl - width) * 0.5;
+    var dx = (width * scl - width) * 0.5 - 120;
     var dy = (height * scl - height) * 0.5;
 
     //DOM svgのフィールドを作成

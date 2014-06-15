@@ -310,7 +310,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 	function onMouseDown( event ) {
 
 		if ( scope.enabled === false ) return;
-//		event.preventDefault();
+		//event.preventDefault();
 
 		if ( event.button === 0 ) {
 			if ( scope.noRotate === true ) return;
@@ -321,14 +321,14 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		} else if ( event.button === 1 ) {
 			if ( scope.noZoom === true ) return;
-
+            //event.preventDefault();
 			state = STATE.DOLLY;
 
 			dollyStart.set( event.clientX, event.clientY );
 
 		} else if ( event.button === 2 ) {
+            //event.preventDefault();
 			if ( scope.noPan === true ) return;
-
 			state = STATE.PAN;
 
 			panStart.set( event.clientX, event.clientY );
@@ -345,7 +345,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		if ( scope.enabled === false ) return;
 
-//		event.preventDefault();
+		//event.preventDefault();
 
 		var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
@@ -415,7 +415,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		if ( scope.enabled === false || scope.noZoom === true ) return;
 
-//		event.preventDefault(); // todo: straighten up this
+		//event.preventDefault(); // todo: straighten up this
 
 		var delta = 0;
 
@@ -525,7 +525,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		if ( scope.enabled === false ) return;
 
-		//event.preventDefault();
+		event.preventDefault();
 		event.stopPropagation();
 
 		var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
@@ -610,7 +610,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 	}
 
 	this.domElement.addEventListener( 'contextmenu', function ( event ) {
-        //event.preventDefault();
+    event.preventDefault();
     }, false );
 	this.domElement.addEventListener( 'mousedown', onMouseDown, false );
 	this.domElement.addEventListener( 'mousewheel', onMouseWheel, false );

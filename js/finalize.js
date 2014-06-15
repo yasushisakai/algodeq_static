@@ -40,7 +40,7 @@ function setup_three_js() {
 
 //    var CANVAS_WIDTH = window.innerWidth;
 //    var CANVAS_HEIGHT = window.innerHeight;
-    var CANVAS_WIDTH = 1280;
+    var CANVAS_WIDTH = 640;
     var CANVAS_HEIGHT = 720;
 
     scene = new THREE.Scene();
@@ -60,12 +60,13 @@ function setup_three_js() {
 //        10,
 //        10000000 );
 
+    var camera_coef = 0.0620;
 
     camera = new THREE.OrthographicCamera(
-            CANVAS_WIDTH / -0.1,
-            CANVAS_WIDTH / 0.1,
-            CANVAS_HEIGHT / 0.1,
-            CANVAS_HEIGHT / -0.1,
+            CANVAS_WIDTH / -camera_coef,
+            CANVAS_WIDTH / camera_coef,
+            CANVAS_HEIGHT / camera_coef,
+            CANVAS_HEIGHT / -camera_coef,
         10,
         10000000);
 
@@ -91,7 +92,7 @@ function setup_three_js() {
 
 
     // html element
-    canvas = $("#webgl_canvas").prepend(renderer.domElement);
+    canvas = $("#webgl_canvas_finalize").prepend(renderer.domElement);
     canvas.width(CANVAS_WIDTH);
     canvas.height(CANVAS_HEIGHT);
 }
@@ -129,13 +130,13 @@ function validate_name() {
     if ($("#name_input").val() == "") {
         $("#name_input").css("border", "solid 1px #ff0000");
         $("#status").text("please enter something for a name.");
-        if ($("#save_plan").is(":visible"))   $("#save_plan").hide();
+        if ($("#save_plan").is(":visible"))   $("#save_plan").hide('fade','',300);
 
         // regex name filtering
     } else if ($("#name_input").val().match(/^[-a-zA-Z0-9]+[-a-zA-Z0-9_]+$/) == null) {
         $("#name_input").css("border", "solid 1px #ff0000");
         $("#status").text("use only numbers and alphabets.('_' is permitted in between)");
-        if ($("#save_plan").is(":visible"))   $("#save_plan").hide();
+        if ($("#save_plan").is(":visible"))   $("#save_plan").hide('fade','',300);
 
     } else { // ajax search for uniqueness
         $.post("",
@@ -158,7 +159,7 @@ function validate_name() {
                 } else {
                     $("#name_input").css("border", "solid 1px #ff0000");
                     $("#status").text("name is already used...");
-                    if ($("#save_plan").is(":visible"))   $("#save_plan").hide();
+                    if ($("#save_plan").is(":visible"))   $("#save_plan").hide('fade','',300);
                 }
             });
     }

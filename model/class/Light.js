@@ -37,7 +37,7 @@ function Light(_ambient_color,_directional_light_color,_intensity) {
     this.light.shadowCameraBottom = -d;
     this.light.shadowCameraNear = 0.0;
     this.light.shadowCameraFar = unit_length*15;
-    this.light.shadowCameraVisible = true;
+    //this.light.shadowCameraVisible = true;
     this.light.shadowBias = 0.000001;
     this.light.shadowDarkness = 0.2;
 }

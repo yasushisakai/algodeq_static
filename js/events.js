@@ -3,11 +3,11 @@ var intersect_objects;
 
 function mouse_move(event) {
 
-//    event.preventDefault(); // todo: straighten up stuff
+    event.preventDefault(); // todo: straighten up stuff
 
     var vector = new THREE.Vector3(
             renderer.devicePixelRatio * (event.pageX - this.offsetLeft) / this.width * 2 - 1,
-            -renderer.devicePixelRatio * (event.pageY - this.offsetTop) / this.height * 2 + 1,
+            -renderer.devicePixelRatio * (event.pageY - this.offsetTop-100) / this.height * 2 + 1,
         0
     );
 

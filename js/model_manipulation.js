@@ -53,8 +53,8 @@ function initialize() {
 
 function setup_three_js() {
     console.log("--setup three js--");
-    var CANVAS_WIDTH = window.innerWidth;
-    var CANVAS_HEIGHT = window.innerHeight;
+    var CANVAS_WIDTH = window.innerWidth-10;
+    var CANVAS_HEIGHT = window.innerHeight-150;
 
     scene = new THREE.Scene();
 
