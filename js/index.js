@@ -2,7 +2,7 @@ function treeDiagram() {
     var modelGene = impData[0];
 
 
-    var nodeSizeW = 100,
+    var nodeSizeW = 150,
         nodeSizeH = 150,
         mxDiv = width / nodeSizeW;
 
@@ -32,7 +32,7 @@ function treeDiagram() {
     ;
     var geneMax = Math.max.apply(null, generation);
 
-    var cluster_sizeH = nodeSizeH * 2 * geneMax;
+
 
     //世代ごとの配列生成
     var geneHi = [];
@@ -48,6 +48,10 @@ function treeDiagram() {
         }
         geneHi.push(tt);
     }
+
+     var c_num = cl_size(geneHi,nodeSizeW);
+
+    var cluster_sizeH = nodeSizeH * 2 * c_num;
 
 
 
@@ -207,7 +211,7 @@ function treeDiagram() {
         a_text = [];
         node.append("text")
 
-            .attr("dy", -nodeSizeH / 2 + 20)
+            .attr("dy", -nodeSizeH / 2+35)
             .style("text-anchor", "middle")
 
             .text(function (d) {
@@ -222,8 +226,8 @@ function treeDiagram() {
         a_text = [];
         node.append("text")
 
-            .attr("dx", -nodeSizeH / 2 + 40)
-            .attr("dy", -nodeSizeH / 2 + 40)
+            .attr("dx", -nodeSizeH / 2 + 25)
+            .attr("dy", -nodeSizeH / 2 + 60)
             .style("text-anchor", "end")
 
             .style("font-size", function (d) {
@@ -575,13 +579,17 @@ function layout_tree(array,geneHi,width,nodeSizeW,nodeSizeH){
                     var node_y=0;
                     for(var m=0;m<l;m++){
                         node_y +=range[m];
+                        console.log(range[m]);
 
                     }
                     if(max_count<geneHi[l].length){
-                        if(k<geneHi[l].length/2){
+                        var cnt = Math.floor(geneHi[l].length/2);
+                        console.log(cnt);
+                        if(k<cnt){
                              node_y +=k;
                         }else{
-                            node_y +=k-Math.floor(geneHi[l].length/2);
+                            node_y +=k-cnt;
+
                         }
 
                     }
@@ -600,6 +608,35 @@ function layout_tree(array,geneHi,width,nodeSizeW,nodeSizeH){
 
 
     return array;
+
+}
+
+function cl_size(geneHi,nodeSizeW){
+
+    var max_count = Math.floor(1250/nodeSizeW);
+    var range = [];
+    for(var i in geneHi){
+        if(max_count<geneHi[i].length){
+                var ran = Math.floor(geneHi[i].length/2);
+                range.push(ran);
+            }else{
+                range.push(1);
+            }
+
+    }
+
+    var c_count=0;
+    for(var l in range){
+        if(range[l]==1){
+            c_count +=1;
+        }else {
+            c_count += range[l]/2
+            }
+        }
+
+
+    return c_count;
+
 
 }
 
