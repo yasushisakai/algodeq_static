@@ -12,6 +12,8 @@ function Plan(_room_data) {
             "wc": [],
             "staircase": []
         };
+
+        this.entities = new THREE.Geometry();
     }
 
     else {
@@ -25,6 +27,7 @@ function Plan(_room_data) {
 
     }
 
+    this.entities = [];
 
 }
 
@@ -84,7 +87,10 @@ Plan.prototype.compare_with = function (_geometry_data) {
         }
     }
 
-    return similarity = same_char / all_char;
+    var ratio = same_char / all_char;
+    if (ratio < 0.01) ratio = 0.01;
+
+    return ratio;
 };
 
 
@@ -248,7 +254,7 @@ Plan.prototype.create_walls_floors = function () {
                     if (room_matrix[floor][z][x] != "nothing") {
                         console.log(room_matrix[floor][z][x]);
                         wall = new Wall([-7, floor, z - 6], true, room_matrix[floor][z][x]);
-                        wall.create(false);
+                        this.entities.push(wall.create(false));
                     }
                 }
 
@@ -262,7 +268,7 @@ Plan.prototype.create_walls_floors = function () {
                         } else {
                             wall = new Wall([x - 6, floor, z - 6], true, room_matrix[floor][z][x + 1]);
                         }
-                        wall.create(false);
+                        this.entities.push(wall.create(false));
                     }
                 }
 
@@ -270,7 +276,7 @@ Plan.prototype.create_walls_floors = function () {
                 if (x == 11) {
                     if (room_matrix[floor][z][x] != "nothing") {
                         wall = new Wall([5, floor, z - 6], false, room_matrix[floor][z][x]);
-                        wall.create(false);
+                        this.entities.push(wall.create(false));
                     }
                 }
 
@@ -279,7 +285,7 @@ Plan.prototype.create_walls_floors = function () {
                 if (z == 0) {
                     if (room_matrix[floor][z][x] != "nothing") {
                         wall = new Wall([x - 6, floor, -7], true, room_matrix[floor][z][x]);
-                        wall.create(true);
+                        this.entities.push(wall.create(true));
                     }
                 }
 
@@ -293,7 +299,7 @@ Plan.prototype.create_walls_floors = function () {
                         } else {
                             wall = new Wall([x - 6, floor, z - 6], true, room_matrix[floor][z + 1][x]);
                         }
-                        wall.create(true);
+                        this.entities.push(wall.create(true));
                     }
                 }
 
@@ -301,7 +307,7 @@ Plan.prototype.create_walls_floors = function () {
                 if (z == 11) {
                     if (room_matrix[floor][z][x] != "nothing") {
                         wall = new Wall([x - 6, floor, 5], false, room_matrix[floor][z][x]);
-                        wall.create(true);
+                        this.entities.push(wall.create(true));
                     }
                 }
 
@@ -313,7 +319,7 @@ Plan.prototype.create_walls_floors = function () {
                 } else {
                     if (floor < 1) {
                         floor_plate = new Floor([x - 6, floor, z - 6], "grass");
-                        floor_plate.create();
+                        this.entities.push(floor_plate.create());
                     }
                 }
 
@@ -321,6 +327,7 @@ Plan.prototype.create_walls_floors = function () {
             }
         }
     }
+
 };
 
 

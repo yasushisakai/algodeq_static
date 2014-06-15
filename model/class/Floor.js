@@ -49,6 +49,15 @@ Floor.prototype.create = function () {
 
     );
 
+    this.mesh.traverse(function (object) {
+        object.castShadow=true;
+        object.receiveShadow=true;
+    });
+
+
+
+
+    return this.mesh
 
 
 }

@@ -87,6 +87,7 @@ function setup_three_js() {
     //renderer.setClearColor(0xffffff,0);  // something is wrong with white, transparent background
     renderer.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
     renderer.shadowMapEnabled = true;
+    renderer.shadowMapSoft=true;
 
 
     // html element
@@ -119,13 +120,6 @@ function setup_world() {
     ground.create();
 
     validate_name();  // initial validation
-
-    console.log($("#name_box"));
-
-//    $("#name_box").focusout(function () {
-//        console.log("inside_focusout");
-//        validate_name();
-//    });
 }
 
 function validate_name() {

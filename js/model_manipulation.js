@@ -63,7 +63,7 @@ function setup_three_js() {
         20,
             CANVAS_WIDTH / CANVAS_HEIGHT,
         unit_size,
-            unit_size * 100
+            unit_size * 1000
     );
 
     camera.position = new THREE.Vector3(

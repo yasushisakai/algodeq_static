@@ -23,21 +23,21 @@ function Light(_ambient_color,_directional_light_color,_intensity) {
 //    );
 
     this.light.position.set(
-        unit_size*2,unit_size*2,unit_size*2
+        unit_length*2,unit_length*2,-unit_length*2
     );
 
     // todo: fine-tune the shadows,
     this.light.castShadow = true;
-    this.light.shadowMapWidth = 4096;
-    this.light.shadowMapHeight = 4096;
-    var d = 1000000;
+    this.light.shadowMapWidth = 2048;
+    this.light.shadowMapHeight = 2048;
+    var d = unit_length;
     this.light.shadowCameraLeft = d;
     this.light.shadowCameraRight = -d;
     this.light.shadowCameraTop = d;
     this.light.shadowCameraBottom = -d;
-    this.light.shadowCameraNear = 100000;
-    this.light.shadowCameraFar = 2500000;
-    //this.light.shadowCameraVisible = true;
+    this.light.shadowCameraNear = 0.0;
+    this.light.shadowCameraFar = unit_length*15;
+    this.light.shadowCameraVisible = true;
     this.light.shadowBias = 0.000001;
     this.light.shadowDarkness = 0.2;
 }

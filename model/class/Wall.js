@@ -52,16 +52,26 @@ Wall.textures = {
     }
 };
 
-Wall.geometry = function () {
+//Wall.geometry = function () {
+//
+//    var wall_geometry = new THREE.Geometry();
+//    var wall_single_side = new THREE.PlaneGeometry(unit_size, unit_height);
+//    THREE.GeometryUtils.merge(wall_geometry, wall_single_side, 0);
+//    var new_single_side =  new THREE.PlaneGeometry(unit_size, unit_height);
+//    new_single_side.position = new THREE.Vector3(0,-10,10);
+//    THREE.GeometryUtils.merge(wall_geometry, new_single_side, 1);
+////    THREE.GeometryUtils.merge(wall_geometry, wall_single_side.clone(), 1);
+//
+//    return wall_geometry;
+//
+//}
 
-    var wall_geometry = new THREE.Geometry();
-    var wall_single_side = new THREE.PlaneGeometry(unit_size, unit_height);
-    THREE.GeometryUtils.merge(wall_geometry, wall_single_side, 0);
-    THREE.GeometryUtils.merge(wall_geometry, wall_single_side.clone(), 1);
+Wall.geometry = function(){
 
-    return wall_geometry;
+    return new THREE.BoxGeometry(unit_size,unit_height,20);
 
 }
+
 
 Wall.prototype.create = function (_rotate) {
 
@@ -71,32 +81,53 @@ Wall.prototype.create = function (_rotate) {
         if (!this.flip) {
 
             materials = [
-                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].inside, side: THREE.BackSide}),
-                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].outside, side: THREE.FrontSide})
+                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].inside, transparent:true,side: THREE.FrontSide}),
+                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].outside, transparent:true,side: THREE.FrontSide})
             ]
         } else {
             materials = [
-                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].inside, side: THREE.FrontSide}),
-                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].outside, side: THREE.BackSide})
+                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].inside, transparent:true,side: THREE.FrontSide}),
+                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].outside, transparent:true,side: THREE.FrontSide})
             ]
         }
     } else {
         if (!this.flip) {
             materials = [
-                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].inside_inside, side: THREE.BackSide}),
-                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_B].inside_inside, side: THREE.FrontSide})
+                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].inside_inside, transparent:true,side: THREE.FrontSide}),
+                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_B].inside_inside, transparent:true,side: THREE.FrontSide})
             ]
         } else {
             materials = [
-                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].inside_inside, side: THREE.FrontSide}),
-                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_B].inside_inside, side: THREE.BackSide})
+                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_A].inside_inside, transparent:true,side: THREE.FrontSide}),
+                new THREE.MeshLambertMaterial({map: Wall.textures[this.type_B].inside_inside, transparent:true,side: THREE.FrontSide})
             ]
         }
     }
+    materials.push(new THREE.MeshLambertMaterial({color:'0xffffff'}));
 
-    this.mesh = new THREE.Mesh(Wall.geometry(), new THREE.MeshFaceMaterial(materials));
-
+    if(this.flip) {
+        this.mesh = new THREE.Mesh(Wall.geometry(), new THREE.MeshFaceMaterial([
+            materials[1],
+            materials[0],
+            materials[2],
+            materials[2],
+            materials[0],
+            materials[1]
+        ]));
+    }else {
+        this.mesh = new THREE.Mesh(Wall.geometry(), new THREE.MeshFaceMaterial([
+            materials[0],
+            materials[1],
+            materials[2],
+            materials[2],
+            materials[1],
+            materials[0]
+        ]));
+    }
+    this.receiveShadow=true;
+    this.castShadow = true;
     scene.add(this.mesh);
+
 
     this.mesh.rotation.y = -90 * Math.PI / 180;
 
@@ -115,5 +146,13 @@ Wall.prototype.create = function (_rotate) {
                 (this.index[1] + 0.5) * unit_height,
                 (this.index[2] + 1) * unit_size);
     }
+
+    //shadowing
+    this.mesh.traverse(function (object) {
+        object.castShadow=true;
+        object.receiveShadow=true;
+    });
+
+    return this.mesh
 
 }
