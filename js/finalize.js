@@ -112,7 +112,7 @@ function setup_world() {
     new_points = parent_points * similarity;
     cost = plan.get_cost();
     $("#cost").text('cost: ' + cost);
-    $("#points_inborn").text('points inborn: ' + points_inborn);
+    $("#points_inborn").text('points inborn: ' + Math.floor(new_points));
 
     // base ground w/ grid
     ground = new Ground();
@@ -120,30 +120,33 @@ function setup_world() {
 
     validate_name();  // initial validation
 
-    $("#name").focusout(function () {
-        validate_name();
-    });
+    console.log($("#name_box"));
+
+//    $("#name_box").focusout(function () {
+//        console.log("inside_focusout");
+//        validate_name();
+//    });
 }
 
 function validate_name() {
     // validate name
 
     // null filtering
-    if ($("#name").val() == "") {
-        $("#name").css("border", "solid 1px #ff0000");
+    if ($("#name_input").val() == "") {
+        $("#name_input").css("border", "solid 1px #ff0000");
         $("#status").text("please enter something for a name.");
         if ($("#save_plan").is(":visible"))   $("#save_plan").hide();
 
         // regex name filtering
-    } else if ($("#name").val().match(/^[-a-zA-Z0-9]+[-a-zA-Z0-9_]+$/) == null) {
-        $("#name").css("border", "solid 1px #ff0000");
+    } else if ($("#name_input").val().match(/^[-a-zA-Z0-9]+[-a-zA-Z0-9_]+$/) == null) {
+        $("#name_input").css("border", "solid 1px #ff0000");
         $("#status").text("use only numbers and alphabets.('_' is permitted in between)");
         if ($("#save_plan").is(":visible"))   $("#save_plan").hide();
 
     } else { // ajax search for uniqueness
         $.post("",
             {
-                name: $("#name").val(),
+                name: $("#name_input").val(),
                 csrfmiddlewaretoken: csrf_token
 
             },
@@ -152,14 +155,14 @@ function validate_name() {
 
                 // valid
                 if (result["flag"]) {
-                    $("#name").css("border", "solid 1px #0000ff");
+                    $("#name_input").css("border", "solid 1px #0000ff");
                     $("#status").text("valid name!..ready to submit");
-                    new_name = $("#name").val();
+                    new_name = $("#name_input").val();
                     if (!$("#save_plan").is(":visible"))   $("#save_plan").show();
 
                     // duplicate
                 } else {
-                    $("#name").css("border", "solid 1px #ff0000");
+                    $("#name_input").css("border", "solid 1px #ff0000");
                     $("#status").text("name is already used...");
                     if ($("#save_plan").is(":visible"))   $("#save_plan").hide();
                 }

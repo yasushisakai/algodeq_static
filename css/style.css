@@ -23,7 +23,6 @@ body {
 
 }
 
-
 .pure-u-4-5 {
     padding: 50px 0 0 0;
     z-index: 0;
@@ -53,6 +52,7 @@ h2 {
     line-height: 0%;
     padding: 0 0 5px 10px;
 }
+
 .icon{
     font-size: 3em;
     color:#000000;
@@ -61,7 +61,13 @@ h2 {
     padding-bottom: 40px;
 }
 
-
+#navigation{
+    width: 30%;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+}
 
 
 
