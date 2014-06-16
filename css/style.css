@@ -54,7 +54,7 @@ a:active {
 #side_bar {
     position: absolute;
     top: 100px;
-    left: 10%;
+
     z-index: 10;
 }
 
@@ -142,7 +142,9 @@ p {
 }
 
 .button-default {
-    background-color: #DFCE3A;
+    width:65px;
+    font-size: 70%;
+    background-color: #DDDDDD;
     line-height: 1.5em;
     border-radius: 4px;
     padding: 20px, 10px;
@@ -152,6 +154,8 @@ p {
 }
 
 .button-living {
+    width:65px;
+    font-size: 70%;
     background-color: #FF4A36;
     line-height: 1.5em;
     border-radius: 4px;
@@ -162,6 +166,8 @@ p {
 }
 
 .button-dining {
+    width:65px;
+    font-size: 70%;
     background-color: #3FE845;
     line-height: 1.5em;
     border-radius: 4px;
@@ -172,6 +178,8 @@ p {
 }
 
 .button-kitchen {
+    width:65px;
+    font-size: 70%;
     color: #DDDDDD;
     background-color: #3C43E5;
     line-height: 1.5em;
@@ -183,6 +191,8 @@ p {
 }
 
 .button-bedroom {
+    width:65px;
+    font-size: 70%;
     background-color: #DFCE3A;
     line-height: 1.5em;
     border-radius: 4px;
@@ -193,6 +203,8 @@ p {
 }
 
 .button-wc {
+    width:65px;
+    font-size: 70%;
     color: #DDDDDD;
     background-color: #7F2460;
     line-height: 1.5em;
@@ -204,6 +216,8 @@ p {
 }
 
 .button-staircase {
+    width:65px;
+    font-size: 70%;
     background-color: #3FE5E5;
     line-height: 1.5em;
     border-radius: 4px;
@@ -214,6 +228,20 @@ p {
 }
 
 .button-delete {
+    width:65px;
+    font-size: 70%;
+    background-color: #DDDDDD;
+    line-height: 1.5em;
+    border-radius: 4px;
+    padding: 20px, 10px;
+    border-style: none;
+    margin-bottom: 3px;
+
+}
+
+#finalize {
+    width:65px;
+    font-size: 70%;
     background-color: #DDDDDD;
     line-height: 1.5em;
     border-radius: 4px;
