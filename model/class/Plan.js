@@ -257,18 +257,37 @@ Plan.prototype.create_walls_floors = function () {
                         this.entities.push(wall.create(false));
                     }
                 }
-
+                var flag = true;
                 // typical cases the middle places
                 if (x < (resolution - 1)) {
 
                     if (room_matrix[floor][z][x] != room_matrix[floor][z][x + 1]) {  // detects weather the two room types are different
-                        if (room_matrix[floor][z][x] != "nothing") {
+                        if (room_matrix[floor][z][x] != "nothing") {  //the spot is not nothing
                             if (room_matrix[floor][z][x + 1] == "nothing") wall = new Wall([x - 6, floor, z - 6], false, room_matrix[floor][z][x]);
-                            else wall = new Wall([x - 6, floor, z - 6], true, room_matrix[floor][z][x], room_matrix[floor][z][x + 1]);
+                            else {
+
+                                if (((room_matrix[floor][z][x] == "living") && (room_matrix[floor][z][x + 1] == "dining")) ||
+                                    ((room_matrix[floor][z][x] == "dining") && (room_matrix[floor][z][x + 1] == "living")) ||
+                                    ((room_matrix[floor][z][x] == "dining") && (room_matrix[floor][z][x + 1] == "kitchen")) ||
+                                    ((room_matrix[floor][z][x] == "kitchen") && (room_matrix[floor][z][x + 1] == "dining")) ||
+                                    ((room_matrix[floor][z][x] == "living") && (room_matrix[floor][z][x + 1] == "staircase")) ||
+                                    ((room_matrix[floor][z][x] == "staircase") && (room_matrix[floor][z][x + 1] == "living")) ||
+                                    ((room_matrix[floor][z][x] == "dining") && (room_matrix[floor][z][x + 1] == "staircase")) ||
+                                    ((room_matrix[floor][z][x] == "staircase") && (room_matrix[floor][z][x + 1] == "dining")) ||
+                                    ((room_matrix[floor][z][x] == "kitchen") && (room_matrix[floor][z][x + 1] == "staircase")) ||
+                                    ((room_matrix[floor][z][x] == "staircase") && (room_matrix[floor][z][x + 1] == "kitchen"))) {
+                                    flag = false;
+                                }
+
+                                else {
+                                    wall = new Wall([x - 6, floor, z - 6], true, room_matrix[floor][z][x], room_matrix[floor][z][x + 1]);
+                                }
+
+                            }
                         } else {
                             wall = new Wall([x - 6, floor, z - 6], true, room_matrix[floor][z][x + 1]);
                         }
-                        this.entities.push(wall.create(false));
+                        if (flag) this.entities.push(wall.create(false));
                     }
                 }
 
@@ -290,16 +309,35 @@ Plan.prototype.create_walls_floors = function () {
                 }
 
 
+                flag = true;
                 // this is for z line
                 if ((z < resolution - 1)) {
                     if (room_matrix[floor][z][x] != room_matrix[floor][z + 1][x]) {
                         if (room_matrix[floor][z][x] != "nothing") {
                             if (room_matrix[floor][z + 1][x] == "nothing")  wall = new Wall([x - 6, floor, z - 6], false, room_matrix[floor][z][x]);
-                            else wall = new Wall([x - 6, floor, z - 6], true, room_matrix[floor][z][x], room_matrix[floor][z + 1][x]);
+                            else {
+                                if (((room_matrix[floor][z][x] == "living") && (room_matrix[floor][z + 1][x] == "dining")) ||
+                                    ((room_matrix[floor][z][x] == "dining") && (room_matrix[floor][z + 1][x] == "living")) ||
+                                    ((room_matrix[floor][z][x] == "dining") && (room_matrix[floor][z + 1][x] == "kitchen")) ||
+                                    ((room_matrix[floor][z][x] == "kitchen") && (room_matrix[floor][z + 1][x] == "dining")) ||
+                                    ((room_matrix[floor][z][x] == "living") && (room_matrix[floor][z + 1][x] == "staircase")) ||
+                                    ((room_matrix[floor][z][x] == "staircase") && (room_matrix[floor][z + 1][x] == "living")) ||
+                                    ((room_matrix[floor][z][x] == "dining") && (room_matrix[floor][z + 1][x] == "staircase")) ||
+                                    ((room_matrix[floor][z][x] == "staircase") && (room_matrix[floor][z + 1][x] == "dining")) ||
+                                    ((room_matrix[floor][z][x] == "kitchen") && (room_matrix[floor][z + 1][x] == "staircase")) ||
+                                    ((room_matrix[floor][z][x] == "staircase") && (room_matrix[floor][z + 1][x] == "kitchen"))) {
+                                    flag = false;
+                                }
+
+
+                                else {
+                                    wall = new Wall([x - 6, floor, z - 6], true, room_matrix[floor][z][x], room_matrix[floor][z + 1][x]);
+                                }
+                            }
                         } else {
                             wall = new Wall([x - 6, floor, z - 6], true, room_matrix[floor][z + 1][x]);
                         }
-                        this.entities.push(wall.create(true));
+                        if (flag) this.entities.push(wall.create(true));
                     }
                 }
 
