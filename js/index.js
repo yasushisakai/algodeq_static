@@ -2,11 +2,11 @@ function treeDiagram() {
     var modelGene = impData[0];
 
 
-    var nodeSizeW = 150,
-        nodeSizeH = 150,
+    var nodeSizeW = 140,
+        nodeSizeH = 140,
         mxDiv = width / nodeSizeW;
 
-    var width = 1200,
+    var width = 1000,
         height = 600,
         scl = 1.2;
 
@@ -65,12 +65,12 @@ function treeDiagram() {
             return [d.x, d.y];
         });
 
-    var dx = (width * scl - width) * 0.5 - 120;
+    var dx =0;// (width * scl - width) * 0.5;
     var dy = (height * scl - height) * 0.5;
 
     //DOM svgのフィールドを作成
     var svg = d3.select(".pure-u-19-24").append("svg")
-        .attr("width", width * scl)
+        .attr("width", width)
         .attr("height", cluster_sizeH * scl)
         .append("g")
         .attr("transform", "translate(" + dx + "," + dy + ")");
@@ -98,9 +98,9 @@ function treeDiagram() {
                 var wd;
                 var wid = d.target.similarity;
                 if (wid == 0) {
-                    wd = 1;
+                    wd = 0.1;
                 } else {
-                    wd = (wid) * 4;
+                    wd = (0.1+wid) * 4;
                 }
 
                 return wd;
@@ -113,26 +113,22 @@ function treeDiagram() {
             .attr("class", "node")
 
             .attr("transform", function (d) {
-                var yy = d.y;
-                if (d.y > 400) {
-                    yy = d.y;// + Math.random() * 50;
-                }
-                //console.log(d.id + "::"+d.y);
-                return "translate(" + d.x + "," + yy + ")";
+
+                return "translate(" + d.x + "," + d.y + ")";
             });
 
         var arr = [];
-        node.append("circle")
-            .attr("r", nodeSizeW / 2 + 5)
-
-            .style("stroke", "none")
-            .style("stroke-width", 1)
-            .style('opacity', 0.5)
-            .attr("transform", function (d) {
-
-                var t_x = pos_trance(d, arr);
-                return "translate(" + t_x[0] + "," + t_x[1] + ")";
-            });
+//        node.append("circle")
+//            .attr("r", nodeSizeW / 2 + 5)
+//
+//            .style("stroke", "none")
+//            .style("stroke-width", 1)
+//            .style('opacity', 0.5)
+//            .attr("transform", function (d) {
+//
+//                var t_x = pos_trance(d, arr);
+//                return "translate(" + t_x[0] + "," + t_x[1] + ")";
+//            });
 
 
         //各サムネイルを入れ込む
@@ -235,6 +231,7 @@ function treeDiagram() {
                 var clr = 10;
                 SortScore(nodes, "total_points");
 
+                console.log(nodes);
                 for (var i = 1; i < 6; i++) {
                     if (nodes[i].id == d.id) {
                         clr = 10 + (10 / 6) * (6 - i);
@@ -479,7 +476,7 @@ function domMaker(array) {
         document.write(array[i].id);
         document.write("</a></td><td>");
         document.write("<a href=" + array[i].url + " OnMouseOver='MouseIn("+array[i].id+");' OnMouseOut='MouseOut("+array[i].id+");'>");
-        document.write(array[i].name);
+        document.write(array[i].name.substring(0, 10));
         document.write("</a></td><td>");
         var pnts = array[i].total_points;
         document.write(pnts.toFixed(1));
@@ -487,7 +484,8 @@ function domMaker(array) {
         var smt = array[i].similarity * 100;
         document.write(smt.toFixed(1));
         document.write("</td><td>");
-        document.write(array[i].creation_time);
+
+        document.write(array[i].creation_time.substring(2, 16));
         document.write("</td>");
         document.write("</tr>");
 
@@ -558,7 +556,8 @@ function MouseOut(id) {
 //樹形図の座標設定
 function layout_tree(array,geneHi,width,nodeSizeW,nodeSizeH){
 
-    var max_count = Math.floor(1250/nodeSizeW);
+    var max_count = Math.floor(1000/nodeSizeW);
+    console.log(max_count);
     var range = [];
     for(var i in geneHi){
         if(max_count<geneHi[i].length){
@@ -579,12 +578,11 @@ function layout_tree(array,geneHi,width,nodeSizeW,nodeSizeH){
                     var node_y=0;
                     for(var m=0;m<l;m++){
                         node_y +=range[m];
-                        console.log(range[m]);
 
                     }
                     if(max_count<geneHi[l].length){
                         var cnt = Math.floor(geneHi[l].length/2);
-                        console.log(cnt);
+
                         if(k<cnt){
                              node_y +=k;
                         }else{
@@ -601,7 +599,7 @@ function layout_tree(array,geneHi,width,nodeSizeW,nodeSizeH){
             }
         }
         if(i==0){
-            array[i].x=1250/2;
+            array[i].x=width/2;
         }
     }
 

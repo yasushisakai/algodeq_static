@@ -24,16 +24,18 @@ a:active {
 
 #wrapper {
     margin: 0 auto;
+    width: 1280px;
+
 }
 
 #contents {
     margin: 0 auto;
-    width: 1280px;
+
     margin-top: 10px;
 }
 
 #header {
-    background-color: #DFCE3A;
+    background-color: #ffffff;
     height: 100px;
     color: #252935;
 }
@@ -103,6 +105,7 @@ a:active {
 }
 
 h1 {
+    color:#DFCE3A;
     font-family: 'Dosis', sans-serif;
     font-weight: 400;
     line-height: 50%;
@@ -114,6 +117,7 @@ h2 {
     font-weight: 100;
     line-height: 0%;
     padding: 0 0 5px 10px;
+    color:#DFCE3A;
 }
 
 p {
@@ -275,7 +279,7 @@ p {
     font-size: inherit;
     margin: 0;
     overflow: visible;
-    padding: 6px 12px
+    padding: 6px 6px
 }
 
 .pure-table2 td:first-child, .pure-table th:first-child {
