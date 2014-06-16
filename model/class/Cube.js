@@ -13,12 +13,12 @@ Cube.geometry = new THREE.CubeGeometry(unit_size, unit_height, unit_size);
 
 
 Cube.material_types = [
-    new THREE.MeshLambertMaterial({ambient: 0xffffff, color: 0xff0000, transparent: true, opacity: 0.5}),  // 1.Living
-    new THREE.MeshLambertMaterial({ambient: 0xffffff, color: 0x00ff00, transparent: true, opacity: 0.5}),  // 2.Dinning
-    new THREE.MeshLambertMaterial({ambient: 0xffffff, color: 0x0000ff, transparent: true, opacity: 0.5}),  // 3.Kitchen
-    new THREE.MeshLambertMaterial({ambient: 0xffffff, color: 0xffff00, transparent: true, opacity: 0.5}),  // 4.Bedroom
-    new THREE.MeshLambertMaterial({ambient: 0xffffff, color: 0xff00ff, transparent: true, opacity: 0.5}),  // 5.wc/bath
-    new THREE.MeshLambertMaterial({ambient: 0xffffff, color: 0x00ffff, transparent: true, opacity: 0.5})  // 6.staircase
+    new THREE.MeshBasicMaterial({color: 0xff0000,ambient: 0xaaaaaa, transparent:true, opacity:0.9}),  // 1.Living
+    new THREE.MeshBasicMaterial({color: 0x00ff00,ambient: 0xaaaaaa, transparent:true, opacity:0.9}),  // 2.Dinning
+    new THREE.MeshBasicMaterial({color: 0x0000ff,ambient: 0xaaaaaa, transparent:true, opacity:0.9}),  // 3.Kitchen
+    new THREE.MeshBasicMaterial({color: 0xffff00,ambient: 0xaaaaaa, transparent:true, opacity:0.9}),  // 4.Bedroom
+    new THREE.MeshBasicMaterial({color: 0xff00ff,ambient: 0xaaaaaa, transparent:true, opacity:0.9}),  // 5.wc/bath
+    new THREE.MeshBasicMaterial({color: 0x00ffff,ambient: 0xaaaaaa, transparent:true, opacity:0.9})  // 6.staircase
 ];
 
 Cube.remove_cube = function (_index) {
@@ -38,6 +38,8 @@ Cube.prototype.create = function (){
 
     this.update_pos();
     this.mesh.name = "cube[" + this.index[0] + "," + this.index[1] + "," + this.index[2] + "]";
+    this.mesh.receiveShadow=true;
+    this.mesh.castShadow=true;
 
 }
 

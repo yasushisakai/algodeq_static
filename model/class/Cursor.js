@@ -3,18 +3,19 @@ function Cursor() {
     this.is_valid = false;
 }
 
-Cursor.geometry = new THREE.PlaneGeometry(unit_size, unit_size, 2, 2);
+Cursor.geometry = new THREE.CubeGeometry(unit_size*1.2, unit_height*1.2, unit_size*1.2);
 
 
 Cursor.material_types = [
-    new THREE.MeshLambertMaterial({ambient: 0xffffff, color: '0xffff00'})
+    new THREE.MeshBasicMaterial({transparent:true, opacity:0.7, color: 0xffffff})
 ];
 
 
 Cursor.prototype.create = function () {
     this.mesh = new THREE.Mesh(Cursor.geometry, Cursor.material_types[0]);
-    this.mesh.rotation.x = -90 * Math.PI / 180;
+    //this.mesh.rotation.x = -90 * Math.PI / 180;
     scene.add(this.mesh);
+    this.mesh.position = new THREE.Vector3(0,-10000000000000,0);
 }
 
 
@@ -34,7 +35,7 @@ Cursor.prototype.update_pos = function(){
 
     this.mesh.position = new THREE.Vector3(
             (this.index[0]+0.5)*unit_size,
-            this.index[1]*unit_height+10,
+            (this.index[1]+0.5)*unit_height,
             (this.index[2]+0.5)*unit_size);
 
 }
