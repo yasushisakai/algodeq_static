@@ -50,23 +50,24 @@ a:active {
     left: 0px;
     z-index: -10;
 }
-#side_bar{
+
+#side_bar {
     position: absolute;
     top: 100px;
     left: 10%;
     z-index: 10;
 }
 
-.header_text{
-   padding-left:10px;
-    padding-bottom:10px;
-   line-height: 2.5em;
+.header_text {
+    padding-left: 10px;
+    padding-bottom: 10px;
+    line-height: 2.5em;
 }
 
-.timers{
-   padding-left:10px;
-    padding-bottom:10px;
-   line-height: 1.5em;
+.timers {
+    padding-left: 10px;
+    padding-bottom: 10px;
+    line-height: 1.5em;
 }
 
 .pure-u-2-5 {
@@ -82,7 +83,12 @@ a:active {
 
 .login {
     padding: 0 15px 0 0;
+    font-size: 10px;
 
+}
+
+#model_action{
+    padding-top: 10px;
 }
 
 .pure-u-19-24 {
@@ -95,8 +101,16 @@ a:active {
     padding: 20px 0 0 0;
 }
 
+#parent_model_info {
+    font-size: 12px;
+    padding: 20px 0 0 0;
+}
+
+
+
 .webfont {
-    font-family: 'Dosis', sans-serif;
+    font-size: 10px;
+
     font-weight: 100;
     line-height: 100%;
     padding-bottom: 10px;
@@ -105,7 +119,7 @@ a:active {
 }
 
 h1 {
-    color:#DFCE3A;
+    color: #DFCE3A;
     font-family: 'Dosis', sans-serif;
     font-weight: 400;
     line-height: 50%;
@@ -117,7 +131,7 @@ h2 {
     font-weight: 100;
     line-height: 0%;
     padding: 0 0 5px 10px;
-    color:#DFCE3A;
+    color: #DFCE3A;
 }
 
 p {
@@ -209,7 +223,6 @@ p {
 
 }
 
-
 .button-large {
     font-size: 1.5em;
     background-color: #DFCE3A;
@@ -220,7 +233,7 @@ p {
     margin-bottom: 3px;
 }
 
-.error{
+.error {
     color: #FF4A36;
 }
 
@@ -232,7 +245,7 @@ p {
     margin-bottom: 3px;
 }
 
-#program_navigation, #level_navigation{
+#program_navigation, #level_navigation {
     margin-bottom: 20px;
 }
 
@@ -320,6 +333,36 @@ p {
 
 .pure-table-horizontal tbody > tr:last-child td {
     border-bottom-width: 0
+}
+
+input#e-mail {
+
+    width: 100px;
+    height: 15px;
+    font-size: 10px;
+}
+
+input#password {
+
+    width: 70px;
+    height: 15px;
+    font-size: 10px;
+}
+
+.button-xsmall {
+    font-size: 70%;
+}
+
+.button-small {
+    font-size: 85%;
+}
+
+.button-large {
+    font-size: 110%;
+}
+
+.button-xlarge {
+    font-size: 125%;
 }
 
 

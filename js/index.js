@@ -509,12 +509,12 @@ function reWrite(array, parameter) {
             ttt += "<td>" + array[i].rank + "</td>";
 
             ttt += "<td>" + array[i].id + "</td>";
-            ttt += "<td><a href=" + array[i].url + " OnMouseOver='MouseIn("+array[i].id+");' OnMouseOut='MouseOut("+array[i].id+");'>" + array[i].name + "</a></td>";
+            ttt += "<td><a href=" + array[i].url + " OnMouseOver='MouseIn("+array[i].id+");' OnMouseOut='MouseOut("+array[i].id+");'>" + array[i].name.substring(0, 10) + "</a></td>";
             var pnts = array[i].total_points;
             ttt += "<td>" + pnts.toFixed(1) + "</td>";
             var smt = array[i].similarity * 100;
             ttt += "<td>" + smt.toFixed(1) + "</td>";
-            ttt += "<td>" + array[i].creation_time + "</td>";
+            ttt += "<td>" + array[i].creation_time.substring(2, 16) + "</td>";
 
             ttt += "</tr>";
             ttt += "</td>";
