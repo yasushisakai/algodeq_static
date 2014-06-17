@@ -47,5 +47,5 @@ Ground.prototype.get_level_height = function(){
 
 Ground.prototype.move_level_grid= function (_level) {
     this.level = _level;
-    this.level_grid.position = new THREE.Vector3(0.0,this.level*unit_height-50,0.0);
+    this.level_grid.position = new THREE.Vector3(0.0,this.level*unit_height,0.0);
 }
