@@ -113,8 +113,10 @@ function setup_world() {
     // update cost and points_inborn
     new_points = parent_points * similarity;
     cost = plan.get_cost();
+    $("#similarity").text(similarity);
     $("#cost").text(cost);
     $("#points_inborn").text(Math.floor(new_points));
+
 
     // base ground w/ grid
     ground = new Ground();

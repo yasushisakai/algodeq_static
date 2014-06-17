@@ -64,13 +64,14 @@ a:active {
 #webgl_canvas {
     position: absolute;
     top: 100px;
-    left: 0px;
+    left: 100px;
     z-index: -10;
 }
 
 #side_bar {
     position: absolute;
     top: 100px;
+    width:210px;
 
     z-index: 10;
 }
@@ -124,20 +125,19 @@ a:active {
 
 #parent_model {
     font-size: 12px;
-    padding: 20px 0 0 0;
+    padding: 0px 0 30px 0;
 
 }
 
 #parent_model_info {
     font-size: 12px;
-    padding: 0 0 30px 0;
+    padding: 20px 0 0px 0;
 
 
 }
 #current_model_info {
     font-size: 12px;
     padding: 20px 0 0 0;
-    font-weight: bold;
 }
 #current_model {
     font-size: 12px;
@@ -153,8 +153,7 @@ a:active {
 
 #actions {
     font-size: 12px;
-    padding: 20px 0 0 0px;
-    font-weight: bold;
+    padding: 10px 0 0 0px;
 }
 
 #sign-up{
@@ -217,6 +216,15 @@ h4 {
     color: #514F5A;
 }
 
+h5 {
+    font-size: 12px;
+    font-family: 'Dosis', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    color: #514F5A;
+    padding: 0px 0px 0px 0px;
+}
+
 p {
     margin-bottom: 0px;
     margin-top: 5px;
@@ -232,7 +240,8 @@ p {
 }
 
 .button-default {
-    width: 65px;
+    width:98px;
+    height:30px;
     font-size: 70%;
     background-color: #DDDDDD;
     line-height: 1.5em;
@@ -244,7 +253,8 @@ p {
 }
 
 .button-living {
-    width: 65px;
+    width:98px;
+    height:30px;
     font-size: 70%;
     background-color: #FF4A36;
     line-height: 1.5em;
@@ -256,7 +266,8 @@ p {
 }
 
 .button-dining {
-    width: 65px;
+    width:98px;
+    height:30px;
     font-size: 70%;
     background-color: #3FE845;
     line-height: 1.5em;
@@ -268,7 +279,8 @@ p {
 }
 
 .button-kitchen {
-    width: 65px;
+    width:98px;
+    height:30px;
     font-size: 70%;
     color: #DDDDDD;
     background-color: #3C43E5;
@@ -281,7 +293,8 @@ p {
 }
 
 .button-bedroom {
-    width: 65px;
+    width:98px;
+    height:30px;
     font-size: 70%;
     background-color: #DFCE3A;
     line-height: 1.5em;
@@ -293,7 +306,8 @@ p {
 }
 
 .button-wc {
-    width: 65px;
+    width:98px;
+    height:30px;
     font-size: 70%;
     color: #DDDDDD;
     background-color: #7F2460;
@@ -306,7 +320,8 @@ p {
 }
 
 .button-staircase {
-    width: 65px;
+    width:98px;
+    height:30px;
     font-size: 70%;
     background-color: #3FE5E5;
     line-height: 1.5em;
@@ -318,7 +333,8 @@ p {
 }
 
 .button-delete {
-    width: 65px;
+    width:98px;
+    height:30px;
     font-size: 70%;
     background-color: #DDDDDD;
     line-height: 1.5em;
@@ -330,7 +346,8 @@ p {
 }
 
 #finalize {
-    width: 65px;
+    width:98px;
+    height:30px;
     font-size: 70%;
     background-color: #DDDDDD;
     line-height: 1.5em;
@@ -394,7 +411,8 @@ p {
     border-collapse: collapse;
     border-spacing: 0;
     empty-cells: show;
-    border-bottom: 1px solid #cbcbcb
+    border-bottom: 1px solid #cbcbcb;
+    width:200px;
 }
 
 .pure-table2 caption {
@@ -469,7 +487,7 @@ input#password {
 
 input#name_input {
 
-    width: 150px;
+    width: 200px;
     height: 25px;
     font-size: 12px;
 }
@@ -480,13 +498,16 @@ input#name_input {
 }
 
 .button-xsmall1 {
+    height:30px;
+    width:98px;
     font-size: 70%;
-    width:74px;
+
 }
 
 .button-xsmall2 {
     font-size: 70%;
-    width:74px;
+    width:98px;
+    height:30px;
     background-color: #DFCE3A;
 
 }
