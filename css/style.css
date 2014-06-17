@@ -250,6 +250,7 @@ p {
     border-style: none;
     margin-bottom: 3px;
 
+
 }
 
 .button-living {
@@ -296,7 +297,7 @@ p {
     width:98px;
     height:30px;
     font-size: 70%;
-    background-color: #DFCE3A;
+    background-color: #F0F000;
     line-height: 1.5em;
     border-radius: 4px;
     padding: 20px, 10px;
@@ -336,27 +337,17 @@ p {
     width:98px;
     height:30px;
     font-size: 70%;
-    background-color: #DDDDDD;
+    background-color: #514F5A;
     line-height: 1.5em;
     border-radius: 4px;
     padding: 20px, 10px;
     border-style: none;
     margin-bottom: 3px;
+    color:#ffffff;
 
 }
 
-#finalize {
-    width:98px;
-    height:30px;
-    font-size: 70%;
-    background-color: #DDDDDD;
-    line-height: 1.5em;
-    border-radius: 4px;
-    padding: 20px, 10px;
-    border-style: none;
-    margin-bottom: 3px;
 
-}
 
 .button-large {
     font-size: 1.5em;
@@ -382,6 +373,7 @@ p {
 
 #program_navigation, #level_navigation {
     margin-bottom: 20px;
+
 }
 
 .icon {
@@ -501,6 +493,7 @@ input#name_input {
     height:30px;
     width:98px;
     font-size: 70%;
+    background-color: #DFCE3A;
 
 }
 
@@ -509,6 +502,13 @@ input#name_input {
     width:98px;
     height:30px;
     background-color: #DFCE3A;
+
+}
+
+.button-xsmall3 {
+    font-size: 70%;
+    width:200px;
+    height:30px;
 
 }
 
