@@ -438,6 +438,7 @@ function Lst_sort() {
 //配列をソート
 function SortScore(array, parameter) {
 
+
     array.sort(function (a, b) {
         var aa = eval("a." + parameter);
         var bb = eval("b." + parameter);
@@ -511,7 +512,7 @@ function reWrite(array, parameter) {
         // var ttt = '<table class="pure-table pure-table-horizontal"><thead><tr><th>ID</th><th>name</th><th>point</th><th>diff</th><th>time</th></tr></thead>';
 
         for (var i in array) {
-            if (i != 0) {
+            if (array[i].id != 1) {
 
 
                 ttt += "<tr>";
