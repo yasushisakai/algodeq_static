@@ -101,6 +101,12 @@ a:active {
 
 }
 
+.current{
+    font-size: 14px;
+    color:black;
+    padding-left: 10px;
+}
+
 .info {
 
     padding: 0 15px 0 0;

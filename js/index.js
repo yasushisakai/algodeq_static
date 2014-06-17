@@ -35,6 +35,8 @@ function treeDiagram() {
     var money = user_money(node);
 
 
+
+
     //世代ごとの配列生成
     var geneHi = [];
     for (var ii = 0; ii < geneMax; ii++) {
@@ -328,7 +330,7 @@ function treeDiagram() {
             var pn = gene[k].paID;//modelParentId[k];
             if (pn > 0) {
                 var IDD = pn - 1;//modelIds.indexOf(pn);
-                console.log(k + "::" + pn + "::" + IDD);
+
                 JYUKEI[IDD].children.push(JYUKEI[k]);
             }
         }
@@ -651,7 +653,7 @@ function user_money(array) {
         return self.indexOf(x) === i;
     });
 
-    console.log(user_only);
+
 
     for (var k in user_only) {
         var ar = [user_only[k], 0];
@@ -668,10 +670,6 @@ function user_money(array) {
             }
         }
     }
-
-    console.log(t_points);
-    console.log(user_ar);
-
 
     return user_ar;
 }
