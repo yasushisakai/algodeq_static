@@ -577,17 +577,17 @@ function layout_tree(array,geneHi,width,nodeSizeW,nodeSizeH){
                     array[i].x = (width/(geneHi[l].length+1)*(k+1));
                     var node_y=0;
                     for(var m=0;m<l;m++){
-                        node_y +=range[m];
+                        node_y +=1;//range[m];
+                        if(range[m]!=1){
+                            node_y +=0.5;
+                        }
 
                     }
                     if(max_count<geneHi[l].length){
                         var cnt = Math.floor(geneHi[l].length/2);
 
-                        if(k<cnt){
-                             node_y +=k;
-                        }else{
-                            node_y +=k-cnt;
-
+                        if(k%2==0){
+                             node_y +=0.5;
                         }
 
                     }

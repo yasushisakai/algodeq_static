@@ -24,7 +24,11 @@ a:active {
 
 #wrapper_base {
     margin: 0 auto;
-    width: 1280px;
+
+}
+
+#wrapper {
+    margin: 0 auto;
 
 }
 
@@ -38,6 +42,19 @@ a:active {
     background-color: #ffffff;
     height: 100px;
     color: #252935;
+}
+
+.width-wide{
+    width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.width-narrow{
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .model_img {
@@ -169,17 +186,29 @@ h1 {
 
 h2 {
     font-family: 'Dosis', sans-serif;
-    font-weight: 100;
+    font-style: normal;
+    font-weight: 200;
     line-height: 0%;
     padding: 0 0 5px 10px;
     color: #DFCE3A;
 }
 
 h3 {
+    font-size: 20px;
     font-family: 'Dosis', sans-serif;
-    font-weight: 100;
+    font-style: normal;
+    font-weight: 600;
     line-height: 0%;
-    color: #000000;
+    color: #514F5A;
+}
+
+h4 {
+    font-size: 14px;
+    font-family: 'Dosis', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 0%;
+    color: #514F5A;
 }
 
 p {
