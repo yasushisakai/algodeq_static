@@ -75,6 +75,10 @@ a:active {
     z-index: 10;
 }
 
+#explain_jp, #explain_en {
+    padding-top: 1em;
+}
+
 .header_text {
     padding-left: 10px;
     padding-bottom: 10px;
@@ -104,7 +108,7 @@ a:active {
 
 }
 
-#model_action{
+#model_action {
     padding-top: 10px;
 }
 
@@ -141,6 +145,7 @@ a:active {
 
 }
 
+
 .model_info{
         margin-top: -150px;
 }
@@ -165,7 +170,6 @@ a:active {
 
 }
 
-
 .webfont {
     font-size: 10px;
 
@@ -186,7 +190,9 @@ h1 {
 
 h2 {
     font-family: 'Dosis', sans-serif;
+
     font-style: normal;
+
     font-weight: 200;
     line-height: 0%;
     padding: 0 0 5px 10px;
@@ -218,8 +224,15 @@ p {
     line-height: 1.2em;
 }
 
+.extra_big_bold {
+    font-size: 4em;
+    font-family: 'Dosis', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+}
+
 .button-default {
-    width:65px;
+    width: 65px;
     font-size: 70%;
     background-color: #DDDDDD;
     line-height: 1.5em;
@@ -231,7 +244,7 @@ p {
 }
 
 .button-living {
-    width:65px;
+    width: 65px;
     font-size: 70%;
     background-color: #FF4A36;
     line-height: 1.5em;
@@ -243,7 +256,7 @@ p {
 }
 
 .button-dining {
-    width:65px;
+    width: 65px;
     font-size: 70%;
     background-color: #3FE845;
     line-height: 1.5em;
@@ -255,7 +268,7 @@ p {
 }
 
 .button-kitchen {
-    width:65px;
+    width: 65px;
     font-size: 70%;
     color: #DDDDDD;
     background-color: #3C43E5;
@@ -268,7 +281,7 @@ p {
 }
 
 .button-bedroom {
-    width:65px;
+    width: 65px;
     font-size: 70%;
     background-color: #DFCE3A;
     line-height: 1.5em;
@@ -280,7 +293,7 @@ p {
 }
 
 .button-wc {
-    width:65px;
+    width: 65px;
     font-size: 70%;
     color: #DDDDDD;
     background-color: #7F2460;
@@ -293,7 +306,7 @@ p {
 }
 
 .button-staircase {
-    width:65px;
+    width: 65px;
     font-size: 70%;
     background-color: #3FE5E5;
     line-height: 1.5em;
@@ -305,7 +318,7 @@ p {
 }
 
 .button-delete {
-    width:65px;
+    width: 65px;
     font-size: 70%;
     background-color: #DDDDDD;
     line-height: 1.5em;
@@ -317,7 +330,7 @@ p {
 }
 
 #finalize {
-    width:65px;
+    width: 65px;
     font-size: 70%;
     background-color: #DDDDDD;
     line-height: 1.5em;

@@ -23,11 +23,10 @@ function Light(_ambient_color, _directional_light_color, _intensity) {
         );
     } else {
         this.light.position.set(
-                unit_length * 2, unit_length * 2, -unit_length * 2
+                unit_length * 2, unit_length * 2, -unit_length * 2 *2
         );
     }
 
-    // todo: fine-tune the shadows,
     this.light.castShadow = true;
     this.light.shadowMapWidth = 2048;
     this.light.shadowMapHeight = 2048;
