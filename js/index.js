@@ -51,7 +51,7 @@ function treeDiagram() {
 
      var c_num = cl_size(geneHi,nodeSizeW);
 
-    var cluster_sizeH = nodeSizeH * 2 * c_num;
+    var cluster_sizeH = nodeSizeH * c_num;
 
 
 
@@ -231,7 +231,6 @@ function treeDiagram() {
                 var clr = 10;
                 SortScore(nodes, "total_points");
 
-                console.log(nodes);
                 for (var i = 1; i < 6; i++) {
                     if (nodes[i].id == d.id) {
                         clr = 10 + (10 / 6) * (6 - i);
@@ -454,7 +453,10 @@ function rank_maker(array) {
     var ranker = [];
     SortScore(array, "total_points");
     for (var i in array) {
-        ranker.push(array[i].id);
+        if(i!=0){
+            ranker.push(array[i].id);
+        }
+
     }
     return ranker;
 }
@@ -466,28 +468,30 @@ function domMaker(array) {
 
 
     for (var i in array) {
+        if(i!=0) {
 
 
-        document.write("<tr>");
-        document.write("<td >");
-        document.write(array[i].rank);
-        document.write("</td>");
-        document.write("<td >");
-        document.write(array[i].id);
-        document.write("</a></td><td>");
-        document.write("<a href=" + array[i].url + " OnMouseOver='MouseIn("+array[i].id+");' OnMouseOut='MouseOut("+array[i].id+");'>");
-        document.write(array[i].name.substring(0, 10));
-        document.write("</a></td><td>");
-        var pnts = array[i].total_points;
-        document.write(pnts.toFixed(1));
-        document.write("</td><td>");
-        var smt = array[i].similarity * 100;
-        document.write(smt.toFixed(1));
-        document.write("</td><td>");
+            document.write("<tr>");
+            document.write("<td >");
+            document.write(array[i].rank);
+            document.write("</td>");
+            document.write("<td >");
+            document.write(array[i].id);
+            document.write("</a></td><td>");
+            document.write("<a href=" + array[i].url + " OnMouseOver='MouseIn(" + array[i].id + ");' OnMouseOut='MouseOut(" + array[i].id + ");'>");
+            document.write(array[i].name.substring(0, 10));
+            document.write("</a></td><td>");
+            var pnts = array[i].total_points;
+            document.write(pnts.toFixed(1));
+            document.write("</td><td>");
+            var smt = array[i].similarity * 100;
+            document.write(smt.toFixed(1));
+            document.write("</td><td>");
 
-        document.write(array[i].creation_time.substring(2, 16));
-        document.write("</td>");
-        document.write("</tr>");
+            document.write(array[i].creation_time.substring(2, 16));
+            document.write("</td>");
+            document.write("</tr>");
+        }
 
     }
 
@@ -505,19 +509,23 @@ function reWrite(array, parameter) {
         // var ttt = '<table class="pure-table pure-table-horizontal"><thead><tr><th>ID</th><th>name</th><th>point</th><th>diff</th><th>time</th></tr></thead>';
 
         for (var i in array) {
-            ttt += "<tr>";
-            ttt += "<td>" + array[i].rank + "</td>";
+            if(i!=0) {
 
-            ttt += "<td>" + array[i].id + "</td>";
-            ttt += "<td><a href=" + array[i].url + " OnMouseOver='MouseIn("+array[i].id+");' OnMouseOut='MouseOut("+array[i].id+");'>" + array[i].name.substring(0, 10) + "</a></td>";
-            var pnts = array[i].total_points;
-            ttt += "<td>" + pnts.toFixed(1) + "</td>";
-            var smt = array[i].similarity * 100;
-            ttt += "<td>" + smt.toFixed(1) + "</td>";
-            ttt += "<td>" + array[i].creation_time.substring(2, 16) + "</td>";
 
-            ttt += "</tr>";
-            ttt += "</td>";
+                ttt += "<tr>";
+                ttt += "<td>" + array[i].rank + "</td>";
+
+                ttt += "<td>" + array[i].id + "</td>";
+                ttt += "<td><a href=" + array[i].url + " OnMouseOver='MouseIn(" + array[i].id + ");' OnMouseOut='MouseOut(" + array[i].id + ");'>" + array[i].name.substring(0, 10) + "</a></td>";
+                var pnts = array[i].total_points;
+                ttt += "<td>" + pnts.toFixed(1) + "</td>";
+                var smt = array[i].similarity * 100;
+                ttt += "<td>" + smt.toFixed(1) + "</td>";
+                ttt += "<td>" + array[i].creation_time.substring(2, 16) + "</td>";
+
+                ttt += "</tr>";
+                ttt += "</td>";
+            }
         }
 
         return ttt;
@@ -557,7 +565,6 @@ function MouseOut(id) {
 function layout_tree(array,geneHi,width,nodeSizeW,nodeSizeH){
 
     var max_count = Math.floor(1000/nodeSizeW);
-    console.log(max_count);
     var range = [];
     for(var i in geneHi){
         if(max_count<geneHi[i].length){
@@ -611,27 +618,15 @@ function layout_tree(array,geneHi,width,nodeSizeW,nodeSizeH){
 
 function cl_size(geneHi,nodeSizeW){
 
-    var max_count = Math.floor(1250/nodeSizeW);
-    var range = [];
-    for(var i in geneHi){
-        if(max_count<geneHi[i].length){
-                var ran = Math.floor(geneHi[i].length/2);
-                range.push(ran);
-            }else{
-                range.push(1);
-            }
-
-    }
 
     var c_count=0;
-    for(var l in range){
-        if(range[l]==1){
-            c_count +=1;
-        }else {
-            c_count += range[l]/2
-            }
-        }
+    for(var l in geneHi) {
+        c_count += 1;
+        if (geneHi[l] != 1) {
 
+            c_count += 0.2;
+        }
+    }
 
     return c_count;
 
