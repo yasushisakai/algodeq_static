@@ -32,6 +32,7 @@ function treeDiagram() {
     ;
     var geneMax = Math.max.apply(null, generation);
 
+    var money = user_money(node);
 
 
     //世代ごとの配列生成
@@ -49,10 +50,9 @@ function treeDiagram() {
         geneHi.push(tt);
     }
 
-     var c_num = cl_size(geneHi,nodeSizeW);
+    var c_num = cl_size(geneHi, nodeSizeW);
 
     var cluster_sizeH = nodeSizeH * c_num;
-
 
 
     //樹形図領域生成
@@ -65,7 +65,7 @@ function treeDiagram() {
             return [d.x, d.y];
         });
 
-    var dx =0;// (width * scl - width) * 0.5;
+    var dx = 0;// (width * scl - width) * 0.5;
     var dy = (height * scl - height) * 0.5;
 
     //DOM svgのフィールドを作成
@@ -76,14 +76,14 @@ function treeDiagram() {
         .attr("transform", "translate(" + dx + "," + dy + ")");
 
 
-    netnode(modelGene,geneHi,width,nodeSizeW,nodeSizeH);
+    netnode(modelGene, geneHi, width, nodeSizeW, nodeSizeH);
 
     //樹形図を作成する
-    function netnode(json,geneHi,width,nodeSizeW,nodeSizeH) {
+    function netnode(json, geneHi, width, nodeSizeW, nodeSizeH) {
         var nodes = cluster.nodes(json),
             links = cluster.links(nodes);
 
-        layout_tree(nodes,geneHi,width,nodeSizeW,nodeSizeH);
+        layout_tree(nodes, geneHi, width, nodeSizeW, nodeSizeH);
 
 
         var ar = [0];
@@ -100,7 +100,7 @@ function treeDiagram() {
                 if (wid == 0) {
                     wd = 0.1;
                 } else {
-                    wd = (0.1+wid) * 4;
+                    wd = (0.1 + wid) * 4;
                 }
 
                 return wd;
@@ -207,7 +207,7 @@ function treeDiagram() {
         a_text = [];
         node.append("text")
 
-            .attr("dy", -nodeSizeH / 2+35)
+            .attr("dy", -nodeSizeH / 2 + 35)
             .style("text-anchor", "middle")
 
             .text(function (d) {
@@ -453,7 +453,7 @@ function rank_maker(array) {
     var ranker = [];
     SortScore(array, "total_points");
     for (var i in array) {
-        if(i!=0){
+        if (i != 0) {
             ranker.push(array[i].id);
         }
 
@@ -468,7 +468,7 @@ function domMaker(array) {
 
 
     for (var i in array) {
-        if(i!=0) {
+        if (i != 0) {
 
 
             document.write("<tr>");
@@ -509,7 +509,7 @@ function reWrite(array, parameter) {
         // var ttt = '<table class="pure-table pure-table-horizontal"><thead><tr><th>ID</th><th>name</th><th>point</th><th>diff</th><th>time</th></tr></thead>';
 
         for (var i in array) {
-            if(i!=0) {
+            if (i != 0) {
 
 
                 ttt += "<tr>";
@@ -562,65 +562,64 @@ function MouseOut(id) {
 }
 
 //樹形図の座標設定
-function layout_tree(array,geneHi,width,nodeSizeW,nodeSizeH){
+function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
 
-    var max_count = Math.floor(1000/nodeSizeW);
+    var max_count = Math.floor(1000 / nodeSizeW);
     var range = [];
-    for(var i in geneHi){
-        if(max_count<geneHi[i].length){
-                var ran = Math.floor(geneHi[i].length/2);
-                range.push(ran);
-            }else{
-                range.push(1);
-            }
+    for (var i in geneHi) {
+        if (max_count < geneHi[i].length) {
+            var ran = Math.floor(geneHi[i].length / 2);
+            range.push(ran);
+        } else {
+            range.push(1);
+        }
 
     }
 
-    for(var i in array){
-        for(var l=0;l<geneHi.length;l++){
+    for (var i in array) {
+        for (var l = 0; l < geneHi.length; l++) {
 
-            for(var k=0;k<geneHi[l].length;k++){
-                if(array[i].id == geneHi[l][k][0]){
-                    array[i].x = (width/(geneHi[l].length+1)*(k+1));
-                    var node_y=0;
-                    for(var m=0;m<l;m++){
-                        node_y +=1;//range[m];
-                        if(range[m]!=1){
-                            node_y +=0.5;
+            for (var k = 0; k < geneHi[l].length; k++) {
+                if (array[i].id == geneHi[l][k][0]) {
+                    array[i].x = (width / (geneHi[l].length + 1) * (k + 1));
+                    var node_y = 0;
+                    for (var m = 0; m < l; m++) {
+                        node_y += 1;//range[m];
+                        if (range[m] != 1) {
+                            node_y += 0.5;
                         }
 
                     }
-                    if(max_count<geneHi[l].length){
-                        var cnt = Math.floor(geneHi[l].length/2);
+                    if (max_count < geneHi[l].length) {
+                        var cnt = Math.floor(geneHi[l].length / 2);
 
-                        if(k%2==0){
-                             node_y +=0.5;
+                        if (k % 2 == 0) {
+                            node_y += 0.5;
                         }
 
                     }
 
-                    array[i].y = (node_y+1)* nodeSizeH;
+                    array[i].y = (node_y + 1) * nodeSizeH;
 
 
                 }
             }
         }
-        if(i==0){
-            array[i].x=width/2;
+        if (i == 0) {
+            array[i].x = width / 2;
         }
     }
-
 
 
     return array;
 
 }
 
-function cl_size(geneHi,nodeSizeW){
+function cl_size(geneHi, nodeSizeW) {
 
 
-    var c_count=0;
-    for(var l in geneHi) {
+    var c_count = 0;
+    for (var l in geneHi) {
         c_count += 1;
         if (geneHi[l] != 1) {
 
@@ -630,8 +629,53 @@ function cl_size(geneHi,nodeSizeW){
 
     return c_count;
 
-
 }
+
+function user_money(array) {
+    var user_ar = [];
+    //user_archi.push([array[1].architect, array[1].total_points]);
+
+    var user = [];
+    var t_points = 0;
+
+    for (var i in array) {
+        if (i != 0) {
+            user.push(array[i].architect);
+            t_points += array[i].total_points;
+        }
+    }
+
+
+// 重複を削除したリスト
+    var user_only = user.filter(function (x, i, self) {
+        return self.indexOf(x) === i;
+    });
+
+    console.log(user_only);
+
+    for (var k in user_only) {
+        var ar = [user_only[k], 0];
+
+        user_ar.push(ar);
+
+        for (var t in array) {
+            if (t != 0) {
+
+
+                if (user_only[k] == array[t].architect) {
+                    user_ar[k][1] += array[t].total_points;
+                }
+            }
+        }
+    }
+
+    console.log(t_points);
+    console.log(user_ar);
+
+
+    return user_ar;
+}
+
 
 
 
