@@ -268,10 +268,9 @@ function update_model_info() {
 
 
     // update the page info as well.
-    $("*[name=new_name]").val(new_plan_name);
     // $("#new_model_geometry").text(new_plan_geometry);
-    $("#new_model_similarity").text(new_plan_similarity);
-    $("#new_model_cost").text(new_plan_cost);
+    $("#new_model_similarity").text(Plan.format_similarity(new_plan_similarity));
+    $("#new_model_cost").text(Plan.format_cost(3000 - new_plan_cost));
 
 
 }

@@ -43,8 +43,9 @@ Plan.format_cost = function (num) {
 }
 
 Plan.format_similarity = function (num){
+    var ratio = Math.floor(num*10000)/100;
 
-
+    return ratio+"%"
 }
 
 Plan.format_geometry = function (_geometry_data) {
