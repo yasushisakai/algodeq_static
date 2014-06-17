@@ -38,6 +38,15 @@ Plan.room_type = ["living", "dining", "kitchen", "bedroom", "wc", "staircase", "
 
 Plan.room_cost = {"living": 15, "dining": 15, "kitchen": 20, "bedroom": 15, "wc": 20, "staircase": 25}; // the cost for unit_size^2;
 
+Plan.format_cost = function (num) {
+    return (num*10000).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+}
+
+Plan.format_similarity = function (num){
+
+
+}
+
 Plan.format_geometry = function (_geometry_data) {
     // returns formatted geometry data for diff comparison.
 
