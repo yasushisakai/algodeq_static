@@ -7,8 +7,8 @@ function mouse_move(event) {
 
     if (is_make) {
         var vector = new THREE.Vector3(
-                renderer.devicePixelRatio * (event.pageX - this.offsetLeft -100) / this.width * 2 - 1,
-                -renderer.devicePixelRatio * (event.pageY - this.offsetTop - 100) / this.height * 2 + 1,
+                renderer.devicePixelRatio * (event.pageX - this.offsetLeft) / this.width * 2 - 1,
+                -renderer.devicePixelRatio * (event.pageY - this.offsetTop-100) / this.height * 2 + 1,
             0
         );
 
