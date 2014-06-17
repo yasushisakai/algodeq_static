@@ -128,7 +128,7 @@ function validate_name() {
 
     // null filtering
     if ($("#name_input").val() == "") {
-        $("#name_input").css("border", "solid 1px #ff0000");
+        $("#name_input").css("border", "solid 1px #000000");
         $("#status").text("please enter something for a name.");
         if ($("#save_plan").is(":visible"))   $("#save_plan").hide('fade','',300);
 
@@ -150,7 +150,7 @@ function validate_name() {
 
                 // valid
                 if (result["flag"]) {
-                    $("#name_input").css("border", "solid 1px #0000ff");
+                    $("#name_input").css("border", "solid 1px #DFCE3A");
                     $("#status").text("valid name!..ready to submit");
                     new_name = $("#name_input").val();
                     if (!$("#save_plan").is(":visible"))   $("#save_plan").show();

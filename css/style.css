@@ -22,7 +22,7 @@ a:active {
     color: #514F5A;
 }
 
-#wrapper {
+#wrapper_base {
     margin: 0 auto;
     width: 1280px;
 
@@ -105,9 +105,52 @@ a:active {
     padding: 20px 0 0 0;
 }
 
-#parent_model_info {
+#parent_model {
     font-size: 12px;
     padding: 20px 0 0 0;
+
+}
+
+#parent_model_info {
+    font-size: 12px;
+    padding: 0 0 30px 0;
+
+
+}
+#current_model_info {
+    font-size: 12px;
+    padding: 20px 0 0 0;
+    font-weight: bold;
+}
+#current_model {
+    font-size: 12px;
+    padding: 0px 0 30px 0;
+
+}
+
+
+.model_info{
+        margin-top: -150px;
+}
+
+
+#actions {
+    font-size: 12px;
+    padding: 20px 0 0 0px;
+    font-weight: bold;
+}
+
+#sign-up{
+    padding-top: 50px;
+}
+
+#how_to{
+    padding-left: 50px;
+}
+
+#name_box{
+    padding-top: 10px;
+
 }
 
 .webfont {
@@ -134,6 +177,13 @@ h2 {
     line-height: 0%;
     padding: 0 0 5px 10px;
     color: #DFCE3A;
+}
+
+h3 {
+    font-family: 'Dosis', sans-serif;
+    font-weight: 100;
+    line-height: 0%;
+    color: #000000;
 }
 
 p {
@@ -275,7 +325,7 @@ p {
 }
 
 .input-default {
-    font-size: 1.5em;
+    font-size: 12px;
     line-height: 2em;
     border-radius: 4px;
     padding: 20px, 10px;
@@ -386,8 +436,28 @@ input#password {
     font-size: 10px;
 }
 
+input#name_input {
+
+    width: 150px;
+    height: 25px;
+    font-size: 12px;
+}
+
 .button-xsmall {
     font-size: 70%;
+
+}
+
+.button-xsmall1 {
+    font-size: 70%;
+    width:74px;
+}
+
+.button-xsmall2 {
+    font-size: 70%;
+    width:74px;
+    background-color: #DFCE3A;
+
 }
 
 .button-small {
