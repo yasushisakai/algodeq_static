@@ -360,6 +360,7 @@ p {
 }
 
 .error {
+    font-size: 10px;
     color: #FF4A36;
 }
 

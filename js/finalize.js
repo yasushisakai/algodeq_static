@@ -111,10 +111,10 @@ function setup_world() {
     plan.create_walls_floors();
 
     // update cost and points_inborn
-    new_points = parent_points * similarity;
     cost = plan.get_cost();
-    $("#similarity").text(similarity);
-    $("#cost").text(cost);
+    new_points = parent_points * similarity;
+    $("#similarity").text(Plan.format_similarity(similarity));
+    $("#cost").text(Plan.format_cost(cost));
     $("#points_inborn").text(Math.floor(new_points));
 
 

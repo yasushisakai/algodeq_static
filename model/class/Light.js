@@ -9,7 +9,7 @@ function Light(_ambient_color, _directional_light_color, _intensity) {
     if (typeof  _directional_light_color === 'undefined') directional_light_color = 0xbbbbbb;
     else directional_light_color = _directional_light_color;
 
-    if (typeof  _intensity === 'undefined') intensity = 1.0;
+    if (typeof  _intensity === 'undefined') intensity = 0.6;
     else intensity = _intensity;
 
 

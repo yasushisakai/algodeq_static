@@ -53,8 +53,8 @@ function initialize() {
 
 function setup_three_js() {
     console.log("--setup three js--");
-    var CANVAS_WIDTH = window.innerWidth-10;
-    var CANVAS_HEIGHT = window.innerHeight-150;
+    var CANVAS_WIDTH = window.innerWidth - 10;
+    var CANVAS_HEIGHT = window.innerHeight - 150;
 
     scene = new THREE.Scene();
 
@@ -180,7 +180,7 @@ function to_finalize() {
     if (new_plan_similarity == 1.0) {
         $(".error").text("models cannot be identical");
         return;
-    }else if(new_plan_cost > 3000.0){
+    } else if (new_plan_cost > 3000.0) {
         $(".error").text("models cannot cost more than 3000");
         return;
     }
@@ -314,14 +314,16 @@ function make_plan(_id) {
     document.location.href = "../../make/" + _id;
 }
 
-function add_points(_id, _points) {
-    // todo:check whether the time has come to add points
-    //add points to plan and update info
+function add_points(_id, _points, _is_anon) {
 
+    var is_anon;
+    if (typeof _is_anon === 'undefined') is_anon = false;
+    else is_anon = true;
 
     $.post("",
         {
             points: _points,
+            is_anon: is_anon,
             csrfmiddlewaretoken: csrf_token
         },
         function (data, status) {
@@ -329,8 +331,7 @@ function add_points(_id, _points) {
             var result = JSON.parse(data);
             var current_value = parseFloat($("#plan_total_points").text()) + result["points_added"];
             console.log("added " + result["points_added"] + "points to model id:" + _id);
-            $("#plan_total_points").text(current_value);
-
+            $("#plan_total_points").text(Math.round(current_value));
 
             evaluation_timer = 0;
             evaluation_lap = clock.getElapsedTime();
@@ -338,11 +339,8 @@ function add_points(_id, _points) {
             $("#model_add_points").hide();
             console.log($("#model_add_points").is(":visible"));
 
-        })
-        .fail(function (xhr) {
-            console.log("Error: " + xhr.statusText);
-            alert("Error: " + xhr.statusText);
         });
+
     return false;
 
 }

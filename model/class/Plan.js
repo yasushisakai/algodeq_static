@@ -98,7 +98,9 @@ Plan.prototype.compare_with = function (_geometry_data) {
     }
 
     var ratio = same_char / all_char;
+
     if (ratio < 0.01) ratio = 0.01;
+    if (isNaN(ratio)) ratio = 1.0;
 
     return ratio;
 };

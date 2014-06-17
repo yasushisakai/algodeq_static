@@ -15,7 +15,7 @@ function Ground(_size){
 Ground.material_types=[
     new THREE.MeshLambertMaterial({ambient:0xffffff, map: THREE.ImageUtils.loadTexture(path_to_static + 'img/make_grid.png')}),
     new THREE.MeshLambertMaterial({ambient:0xffffff, color:'0xffffff'}),
-    new THREE.MeshLambertMaterial({color:0xffff00, transparent:true, opacity:0.2})
+    new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture(path_to_static + 'img/make_grid.png'), transparent:true, opacity:0.8})
 ];
 
 Ground.materials = new THREE.MeshFaceMaterial([
@@ -30,7 +30,7 @@ Ground.materials = new THREE.MeshFaceMaterial([
 Ground.prototype.create = function(){
 
     this.ground = new THREE.Mesh(this.geometry,Ground.materials);
-    this.ground.position.y = -unit_size /2.0 -100;
+    this.ground.position.y = -unit_size /2.0 +100;
     scene.add(this.ground);
     this.ground.name="ground"
 
@@ -47,5 +47,5 @@ Ground.prototype.get_level_height = function(){
 
 Ground.prototype.move_level_grid= function (_level) {
     this.level = _level;
-    this.level_grid.position = new THREE.Vector3(0.0,this.level*unit_height,0.0);
+    this.level_grid.position = new THREE.Vector3(0.0,this.level*unit_height-50,0.0);
 }
