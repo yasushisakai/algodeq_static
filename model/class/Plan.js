@@ -39,13 +39,13 @@ Plan.room_type = ["living", "dining", "kitchen", "bedroom", "wc", "staircase", "
 Plan.room_cost = {"living": 15, "dining": 15, "kitchen": 20, "bedroom": 15, "wc": 20, "staircase": 25}; // the cost for unit_size^2;
 
 Plan.format_cost = function (num) {
-    return (num*10000).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+    return (num * 10000).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
 }
 
-Plan.format_similarity = function (num){
-    var ratio = Math.floor(num*10000)/100;
+Plan.format_similarity = function (num) {
+    var ratio = Math.floor(num * 10000) / 100;
 
-    return ratio+"%"
+    return ratio + "%"
 }
 
 Plan.format_geometry = function (_geometry_data) {
@@ -189,13 +189,23 @@ Plan.prototype.get_max_height = function () {
 Plan.prototype.get_cost = function () {
     var cost = 0;
 
-
+    var max_height = 0;
     for (var rooms in this.room_data) {
-
         cost += this.room_data[rooms].length * Plan.room_cost[rooms];
+
+        if (max_height == 2) {
+            continue;
+        }
+        for (var i = 0; i < this.room_data[rooms].length; i++) {
+            if (max_height < this.room_data[rooms][i][1]) {
+                max_height = this.room_data[rooms][i][1];
+            }
+            if (max_height == 2)    break;
+        }
     }
 
-    console.log(this.max_height);
+    // update max height
+    this.max_height = max_height;
 
     if (this.max_height == 0) {
         return cost;
@@ -204,7 +214,6 @@ Plan.prototype.get_cost = function () {
     } else {
         return cost * 2.0;
     }
-
 
 };
 
