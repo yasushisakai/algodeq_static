@@ -1,5 +1,7 @@
-function treeDiagram() {
+function treeDiagram(users) {
     var modelGene = impData[0];
+    var account = users;
+    var point_color = d3.rgb(223, 206, 58);
 
 
     var nodeSizeW = 140,
@@ -33,8 +35,6 @@ function treeDiagram() {
     var geneMax = Math.max.apply(null, generation);
 
     var money = user_money(node);
-
-
 
 
     //世代ごとの配列生成
@@ -95,6 +95,14 @@ function treeDiagram() {
             .attr("class", "link")
 
             .attr("d", diagonal)
+            .style("stroke", function (d) {
+                var pnt = d.target.similarity;
+                var clr = 255 - pnt * 155;
+                if (pnt == 0.01) {
+                    clr = 0;
+                }
+                return d3.rgb(clr, clr, clr);
+            })
             .style("stroke-width", function (d) {
                 //console.log(d);
                 var wd;
@@ -120,17 +128,6 @@ function treeDiagram() {
             });
 
         var arr = [];
-//        node.append("circle")
-//            .attr("r", nodeSizeW / 2 + 5)
-//
-//            .style("stroke", "none")
-//            .style("stroke-width", 1)
-//            .style('opacity', 0.5)
-//            .attr("transform", function (d) {
-//
-//                var t_x = pos_trance(d, arr);
-//                return "translate(" + t_x[0] + "," + t_x[1] + ")";
-//            });
 
 
         //各サムネイルを入れ込む
@@ -171,7 +168,7 @@ function treeDiagram() {
             });
 
         //テキストの基準座標 [x,y,height]
-        var textPos = [10, -40, 10];
+        var textPos = [10, -30, 10];
 
         //ID
         a_text = [];
@@ -179,6 +176,12 @@ function treeDiagram() {
             .attr("dx", -nodeSizeW / 2 + textPos[0])
             .attr("dy", nodeSizeH / 2 + textPos[1])
             .style("text-anchor", "start")
+            .style("font-weight", function (d) {
+                if (account == d.architect) {
+                    return "bold";
+                }
+
+            })
             .text(function (d) {
                 return "id: " + d.id;
             });
@@ -189,6 +192,12 @@ function treeDiagram() {
             .attr("dx", -nodeSizeW / 2 + textPos[0])
             .attr("dy", nodeSizeH / 2 + textPos[1] + 10)
             .style("text-anchor", "start")
+            .style("font-weight", function (d) {
+                if (account == d.architect) {
+                    return "bold";
+                }
+
+            })
             .text(function (d) {
                 return "name: " + d.name;
             });
@@ -200,6 +209,7 @@ function treeDiagram() {
             .attr("dy", nodeSizeH / 2 + textPos[1] + 10 * 2)
             .style("text-anchor", "start")
             .style("font-size", 5)
+
             .text(function (d) {
                 var txt = d.creation_time;
                 return txt.substring(2, 16);
@@ -209,7 +219,7 @@ function treeDiagram() {
         a_text = [];
         node.append("text")
 
-            .attr("dy", -nodeSizeH / 2 + 35)
+            .attr("dy", -nodeSizeH / 2 + 20)
             .style("text-anchor", "middle")
 
             .text(function (d) {
@@ -225,17 +235,17 @@ function treeDiagram() {
         node.append("text")
 
             .attr("dx", -nodeSizeH / 2 + 25)
-            .attr("dy", -nodeSizeH / 2 + 60)
+            .attr("dy", -nodeSizeH / 2 + 50)
             .style("text-anchor", "end")
-
             .style("font-size", function (d) {
                 var pnt = d.total_points;
                 var clr = 10;
-                SortScore(nodes, "total_points");
+                SortScore(nodes, "rank");
 
                 for (var i = 1; i < 6; i++) {
                     if (nodes[i].id == d.id) {
                         clr = 10 + (10 / 6) * (6 - i);
+
 
                     }
                 }
@@ -244,11 +254,11 @@ function treeDiagram() {
             .style("fill", function (d) {
                 var pnt = d.total_points;
                 var clr = 0;
-                SortScore(nodes, "total_points");
+                SortScore(nodes, "rank");
 
-                for (var i = 1; i < 6; i++) {
+                for (var i = 1; i < 11; i++) {
                     if (nodes[i].id == d.id) {
-                        clr = (255 / 5) * (5 - i);
+                        clr = (255 / 10) * (10 - i);
 
                     }
                 }
@@ -257,7 +267,7 @@ function treeDiagram() {
 
             })
             .style("font-weight", function (d) {
-                SortScore(nodes, "total_points");
+                SortScore(nodes, "rank");
                 var sty = "none";
 
                 for (var i = 1; i < 6; i++) {
@@ -283,13 +293,19 @@ function treeDiagram() {
             .attr("dx", -nodeSizeW / 2 + textPos[0])
             .attr("dy", nodeSizeH / 2 + textPos[1] - 10)
             .style("text-anchor", "start")
+            .style("font-weight", function (d) {
+                if (account == d.architect) {
+                    return "bold";
+                }
+
+            })
             .text(function (d) {
 
-                var rank = Lst_sort();
+                var rankrank = Lst_sort();
                 var rk;
-                for (var i in rank) {
-                    if (d.id == rank[i].id) {
-                        rk = rank[i].rank;
+                for (var i in rankrank) {
+                    if (d.id == rankrank[i].id) {
+                        rk = rankrank[i].rank
                     }
                 }
 
@@ -420,13 +436,18 @@ function Lst_sort() {
     var node = cluster.nodes(modelGene);
 
     var rank = rank_maker(node);
+
     for (var i in node) {
-        var counter = 0;
+        var counter = 1;
         for (var l in rank) {
-            counter += 1;
-            if (node[i].id == rank[l]) {
+            if(node[i].id ==1){
+                node[i]["rank"] = 0;
+            }else if (node[i].id == rank[l]) {
                 node[i]["rank"] = counter;
+
             }
+            counter += 1;
+
         }
 
     }
@@ -456,8 +477,9 @@ function rank_maker(array) {
     var ranker = [];
     SortScore(array, "total_points");
     for (var i in array) {
-        if (i != 0) {
+        if (array[i].id != 1) {
             ranker.push(array[i].id);
+
         }
 
     }
@@ -471,7 +493,7 @@ function domMaker(array) {
 
 
     for (var i in array) {
-        if (i != 0) {
+        if (array[i].id != 1) {
 
 
             document.write("<tr>");
@@ -537,10 +559,16 @@ function reWrite(array, parameter) {
 }
 
 function MouseIn(id) {
+    console.log(id);
     var svg = d3.select(".pure-u-19-24");
     svg.selectAll(".node")
 
-        .style('opacity', 0.8)
+        .style('opacity',function(d){
+            if (id == d.id) {
+                return 0.8;
+            }
+
+        })
         .style('fill', function (d) {
             if (id == d.id) {
                 return d3.rgb(223, 206, 58);
@@ -550,11 +578,12 @@ function MouseIn(id) {
 
 }
 
+
 function MouseOut(id) {
     var svg = d3.select(".pure-u-19-24");
     svg.selectAll(".node")
 
-        .style('opacity', 0.8)
+        .style('opacity', 1)
         .style('fill', function (d) {
             if (id == d.id) {
                 return d3.rgb(0, 0, 0);
@@ -653,7 +682,6 @@ function user_money(array) {
     var user_only = user.filter(function (x, i, self) {
         return self.indexOf(x) === i;
     });
-
 
 
     for (var k in user_only) {
