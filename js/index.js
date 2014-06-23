@@ -199,7 +199,8 @@ function treeDiagram(users) {
 
             })
             .text(function (d) {
-                return "name: " + d.name;
+                var name = d.name;
+                return name.substring(0, 10);
             });
 
         //creation_time
@@ -463,7 +464,7 @@ function SortScore(array, parameter) {
     array.sort(function (a, b) {
         var aa = eval("a." + parameter);
         var bb = eval("b." + parameter);
-        if (parameter == "rank") {
+        if (parameter == "rank" || parameter == "id") {
             return (aa < bb) ? -1 : 1;
         } else {
             return (aa > bb) ? -1 : 1;
@@ -595,61 +596,63 @@ function MouseOut(id) {
 
 //樹形図の座標設定
 function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
+    SortScore(array, "id");
 
     var max_count = Math.floor(1000 / nodeSizeW);
     var range = [];
-    for (var i in geneHi) {
-        if (max_count < geneHi[i].length) {
-            var ran = Math.floor(geneHi[i].length / 2);
+    var tr;
+    for (var ii in geneHi) {
+        tr = Math.ceil(geneHi[ii].length / max_count);
+
+        //各世代の段数を割り出す
+        if (max_count < geneHi[ii].length) {
+            var ran = tr;
             range.push(ran);
         } else {
             range.push(1);
         }
-
     }
+    console.log(geneHi);
 
     for (var i in array) {
         for (var l = 0; l < geneHi.length; l++) {
-
+            var node_y = 0;
             for (var k = 0; k < geneHi[l].length; k++) {
                 if (array[i].id == geneHi[l][k][0]) {
-                    array[i].x = (width / (geneHi[l].length + 1) * (k + 1));
-                    var node_y = 0;
-                    for (var m = 0; m < l; m++) {
-                        node_y += 1;//range[m];
-                        if (range[m] != 1) {
-                            node_y += 0.5;
-                        }
+                    for(var mm = 0;mm<l;mm++){
+                        if(range[mm] !=1){
 
+                            node_y +=(range[mm]/2)*0.5*(range[mm]+1);
+                        }else {
+                            node_y += range[mm];
+                        }
                     }
-                    if (max_count < geneHi[l].length) {
-                        var cnt = Math.floor(geneHi[l].length / 2);
 
-                        if (k % 2 == 0) {
-                            node_y += 0.5;
-                        }
+                    if (range[l] != 1) {
+                        var each_length = (width - nodeSizeW) / (geneHi[l].length);
+                        array[i].x = nodeSizeH / 2 + each_length * (k + 1);
+
+                        var m_tr = k % range[l];
+                        node_y += 0.5 * (range[l] / 2) * m_tr;
+
+                    } else {
+                        array[i].x = (width / (geneHi[l].length + 1) * (k + 1));
 
                     }
 
                     array[i].y = (node_y + 1) * nodeSizeH;
-
-
                 }
             }
+
         }
-        if (i == 0) {
+        if (array[i].id == 1) {
             array[i].x = width / 2;
         }
     }
-
-
     return array;
-
 }
 
 function cl_size(geneHi, nodeSizeW) {
-
-
     var c_count = 0;
     for (var l in geneHi) {
         c_count += 1;
@@ -685,7 +688,7 @@ function user_money(array) {
 
 
     for (var k in user_only) {
-        var ar = {'user':user_only[k], 'points':0};
+        var ar = {'user': user_only[k], 'points': 0};
 
         user_ar.push(ar);
 
@@ -705,7 +708,7 @@ function user_money(array) {
 
 function graph_bar(array) {
 
-    SortScore(array,"points");
+    SortScore(array, "points");
 
     for (var i = 0; i < array.length; i++) {
         var xx = 0;
@@ -715,7 +718,6 @@ function graph_bar(array) {
         array[i].x = xx;
         array[i].y = yy;
     }
-
 
 
     var margin = {top: 20, right: 20, bottom: 70, left: 100},
@@ -752,7 +754,6 @@ function graph_bar(array) {
             "translate(" + margin.left + "," + margin.top + ")");
 
 
-
     g.append("axis")
         .attr("class", "y axis")
         .call(yAxis)
@@ -765,23 +766,23 @@ function graph_bar(array) {
 
     g.append("rect")
         .attr("class", "bar")
-        .style("fill", d3.rgb(223,206,58))
+        .style("fill", d3.rgb(223, 206, 58))
         .attr("x", d.x)
         .attr("y", d.y)
         .attr("height", bar_height)
         .attr("width", function (d) {
             var u_cost = cost_cal(array, d.user);
 
-            return u_cost[1]/10000;
+            return u_cost[1] / 10000;
         })
         .attr("transform", function (d) {
             return "translate(0," + d.y + ")";
         });
 
     g.append("text")
-        .attr("x", function(d){
-        return d.x-40;
-    })
+        .attr("x", function (d) {
+            return d.x - 40;
+        })
         .attr("y", function (d) {
             var yyy = d.y + bar_height / 2;
             return yyy;
@@ -795,7 +796,7 @@ function graph_bar(array) {
         });
     g.append("text")
 
-        .attr("x", function(){
+        .attr("x", function () {
             return d.x;
         })
         .attr("y", function (d) {
@@ -813,7 +814,7 @@ function graph_bar(array) {
 
 }
 
-function cost_cal(list,user) {
+function cost_cal(list, user) {
     var total_cost = 0;
     var all_cost = 0;
 
@@ -825,11 +826,10 @@ function cost_cal(list,user) {
 
     }
     var user_cost = Math.floor((1000000 / all_cost) * total_cost);
-    console.log(user_cost);
 
-    var user_costNew =user_cost.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    var user_costNew = user_cost.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 
-    return [user_costNew,user_cost];
+    return [user_costNew, user_cost];
 
 }
 
