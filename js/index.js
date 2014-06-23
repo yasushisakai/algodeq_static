@@ -440,9 +440,9 @@ function Lst_sort() {
     for (var i in node) {
         var counter = 1;
         for (var l in rank) {
-            if(node[i].id ==1){
+            if (node[i].id == 1) {
                 node[i]["rank"] = 0;
-            }else if (node[i].id == rank[l]) {
+            } else if (node[i].id == rank[l]) {
                 node[i]["rank"] = counter;
 
             }
@@ -563,7 +563,7 @@ function MouseIn(id) {
     var svg = d3.select(".pure-u-19-24");
     svg.selectAll(".node")
 
-        .style('opacity',function(d){
+        .style('opacity', function (d) {
             if (id == d.id) {
                 return 0.8;
             }
@@ -685,7 +685,7 @@ function user_money(array) {
 
 
     for (var k in user_only) {
-        var ar = [user_only[k], 0];
+        var ar = {'user':user_only[k], 'points':0};
 
         user_ar.push(ar);
 
@@ -694,13 +694,143 @@ function user_money(array) {
 
 
                 if (user_only[k] == array[t].architect) {
-                    user_ar[k][1] += array[t].total_points;
+                    user_ar[k].points += array[t].total_points;
                 }
             }
         }
     }
 
     return user_ar;
+}
+
+function graph_bar(array) {
+
+    SortScore(array,"points");
+
+    for (var i = 0; i < array.length; i++) {
+        var xx = 0;
+        var pitch = 30;
+        var yy = pitch * i;
+        var bar_height = 20;
+        array[i].x = xx;
+        array[i].y = yy;
+    }
+
+
+
+    var margin = {top: 20, right: 20, bottom: 70, left: 100},
+        width = 600 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom;
+
+// Parse the date / time
+    var parseDate = d3.time.format("%Y-%m").parse;
+
+    var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+
+    var y = d3.scale.linear().range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
+        .tickFormat(d3.time.format("%Y-%m"));
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .ticks(10);
+
+    var svg = d3.select(".pure-u-5-24").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+
+
+    var g = svg.selectAll(".data")
+        .data(array)
+        .enter().append("g")
+        .attr("class", "data")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+    g.append("axis")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Value ($)");
+
+    g.append("rect")
+        .attr("class", "bar")
+        .style("fill", d3.rgb(223,206,58))
+        .attr("x", d.x)
+        .attr("y", d.y)
+        .attr("height", bar_height)
+        .attr("width", function (d) {
+            var u_cost = cost_cal(array, d.user);
+
+            return u_cost[1]/10000;
+        })
+        .attr("transform", function (d) {
+            return "translate(0," + d.y + ")";
+        });
+
+    g.append("text")
+        .attr("x", function(d){
+        return d.x-40;
+    })
+        .attr("y", function (d) {
+            var yyy = d.y + bar_height / 2;
+            return yyy;
+        })
+        .attr("dy", ".35em")
+        .style("font-size", 10)
+        .style("text-anchor", "end")
+        .text(function (d) {
+            var aaa = d.user;
+            return aaa;
+        });
+    g.append("text")
+
+        .attr("x", function(){
+            return d.x;
+        })
+        .attr("y", function (d) {
+            var yyy = d.y + bar_height / 2;
+            return yyy;
+        })
+        .attr("dy", ".35em")
+        .style("text-anchor", "end")
+        .style("font-size", 10)
+        .text(function (d) {
+            var u_cost = cost_cal(array, d.user);
+            return u_cost[0];
+        });
+
+
+}
+
+function cost_cal(list,user) {
+    var total_cost = 0;
+    var all_cost = 0;
+
+    for (var i in user_list) {
+        all_cost += user_list[i].points;
+        if (user == user_list[i].user) {
+            total_cost = user_list[i].points;
+        }
+
+    }
+    var user_cost = Math.floor((1000000 / all_cost) * total_cost);
+    console.log(user_cost);
+
+    var user_costNew =user_cost.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+
+    return [user_costNew,user_cost];
+
 }
 
 
