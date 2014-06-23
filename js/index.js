@@ -1,4 +1,4 @@
-function treeDiagram(users) {
+function treeDiagram(users, bool) {
     var modelGene = impData[0];
     var account = users;
     var point_color = d3.rgb(223, 206, 58);
@@ -11,6 +11,9 @@ function treeDiagram(users) {
     var width = 1000,
         height = 600,
         scl = 1.2;
+    if(bool == false){
+        width = 1870;
+    }
 
     //何世代目までいるかを調べる
     var cluster = d3.layout.tree();
@@ -54,7 +57,7 @@ function treeDiagram(users) {
 
     var c_num = cl_size(geneHi, nodeSizeW);
 
-    var cluster_sizeH = nodeSizeH * c_num;
+    var cluster_sizeH = 8000;//nodeSizeH * c_num;
 
 
     //樹形図領域生成
@@ -71,21 +74,36 @@ function treeDiagram(users) {
     var dy = (height * scl - height) * 0.5;
 
     //DOM svgのフィールドを作成
-    var svg = d3.select(".pure-u-19-24").append("svg")
+    if(bool==true){
+            var svg = d3.select(".pure-u-19-24").append("svg")
         .attr("width", width)
         .attr("height", cluster_sizeH * scl)
         .append("g")
         .attr("transform", "translate(" + dx + "," + dy + ")");
+    }else{
+            var svg = d3.select(".pure-u-24-24").append("svg")
+        .attr("width", width)
+        .attr("height", cluster_sizeH * scl)
+        .append("g")
+        .attr("transform", "translate(" + dx + "," + dy + ")");
+    }
 
 
-    netnode(modelGene, geneHi, width, nodeSizeW, nodeSizeH);
+
+
+
+    netnode(modelGene, geneHi, width, nodeSizeW, nodeSizeH, bool);
 
     //樹形図を作成する
-    function netnode(json, geneHi, width, nodeSizeW, nodeSizeH) {
+    function netnode(json, geneHi, width, nodeSizeW, nodeSizeH, bool) {
         var nodes = cluster.nodes(json),
             links = cluster.links(nodes);
 
-        layout_tree(nodes, geneHi, width, nodeSizeW, nodeSizeH);
+        if (bool == true) {
+            layout_tree(nodes, geneHi, width, nodeSizeW, nodeSizeH);
+        } else {
+            layout_treeGraphic(nodes, geneHi, width, nodeSizeW, nodeSizeH);
+        }
 
 
         var ar = [0];
@@ -612,18 +630,17 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
             range.push(1);
         }
     }
-    console.log(geneHi);
 
     for (var i in array) {
         for (var l = 0; l < geneHi.length; l++) {
             var node_y = 0;
             for (var k = 0; k < geneHi[l].length; k++) {
                 if (array[i].id == geneHi[l][k][0]) {
-                    for(var mm = 0;mm<l;mm++){
-                        if(range[mm] !=1){
+                    for (var mm = 0; mm < l; mm++) {
+                        if (range[mm] != 1) {
 
-                            node_y +=(range[mm]/2)*0.5*(range[mm]+1);
-                        }else {
+                            node_y += (range[mm] / 2) * 0.5 * (range[mm] + 1);
+                        } else {
                             node_y += range[mm];
                         }
                     }
@@ -651,6 +668,65 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
     }
     return array;
 }
+
+
+//樹形図の座標設定
+function layout_treeGraphic(array, geneHi, width, nodeSizeW, nodeSizeH) {
+    SortScore(array, "id");
+
+    var max_count = Math.floor(width / nodeSizeW);
+    var range = [];
+    var tr;
+    for (var ii in geneHi) {
+        tr = Math.ceil(geneHi[ii].length / max_count);
+
+        //各世代の段数を割り出す
+        if (max_count < geneHi[ii].length) {
+            var ran = tr;
+            range.push(ran);
+        } else {
+            range.push(1);
+        }
+    }
+
+    for (var i in array) {
+        for (var l = 0; l < geneHi.length; l++) {
+            var node_y = 0;
+            for (var k = 0; k < geneHi[l].length; k++) {
+                if (array[i].id == geneHi[l][k][0]) {
+                    for (var mm = 0; mm < l; mm++) {
+                        if (range[mm] != 1) {
+
+                            node_y += (range[mm] / 2) * 0.5 * (range[mm] + 1);
+                        } else {
+                            node_y += range[mm];
+                        }
+                    }
+
+                    if (range[l] != 1) {
+                        var each_length = (width - nodeSizeW) / (geneHi[l].length);
+                        array[i].x = nodeSizeH / 2 + each_length * (k + 1);
+
+                        var m_tr = k % range[l];
+                        node_y += 0.5 * (range[l] / 2) * m_tr;
+
+                    } else {
+                        array[i].x = (width / (geneHi[l].length + 1) * (k + 1));
+
+                    }
+
+                    array[i].y = (node_y + 1) * nodeSizeH;
+                }
+            }
+
+        }
+        if (array[i].id == 1) {
+            array[i].x = width / 2;
+        }
+    }
+    return array;
+}
+
 
 function cl_size(geneHi, nodeSizeW) {
     var c_count = 0;
