@@ -181,7 +181,7 @@ function to_finalize() {
         $(".error").text("models cannot be identical");
         return;
     } else if (new_plan_cost > 3000.0) {
-        $(".error").text("models cannot cost more than 3000");
+        $(".error").text("models cannot cost more than 30,000,000 yen.");
         return;
     }
 
