@@ -639,7 +639,7 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
                     for (var mm = 0; mm < l; mm++) {
                         if (range[mm] != 1) {
 
-                            node_y += (range[mm] / 2) * 0.5 * (range[mm] + 1);
+                            node_y += (range[mm] / 2) * 0.5 * (range[mm] );
                         } else {
                             node_y += range[mm];
                         }
@@ -798,7 +798,7 @@ function graph_bar(array) {
 
     var margin = {top: 20, right: 20, bottom: 70, left: 100},
         width = 600 - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom;
+        height = 1000 - margin.top - margin.bottom;
 
 // Parse the date / time
     var parseDate = d3.time.format("%Y-%m").parse;
