@@ -155,7 +155,7 @@ function treeDiagram(users, bool) {
                 var name = d.name;
                 var ch = d.paID;
                 var tm = d.time;
-                return "/media/plans/img_" + d.name + ".png";
+                return "/media/plans/small/img_" + d.name + ".png";
                 //return "/media/plans/img_tokyo_0.png";
 
             })

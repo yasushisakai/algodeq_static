@@ -279,14 +279,14 @@ function update_timer_limiations() {
     // updates the limitations for creating and adding points
 
     if (until_next_creation < 0) {
-        if (!$("#save_plan").is(":visible")) {
-            $("#save_plan").show();
+        if (!$("#model_make_plan").is(":visible")) {
+            $("#model_make_plan").show();
         }
         $("#timers_creation").text("ready for making a new plan");
 
     } else {
-        if ($("#save_plan").is(":visible")) {
-            $("#save_plan").hide();
+        if ($("#model_make_plan").is(":visible")) {
+            $("#model_make_plan").hide();
         }
         $("#timers_creation").text(Math.floor(until_next_creation) + "seconds until next creation");
     }
