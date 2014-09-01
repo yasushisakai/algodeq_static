@@ -4,16 +4,16 @@ function treeDiagram(users, bool) {
     var point_color = d3.rgb(223, 206, 58);
 
 
+    var width = 6000,
+        height = 600,
+        scl = 1.2;
+    if (bool == false) {
+        width = 1870;
+    }
+
     var nodeSizeW = 140,
         nodeSizeH = 140,
         mxDiv = width / nodeSizeW;
-
-    var width = 1000,
-        height = 600,
-        scl = 1.2;
-    if(bool == false){
-        width = 1870;
-    }
 
     //何世代目までいるかを調べる
     var cluster = d3.layout.tree();
@@ -29,12 +29,12 @@ function treeDiagram(users, bool) {
         } else {
             var gPar = node[i].parent.id;
         }
-        //console.log(gPar);
 
         generation.push(gene);
         geneID.push([gID, gPar]);
     }
     ;
+    console.log(generation);
     var geneMax = Math.max.apply(null, generation);
 
     var money = user_money(node);
@@ -47,13 +47,20 @@ function treeDiagram(users, bool) {
 
         for (var k = 0; k < generation.length; k++) {
             if (generation[k] == ii + 1) {
-                tt.push(geneID[k]);
+                for (var i in node) {
+
+                    if (geneID[k][0] == node[i].id) {
+
+                        tt.push([geneID[k][0], node[i]]);
+                    }
+                }
 
 
             }
         }
         geneHi.push(tt);
     }
+    console.log(geneHi);
 
     var c_num = cl_size(geneHi, nodeSizeW);
 
@@ -74,35 +81,33 @@ function treeDiagram(users, bool) {
     var dy = (height * scl - height) * 0.5;
 
     //DOM svgのフィールドを作成
-    if(bool==true){
-            var svg = d3.select(".pure-u-19-24").append("svg")
-        .attr("width", width)
-        .attr("height", cluster_sizeH * scl)
-        .append("g")
-        .attr("transform", "translate(" + dx + "," + dy + ")");
-    }else{
-            var svg = d3.select(".pure-u-24-24").append("svg")
-        .attr("width", width)
-        .attr("height", cluster_sizeH * scl)
-        .append("g")
-        .attr("transform", "translate(" + dx + "," + dy + ")");
+    if (bool == true) {
+        var svg = d3.select(".pure-u-19-24").append("svg")
+            .attr("width", width)
+            .attr("height", cluster_sizeH * scl)
+            .append("g")
+            .attr("transform", "translate(" + dx + "," + dy + ")");
+    } else {
+        var svg = d3.select(".pure-u-24-24").append("svg")
+            .attr("width", width)
+            .attr("height", cluster_sizeH * scl)
+            .append("g")
+            .attr("transform", "translate(" + dx + "," + dy + ")");
     }
+    node[0].x = 3000;
 
 
-
-
-
-    netnode(modelGene, geneHi, width, nodeSizeW, nodeSizeH, bool);
+    netnode(node, geneHi, width, nodeSizeW, nodeSizeH, bool);
 
     //樹形図を作成する
-    function netnode(json, geneHi, width, nodeSizeW, nodeSizeH, bool) {
-        var nodes = cluster.nodes(json),
-            links = cluster.links(nodes);
+    function netnode(node, geneHi, width, nodeSizeW, nodeSizeH, bool) {
+
+        var links = cluster.links(node);
 
         if (bool == true) {
-            layout_tree(nodes, geneHi, width, nodeSizeW, nodeSizeH);
+            layout_tree(node, geneHi, width, nodeSizeW, nodeSizeH);
         } else {
-            layout_treeGraphic(nodes, geneHi, width, nodeSizeW, nodeSizeH);
+            layout_treeGraphic(node, geneHi, width, nodeSizeW, nodeSizeH);
         }
 
 
@@ -135,8 +140,8 @@ function treeDiagram(users, bool) {
             });
 
         var array_node = [];
-        var node = svg.selectAll(".node")
-            .data(nodes)
+        var node_l = svg.selectAll(".node")
+            .data(node)
             .enter().append("g")
             .attr("class", "node")
 
@@ -150,7 +155,7 @@ function treeDiagram(users, bool) {
 
         //各サムネイルを入れ込む
         var array_image = [];
-        node.append("svg:image")
+        node_l.append("svg:image")
             .attr("xlink:href", function (d) {
                 var name = d.name;
                 var ch = d.paID;
@@ -168,7 +173,8 @@ function treeDiagram(users, bool) {
             .on("mouseover", function (d, i) {
                 d3.select(this)
                     .style('opacity', 0.8)
-                    .style('fill', d3.rgb(223, 206, 58));
+                    .style('fill', d3.rgb(223, 206, 58))
+
             })
             .on("mouseout", function (d, i) {
                 d3.select(this)
@@ -190,7 +196,7 @@ function treeDiagram(users, bool) {
 
         //ID
         a_text = [];
-        node.append("text")
+        node_l.append("text")
             .attr("dx", -nodeSizeW / 2 + textPos[0])
             .attr("dy", nodeSizeH / 2 + textPos[1])
             .style("text-anchor", "start")
@@ -206,7 +212,7 @@ function treeDiagram(users, bool) {
 
         //name
         a_text = [];
-        node.append("text")
+        node_l.append("text")
             .attr("dx", -nodeSizeW / 2 + textPos[0])
             .attr("dy", nodeSizeH / 2 + textPos[1] + 10)
             .style("text-anchor", "start")
@@ -223,7 +229,7 @@ function treeDiagram(users, bool) {
 
         //creation_time
         a_text = [];
-        node.append("text")
+        node_l.append("text")
             .attr("dx", -nodeSizeW / 2 + textPos[0])
             .attr("dy", nodeSizeH / 2 + textPos[1] + 10 * 2)
             .style("text-anchor", "start")
@@ -236,7 +242,7 @@ function treeDiagram(users, bool) {
 
         //diff
         a_text = [];
-        node.append("text")
+        node_l.append("text")
 
             .attr("dy", -nodeSizeH / 2 + 20)
             .style("text-anchor", "middle")
@@ -251,7 +257,7 @@ function treeDiagram(users, bool) {
 
         //point
         a_text = [];
-        node.append("text")
+        node_l.append("text")
 
             .attr("dx", -nodeSizeH / 2 + 25)
             .attr("dy", -nodeSizeH / 2 + 50)
@@ -259,10 +265,10 @@ function treeDiagram(users, bool) {
             .style("font-size", function (d) {
                 var pnt = d.total_points;
                 var clr = 10;
-                SortScore(nodes, "rank");
+                SortScore(node, "rank");
 
                 for (var i = 1; i < 6; i++) {
-                    if (nodes[i].id == d.id) {
+                    if (node[i].id == d.id) {
                         clr = 10 + (10 / 6) * (6 - i);
 
 
@@ -273,10 +279,10 @@ function treeDiagram(users, bool) {
             .style("fill", function (d) {
                 var pnt = d.total_points;
                 var clr = 0;
-                SortScore(nodes, "rank");
+                SortScore(node, "rank");
 
                 for (var i = 1; i < 11; i++) {
-                    if (nodes[i].id == d.id) {
+                    if (node[i].id == d.id) {
                         clr = (255 / 10) * (10 - i);
 
                     }
@@ -286,11 +292,11 @@ function treeDiagram(users, bool) {
 
             })
             .style("font-weight", function (d) {
-                SortScore(nodes, "rank");
+                SortScore(node, "rank");
                 var sty = "none";
 
                 for (var i = 1; i < 6; i++) {
-                    if (nodes[i].id == d.id) {
+                    if (node[i].id == d.id) {
                         sty = "bold";
                     }
                 }
@@ -307,7 +313,7 @@ function treeDiagram(users, bool) {
 
         //rank
         a_text = [];
-        node.append("text")
+        node_l.append("text")
 
             .attr("dx", -nodeSizeW / 2 + textPos[0])
             .attr("dy", nodeSizeH / 2 + textPos[1] - 10)
@@ -320,7 +326,7 @@ function treeDiagram(users, bool) {
             })
             .text(function (d) {
 
-                var rankrank = Lst_sort();
+                var rankrank = Lst_sort(node);
                 var rk;
                 for (var i in rankrank) {
                     if (d.id == rankrank[i].id) {
@@ -352,7 +358,6 @@ function treeDiagram(users, bool) {
 
         for (var i in  tmp_arr) {
             countArray.push(tmp_arr[i].children.length);
-            //console.log(tmp_arr[i].children.length);
         }
         var maxCount = Math.max.apply(null, countArray);
 
@@ -387,68 +392,10 @@ function treeDiagram(users, bool) {
         }
     }
 
-    function pos_trance(d, array) {
-        var c_x;
-        var xxx = 0;
-        var dis = 0;
-        var j_num = 0;
-        array[0] = [1, 0, 1];
-
-        for (var l = 0; l < geneHi.length; l++) {
-            var ar_t = [];
-            for (var j = 0; j < geneHi[l].length; j++) {
-                if (d.id == geneHi[l][j][0]) {
-                    var a_r = [d.id, d.x, d.parent.id];
-                    var dis = 0;
-                    var signal = false;
-                    if (j > 0) {
-                        for (var zz = 0; zz < array.length; zz++) {
-                            if (geneHi[l][j - 1][0] == array[zz][0]) {
-                                dis = d.x - array[zz][1];
-                            }
-                        }
-                    }
-                    if (d.parent.id == array[array.length - 1][2]) {
-
-                        j_num = j;
-                        signal = true;
-
-
-                    }
-
-                    if (dis == 0) {
-                        xxx = 0;
-                    } else if (dis < (nodeSizeW / 2 + 5) * 2) {
-                        if (signal == true) {
-                            xxx = ((nodeSizeW / 2 + 5) * 2 - dis) * (j - j_num + 1);
-                        } else {
-                            xxx = ((nodeSizeW / 2 + 5) * 2 - dis);
-                        }
-
-                    } else {
-                        xxx = 0;
-                    }
-                    array.push(a_r);
-
-
-                }
-
-            }
-
-
-        }
-        var yyy = 0;
-
-
-        array = [];
-        return [xxx, yyy];
-
-    }
-
 }
 
 //JSONデータをD3の連想配列に変換
-function Lst_sort() {
+function Lst_sort(node) {
 
     var modelGene = impData[0];
     var cluster = d3.layout.tree();
@@ -470,6 +417,7 @@ function Lst_sort() {
         }
 
     }
+
 
     return node;
 
@@ -578,7 +526,6 @@ function reWrite(array, parameter) {
 }
 
 function MouseIn(id) {
-    console.log(id);
     var svg = d3.select(".pure-u-19-24");
     svg.selectAll(".node")
 
@@ -616,7 +563,7 @@ function MouseOut(id) {
 function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
     SortScore(array, "id");
 
-    var max_count = Math.floor(1000 / nodeSizeW);
+    var max_count = Math.floor(width / nodeSizeW);
     var range = [];
     var tr;
     for (var ii in geneHi) {
@@ -631,11 +578,62 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
         }
     }
 
-    for (var i in array) {
-        for (var l = 0; l < geneHi.length; l++) {
+    //子供の数を点数化
+    for (var i = array.length - 1; i >= 0; i--) {
+        var child_pt = array[i].children.length - 1;
+        //子供の数を点数化
+        array[i].pt = child_pt;
+        var ppp = 0;
+        for (var l in array[i].children) {
+            for (var k in array) {
+                if (array[i].children[l].id == array[k].id) {
+                    var chd = array[k].children.length;
+                    if (chd != 0) {
+                        chd -= 1;
+                    }
+                    ppp += chd / 2;
+                }
+            }
+        }
+        array[i].grandchildren = ppp;
+
+
+    }
+    for (var l = geneHi.length - 1; l >= 0; l--) {
+        for (var k = 0; k < geneHi[l].length; k++) {
+            for (var i in array) {
+                if (geneHi[l][k][0] == array[i].id) {
+                    var chdn = array[i].children.length;
+                    if (chdn > 1) {
+                        chdn -= 1;
+                    } else if (chdn == 1) {
+                        chdn = 0;
+                    }
+                    if (array[i].children.length == 1) {
+                        array[i].pt = 0;
+                    } else {
+                        array[i].pt = array[i].grandchildren + chdn;
+                    }
+
+                }
+            }
+        }
+    }
+
+
+    for (var l = 0; l < geneHi.length; l++) {
+        var present_pt = 0;
+        var present_id = 0;
+        var kk = 0;
+
+        for (k = 0; k < geneHi[l].length; k++) {
+
             var node_y = 0;
-            for (var k = 0; k < geneHi[l].length; k++) {
+
+            for (var i in array) {
+
                 if (array[i].id == geneHi[l][k][0]) {
+
                     for (var mm = 0; mm < l; mm++) {
                         if (range[mm] != 1) {
 
@@ -646,26 +644,95 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
                     }
 
                     if (range[l] != 1) {
-                        var each_length = (width - nodeSizeW) / (geneHi[l].length);
-                        array[i].x = nodeSizeH / 2 + each_length * (k + 1);
 
                         var m_tr = k % range[l];
                         node_y += 0.5 * (range[l] / 2) * m_tr;
 
                     } else {
-                        array[i].x = (width / (geneHi[l].length + 1) * (k + 1));
 
+                        //x座標
+                        if (k == 0) {
+                            array[i].x = array[i].parent.x - geneHi[l][0][1].parent.pt / 2 * 140;
+                            present_pt += geneHi[l][k][1].pt / 2;
+                            kk +=1;
+                        } else {
+                            present_pt += geneHi[l][k][1].pt / 2;
+                            if (present_id != array[i].parent.id) {
+                                kk = 0;
+                                present_pt = 0;
+
+                            }
+                            array[i].x = array[i].parent.x - geneHi[l][k][1].parent.pt / 2 * 140 + 140 * ( kk + present_pt);
+                            kk +=1;
+
+
+                        }
+                        present_id = array[i].parent.id;
                     }
 
                     array[i].y = (node_y + 1) * nodeSizeH;
+
+                    if (array[i].id == 1) {
+                        array[i].x = width / 2;
+                    }
+
                 }
             }
 
         }
-        if (array[i].id == 1) {
-            array[i].x = width / 2;
-        }
     }
+
+
+//    for (var i in array) {
+//        for (var l = 0; l < geneHi.length; l++) {
+//            var pt = 0;
+//            var node_y = 0;
+//            console.log(geneHi);
+//
+//            for (var k =0;k< geneHi[l].length;k++) {
+//
+//
+//                if (array[i].id == geneHi[l][k][0]) {
+//
+//                    for (var mm = 0; mm < l; mm++) {
+//                        if (range[mm] != 1) {
+//
+//                            node_y += (range[mm] / 2) * 0.5 * (range[mm] );
+//                        } else {
+//                            node_y += range[mm];
+//                        }
+//                    }
+//
+//                    if (range[l] != 1) {
+//                        var each_length = (width - nodeSizeW) / (geneHi[l].length);
+//
+//                        array[i].x = nodeSizeH / 2 + each_length * (k + 1);
+//
+//                        var m_tr = k % range[l];
+//                        node_y += 0.5 * (range[l] / 2) * m_tr;
+//
+//                    } else {
+//                        var ch_pt = array[i].children.length;
+//                        if(ch_pt != 0){
+//                            ch_pt -=1;
+//                        }
+//                        pt += ch_pt/2*120;
+//
+//
+//                        array[i].x = 120*(k+1)+pt;//(width / (geneHi[l].length + 1) * (k + 1));
+//
+//
+//                    }
+//
+//                    array[i].y = (node_y + 1) * nodeSizeH;
+//                }
+//            }
+//
+//        }
+//        if (array[i].id == 1) {
+//            array[i].x = width / 2;
+//        }
+//    }
     return array;
 }
 
