@@ -4,7 +4,7 @@ function treeDiagram(users, bool) {
     var point_color = d3.rgb(223, 206, 58);
 
 
-    var width = 6000,
+    var width = 9000,
         height = 600,
         scl = 1.2;
     if (bool == false) {
@@ -64,7 +64,7 @@ function treeDiagram(users, bool) {
 
     var c_num = cl_size(geneHi, nodeSizeW);
 
-    var cluster_sizeH = 8000;//nodeSizeH * c_num;
+    var cluster_sizeH = 14000;//nodeSizeH * c_num;
 
 
     //樹形図領域生成
@@ -94,7 +94,7 @@ function treeDiagram(users, bool) {
             .append("g")
             .attr("transform", "translate(" + dx + "," + dy + ")");
     }
-    node[0].x = 3000;
+    node[0].x = 4500;
 
 
     netnode(node, geneHi, width, nodeSizeW, nodeSizeH, bool);
@@ -591,12 +591,13 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
                     if (chd != 0) {
                         chd -= 1;
                     }
+                    ;
+
                     ppp += chd / 2;
                 }
             }
         }
         array[i].grandchildren = ppp;
-
 
     }
     for (var l = geneHi.length - 1; l >= 0; l--) {
@@ -606,11 +607,15 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
                     var chdn = array[i].children.length;
                     if (chdn > 1) {
                         chdn -= 1;
-                    } else if (chdn == 1) {
-                        chdn = 0;
                     }
                     if (array[i].children.length == 1) {
-                        array[i].pt = 0;
+                        if (array[i].children[0].children.length == 1) {
+                            array[i].pt = 0;
+                        } else {
+                            array[i].pt = 0;
+                        }
+
+
                     } else {
                         array[i].pt = array[i].grandchildren + chdn;
                     }
@@ -624,6 +629,7 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
     for (var l = 0; l < geneHi.length; l++) {
         var present_pt = 0;
         var present_id = 0;
+        var present_x = 0;
         var kk = 0;
 
         for (k = 0; k < geneHi[l].length; k++) {
@@ -649,24 +655,36 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
                         node_y += 0.5 * (range[l] / 2) * m_tr;
 
                     } else {
+                        var sc = 140;//*(geneHi.length-l)/array[i].children.length/2;
+                        console.log(sc);
 
                         //x座標
                         if (k == 0) {
-                            array[i].x = array[i].parent.x - geneHi[l][0][1].parent.pt / 2 * 140;
+                            array[i].x = array[i].parent.x - array[i].parent.pt / 2 * sc;
                             present_pt += geneHi[l][k][1].pt / 2;
-                            kk +=1;
+                            kk += 1;
                         } else {
                             present_pt += geneHi[l][k][1].pt / 2;
+
                             if (present_id != array[i].parent.id) {
                                 kk = 0;
                                 present_pt = 0;
 
                             }
-                            array[i].x = array[i].parent.x - geneHi[l][k][1].parent.pt / 2 * 140 + 140 * ( kk + present_pt);
-                            kk +=1;
+
+                            array[i].x = array[i].parent.x - array[i].parent.pt / 2 * sc + ( kk + present_pt) * sc;
+
+                            kk += 1;
+
+                            present_pt += geneHi[l][k][1].pt / 2;
 
 
                         }
+
+                        if (array[i].x < present_x+sc) {
+                            array[i].x = present_x + sc;
+                        }
+                        present_x = array[i].x;
                         present_id = array[i].parent.id;
                     }
 
@@ -682,57 +700,6 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
         }
     }
 
-
-//    for (var i in array) {
-//        for (var l = 0; l < geneHi.length; l++) {
-//            var pt = 0;
-//            var node_y = 0;
-//            console.log(geneHi);
-//
-//            for (var k =0;k< geneHi[l].length;k++) {
-//
-//
-//                if (array[i].id == geneHi[l][k][0]) {
-//
-//                    for (var mm = 0; mm < l; mm++) {
-//                        if (range[mm] != 1) {
-//
-//                            node_y += (range[mm] / 2) * 0.5 * (range[mm] );
-//                        } else {
-//                            node_y += range[mm];
-//                        }
-//                    }
-//
-//                    if (range[l] != 1) {
-//                        var each_length = (width - nodeSizeW) / (geneHi[l].length);
-//
-//                        array[i].x = nodeSizeH / 2 + each_length * (k + 1);
-//
-//                        var m_tr = k % range[l];
-//                        node_y += 0.5 * (range[l] / 2) * m_tr;
-//
-//                    } else {
-//                        var ch_pt = array[i].children.length;
-//                        if(ch_pt != 0){
-//                            ch_pt -=1;
-//                        }
-//                        pt += ch_pt/2*120;
-//
-//
-//                        array[i].x = 120*(k+1)+pt;//(width / (geneHi[l].length + 1) * (k + 1));
-//
-//
-//                    }
-//
-//                    array[i].y = (node_y + 1) * nodeSizeH;
-//                }
-//            }
-//
-//        }
-//        if (array[i].id == 1) {
-//            array[i].x = width / 2;
-//        }
-//    }
     return array;
 }
 
@@ -811,7 +778,6 @@ function cl_size(geneHi, nodeSizeW) {
 
 function user_money(array) {
     var user_ar = [];
-    //user_archi.push([array[1].architect, array[1].total_points]);
 
     var user = [];
     var t_points = 0;
