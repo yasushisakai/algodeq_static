@@ -34,7 +34,7 @@ function treeDiagram(users, bool) {
         geneID.push([gID, gPar]);
     }
     ;
-    console.log(generation);
+    //console.log(generation);
     var geneMax = Math.max.apply(null, generation);
 
     var money = user_money(node);
@@ -60,7 +60,7 @@ function treeDiagram(users, bool) {
         }
         geneHi.push(tt);
     }
-    console.log(geneHi);
+    //console.log(geneHi);
 
     var c_num = cl_size(geneHi, nodeSizeW);
 
@@ -110,8 +110,21 @@ function treeDiagram(users, bool) {
             layout_treeGraphic(node, geneHi, width, nodeSizeW, nodeSizeH);
         }
 
+//        var node_xmin = node[0].x;
+//        var node_xmax = node[0].x;
+//        for(i in node){
+//            if (node_xmin>node[i].x ){
+//                node_xmin = node[i].x;
+//            }else if (node_xmax <node[i].x){
+//                node_xmax = node[i].x;
+//            }
+//        }
 
-        var ar = [0];
+//        var all_wide = node_xmax - node_xmin;
+//        cluster_sizeH = all_wide;//14000;
+
+
+        //var ar = [0];
         var link = svg.selectAll(".link")
             .data(links)
             .enter().append("path")
@@ -173,7 +186,8 @@ function treeDiagram(users, bool) {
             .on("mouseover", function (d, i) {
                 d3.select(this)
                     .style('opacity', 0.8)
-                    .style('fill', d3.rgb(223, 206, 58))
+                    .style('fill', d3.rgb(223, 206, 58));
+
 
             })
             .on("mouseout", function (d, i) {
@@ -461,6 +475,7 @@ function domMaker(array) {
 
     for (var i in array) {
         if (array[i].id != 1) {
+            console.log(array[i].x);
 
 
             document.write("<tr>");
@@ -468,6 +483,7 @@ function domMaker(array) {
             document.write(array[i].rank);
             document.write("</td>");
             document.write("<td >");
+            document.write("<a href='#' title='$(...).scrollTo(  { top:1000, left:"+array[i].x*(-1000)+", {queue:true}); class='back'>");
             document.write(array[i].id);
             document.write("</a></td><td>");
             document.write("<a href=" + array[i].url + " OnMouseOver='MouseIn(" + array[i].id + ");' OnMouseOut='MouseOut(" + array[i].id + ");'>");
@@ -483,6 +499,7 @@ function domMaker(array) {
             document.write(array[i].creation_time.substring(2, 16));
             document.write("</td>");
             document.write("</tr>");
+
         }
 
     }
@@ -541,6 +558,7 @@ function MouseIn(id) {
             }
 
         });
+
 
 }
 
@@ -656,7 +674,7 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
 
                     } else {
                         var sc = 140;//*(geneHi.length-l)/array[i].children.length/2;
-                        console.log(sc);
+                        //console.log(sc);
 
                         //x座標
                         if (k == 0) {

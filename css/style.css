@@ -632,14 +632,14 @@ input#name_input {
 
 .top-layer-side-bar{
     position: fixed;
-    top: 250px;
+    top: 100px;
     left: 50px;
     z-index: 1;
 }
 
 .bottom-layer{
     position: absolute;
-    top: 0px;
+    top: 100px;
     left:0px;
     z-index: 0;
 }
