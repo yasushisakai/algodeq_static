@@ -25,7 +25,6 @@ Cube.remove_cube = function (_index) {
 
     var obj_name = "cube[" + _index[0] + "," + _index[1] + "," + _index[2] + "]";
     var object = scene.getObjectByName(obj_name);
-    console.log(obj_name);
     scene.remove(object);
 
 }
