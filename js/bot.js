@@ -98,7 +98,11 @@ function setup_world() {
             plan.fabricate1(10);
             break;
         case 1:
+        case 2:
             var sibling = new Plan(geometry2_data);
+            //
+            // crossing!!!!
+            //
             var plans = Plan.cross(plan,sibling);
             if(plans[0] != null){
                 plan = plans[0];
@@ -107,7 +111,6 @@ function setup_world() {
             }else{
                 alert("cannot make different plan");
             }
-
         default :
             break;
     }
@@ -119,6 +122,8 @@ function setup_world() {
     if(bot_type == 0) {
         new_name = random_station() + "_" + bot_type + "" + zero_add(Math.floor(Math.random() * 10000));
     }else if(bot_type ==1){
+        new_name = random_constellations() +"_" + bot_type + "_" +parent_id+"_"+parent2_id+"_"+ zero_add(Math.floor(Math.random() * 10000));
+    }else if(bot_type ==2){
         new_name = random_constellations() +"_" + bot_type + "_" +parent_id+"_"+parent2_id+"_"+ zero_add(Math.floor(Math.random() * 10000));
     }
 
@@ -140,7 +145,7 @@ function setup_world() {
 
 
 function save_plan() {
-
+    console.log("save_plane");
     $.post("/fabricate/",
         {
             input_name: new_name,
