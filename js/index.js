@@ -2,9 +2,10 @@ function treeDiagram(users, bool) {
     var modelGene = impData[0];
     var account = users;
     var point_color = d3.rgb(223, 206, 58);
+    //console.log("level1");
 
 
-    var width = 9000,
+    var width = 13000,
         height = 600,
         scl = 1.2;
     if (bool == false) {
@@ -34,6 +35,7 @@ function treeDiagram(users, bool) {
         geneID.push([gID, gPar]);
     }
     ;
+    //console.log("level2");
     //console.log(generation);
     var geneMax = Math.max.apply(null, generation);
 
@@ -61,6 +63,7 @@ function treeDiagram(users, bool) {
         geneHi.push(tt);
     }
     //console.log(geneHi);
+    //console.log("level3");
 
     var c_num = cl_size(geneHi, nodeSizeW);
 
@@ -94,10 +97,12 @@ function treeDiagram(users, bool) {
             .append("g")
             .attr("transform", "translate(" + dx + "," + dy + ")");
     }
-    node[0].x = 4500;
+    node[0].x = 6000;
+    //console.log("level4");
 
 
     netnode(node, geneHi, width, nodeSizeW, nodeSizeH, bool);
+
 
     //樹形図を作成する
     function netnode(node, geneHi, width, nodeSizeW, nodeSizeH, bool) {
@@ -105,8 +110,10 @@ function treeDiagram(users, bool) {
         var links = cluster.links(node);
 
         if (bool == true) {
+            //console.log("level5");
             layout_tree(node, geneHi, width, nodeSizeW, nodeSizeH);
         } else {
+
             layout_treeGraphic(node, geneHi, width, nodeSizeW, nodeSizeH);
         }
 
@@ -182,6 +189,7 @@ function treeDiagram(users, bool) {
             .attr("width", nodeSizeW)
             .attr("height", nodeSizeH);
 
+       //console.log("level9");
         svg.selectAll(".node")
             .on("mouseover", function (d, i) {
                 d3.select(this)
@@ -206,8 +214,10 @@ function treeDiagram(users, bool) {
             });
 
         //テキストの基準座標 [x,y,height]
+
         var textPos = [10, -30, 10];
 
+        //console.log("level10");
         //ID
         a_text = [];
         node_l.append("text")
@@ -254,6 +264,7 @@ function treeDiagram(users, bool) {
                 return txt.substring(2, 16);
             });
 
+        //console.log("level11");
         //diff
         a_text = [];
         node_l.append("text")
@@ -271,6 +282,8 @@ function treeDiagram(users, bool) {
 
         //point
         a_text = [];
+        SortScore(node, "rank");
+        var rankrank = Lst_sort(node);
         node_l.append("text")
 
             .attr("dx", -nodeSizeH / 2 + 25)
@@ -279,7 +292,7 @@ function treeDiagram(users, bool) {
             .style("font-size", function (d) {
                 var pnt = d.total_points;
                 var clr = 10;
-                SortScore(node, "rank");
+                //SortScore(node, "rank");
 
                 for (var i = 1; i < 6; i++) {
                     if (node[i].id == d.id) {
@@ -293,7 +306,7 @@ function treeDiagram(users, bool) {
             .style("fill", function (d) {
                 var pnt = d.total_points;
                 var clr = 0;
-                SortScore(node, "rank");
+                //SortScore(node, "rank");
 
                 for (var i = 1; i < 11; i++) {
                     if (node[i].id == d.id) {
@@ -306,7 +319,7 @@ function treeDiagram(users, bool) {
 
             })
             .style("font-weight", function (d) {
-                SortScore(node, "rank");
+                //SortScore(node, "rank");
                 var sty = "none";
 
                 for (var i = 1; i < 6; i++) {
@@ -325,6 +338,7 @@ function treeDiagram(users, bool) {
                 return pnt.toFixed(1);
             });
 
+        //console.log("level12");
         //rank
         a_text = [];
         node_l.append("text")
@@ -340,7 +354,7 @@ function treeDiagram(users, bool) {
             })
             .text(function (d) {
 
-                var rankrank = Lst_sort(node);
+
                 var rk;
                 for (var i in rankrank) {
                     if (d.id == rankrank[i].id) {
@@ -353,6 +367,7 @@ function treeDiagram(users, bool) {
 
 
     }
+    //console.log("level13-2");
 
     d3.select(self.frameElement).style("width", width + "py");
 
@@ -410,6 +425,35 @@ function treeDiagram(users, bool) {
 
 //JSONデータをD3の連想配列に変換
 function Lst_sort(node) {
+
+    //var modelGene = impData[0];
+    //var cluster = d3.layout.tree();
+    //var node = cluster.nodes(modelGene);
+
+    var rank = rank_maker(node);
+
+    for (var i in node) {
+        var counter = 1;
+        for (var l in rank) {
+            if (node[i].id == 1) {
+                node[i]["rank"] = 0;
+            } else if (node[i].id == rank[l]) {
+                node[i]["rank"] = counter;
+
+            }
+            counter += 1;
+
+        }
+
+    }
+
+
+    return node;
+
+}
+
+//JSONデータをD3の連想配列に変換
+function Lst_sortAll(node) {
 
     var modelGene = impData[0];
     var cluster = d3.layout.tree();
@@ -475,7 +519,7 @@ function domMaker(array) {
 
     for (var i in array) {
         if (array[i].id != 1) {
-            console.log(array[i].x);
+            //console.log(array[i].x);
 
 
             document.write("<tr>");
@@ -618,6 +662,7 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
         array[i].grandchildren = ppp;
 
     }
+    //console.log("level6");
     for (var l = geneHi.length - 1; l >= 0; l--) {
         for (var k = 0; k < geneHi[l].length; k++) {
             for (var i in array) {
@@ -642,6 +687,7 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
             }
         }
     }
+    //console.log("level7");
 
 
     for (var l = 0; l < geneHi.length; l++) {
@@ -717,6 +763,7 @@ function layout_tree(array, geneHi, width, nodeSizeW, nodeSizeH) {
 
         }
     }
+    //console.log("level8");
 
     return array;
 }
