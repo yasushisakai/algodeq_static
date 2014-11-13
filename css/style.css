@@ -631,12 +631,10 @@ input#name_input {
 }
 
 .top-layer-side-bar{
-    position: absolute;
-    top: 250px;
-    /*position: fixed;*/
-    /*top: 100px;*/
+    position: fixed;
+    top: 100px;
     left: 50px;
-    z-index: 2;
+    z-index: 1;
 }
 
 .bottom-layer{
