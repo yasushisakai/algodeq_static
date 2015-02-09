@@ -14,6 +14,7 @@ function treeDiagram(users, bool) {
 
     var nodeSizeW = 140,
         nodeSizeH = 140,
+        nodeSizeH = 140,
         mxDiv = width / nodeSizeW;
 
     //何世代目までいるかを調べる
@@ -855,6 +856,7 @@ function user_money(array) {
     }
 
 
+
 // 重複を削除したリスト
     var user_only = user.filter(function (x, i, self) {
         return self.indexOf(x) === i;
@@ -876,6 +878,7 @@ function user_money(array) {
             }
         }
     }
+    console.log(user_ar);
 
     return user_ar;
 }
